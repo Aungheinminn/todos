@@ -19,7 +19,7 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <body className="w-full text-white min-h-screen">
+      <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
         <Wrapper>
           {children}
         </Wrapper>
