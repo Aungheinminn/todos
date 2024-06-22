@@ -5,7 +5,7 @@ type MobileNavbarProps = {
 
 export const MobileNavbar:React.FC<MobileNavbarProps> = ({ onToggle }) => {
     return (
-        <div className="w-full bg-gray-800 flex justify-between items-center lg:hidden px-8 py-3">
+        <div className="w-full bg-gray-800 flex justify-between items-center lg:hidden px-2 py-3">
             <h1 className="">Logo</h1>
             <TopicsBadge onToggle={onToggle} />
         </div>
