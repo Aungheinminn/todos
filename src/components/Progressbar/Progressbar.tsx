@@ -16,8 +16,6 @@ const Progressbar = () => {
         }
     }
     
-    console.log(progress)
-    
     return (
         <div className="w-full">
             <button onClick={handleProgress}>Click me</button>
