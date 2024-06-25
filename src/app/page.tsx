@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 export default function Page() {
-  const a = ""
+  const a = "a"
   if(a) {
     redirect(`/home/${a}`)
   } else {
