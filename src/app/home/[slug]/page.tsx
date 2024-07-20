@@ -1,18 +1,19 @@
 "use client"
 import Progressbar from "@/components/Progressbar/Progressbar"
-import { addDays } from "date-fns";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
+import Cookies from 'js-cookie';
+import { createItems } from "@/lib/items.service";
+
 
 const Home = ({params}: { params: { slug: string}}) => {
-
-
     const [selectedDates, setSelectedDates] = useState<any[]>([])
-    const handleAddDate = () => {
+    const handleAddDate = async () => {
         const newDate = new Date() as any
         console.log(newDate, typeof newDate)
         setSelectedDates([...selectedDates, newDate])
+        await createItems({date: newDate})
     }
     const handleRemoveDate = () => {
         //No need yet

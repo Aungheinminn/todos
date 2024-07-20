@@ -5,6 +5,7 @@ import { MobileNavbar, WebNavbar } from "@/components/Navbar/Navbar";
 import Bottombar from "@/components/Bottombar/Bottombar";
 import TopicsCommand from "@/components/TopicsCommand/TopicCommand";
 import Wrapper from "@/components/Wrapper/Wrapper";
+import {SessionProvider} from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,12 +19,15 @@ export default function RootLayout({
 }>) {
   
   return (
-    <html lang="en">
-      <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
-        <Wrapper>
-          {children}
-        </Wrapper>
-      </body>
-    </html>
+    <SessionProvider>
+      <html lang="en">
+        <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
+          <Wrapper>
+            {children}
+          </Wrapper>
+        </body>
+      </html>
+    </SessionProvider>
+
   );
 }
