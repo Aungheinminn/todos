@@ -1,4 +1,4 @@
-import clientPromise from '@/libs/database';
+import clientPromise from '@/lib/database';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const POST = async (req: NextApiRequest) => {
