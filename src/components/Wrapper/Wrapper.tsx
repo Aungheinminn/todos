@@ -13,6 +13,7 @@ const Wrapper:React.FC<WrapperProps> = ({ children }) => {
     const noWrapperRoutes = ["/signIn", "/signUp"];
     const isWrapperRequired = !noWrapperRoutes.includes(router);
     const [show, setShow] = useState<boolean>(false);
+    const noNavbarPages = ["/settings"]
     const handleToggle = () => {
         setShow(!show);
         redirect('/topics')
@@ -23,7 +24,7 @@ const Wrapper:React.FC<WrapperProps> = ({ children }) => {
     return (
         <div className="relative w-full min-h-screen">
             
-            <div className="z-10 fixed w-full top-0 ">
+            <div className={`z-10 fixed w-full top-0 ${noNavbarPages.includes(router) ? 'hidden' : 'block'}`}>
                 <MobileNavbar onToggle={handleToggle} />
                 <WebNavbar />
             </div>

@@ -1,4 +1,6 @@
+"use client"
 import { redirect } from "next/navigation";
+
 
 export default function Page() {
   const a = "a"
@@ -8,7 +10,8 @@ export default function Page() {
     redirect('no-topic')
   }
   return (
-    <main className="flex flex-col items-center justify-between p-24">
-    </main>
+      <main className="flex flex-col items-center justify-between p-24">
+      </main>
+
   );
 }

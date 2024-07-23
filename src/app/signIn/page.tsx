@@ -16,7 +16,9 @@ const SignIn = () => {
         try {
             const res = await loginUser(datas)
             console.log('res', res)
-            router.push('/')
+            if(res){
+              router.push('/') 
+            }
         } catch (e) {
             console.log(e)
         }
