@@ -41,7 +41,21 @@ export const getUsers = async () => {
                 "Content-Type": "application/json"
             }
         })
-        return res
+        return res.json()
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const getCurrentUser = async () => {
+    try{
+        const res = await fetch('http://localhost:3000/api/protected/currentUser', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        return res.json()
     } catch (e) {
         console.log(e)
     }

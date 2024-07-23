@@ -26,13 +26,23 @@ export const GET = async (req: NextRequest) => {
             }
             const token = jwt.sign(tokenData, process.env.JWT_SECRET ?? '', { expiresIn: '1h' });
             if(comparePassword) {
+
                 const response = NextResponse.json({ message: 'Login Successful', data: {
                     id: user._id,
                     name: user.username,
                     email: user.email,
                 } }, { status: 200 });
+                
                 response.cookies.set('token', token, {
                     httpOnly: true,
+                })
+                response.cookies.set('user', JSON.stringify({
+                    id: user._id,
+                    name: user.username,
+                    email: user.email,
+                }), {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + 3600000),
                 })
 
                 return response;
