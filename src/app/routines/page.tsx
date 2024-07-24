@@ -1,6 +1,8 @@
 'use client'
 import RoutinesBody from "@/components/RoutinesBody/RoutinesBody"
 import RoutinesHeader from "@/components/RoutinesHeader/RoutinesHeader"
+import { createRoutine } from "@/lib/routines.service"
+import { RoutineType } from "@/lib/types/routine.type"
 import { useState } from "react"
 
 const Routines = () => {
@@ -10,8 +12,9 @@ const Routines = () => {
         setSearchText(key)
     }
 
-    const handleCreate = () => {
-        console.log('Create routine')
+    const handleCreate = async (data: RoutineType) => {
+        const res = await createRoutine(data)
+        console.log('res',res)
     }
 
     return (

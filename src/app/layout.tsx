@@ -8,7 +8,7 @@ import TopicsCommand from "@/components/TopicsCommand/TopicCommand";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import "react-day-picker/dist/style.css";
 
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
 const queryClient = new QueryClient()
 
@@ -18,18 +18,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   
   return (
-      <html lang="en">
-            <QueryClientProvider client={queryClient}>
-
+    <html lang="en">
+      <QueryClientProvider client={queryClient}>
         <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
           <Wrapper>
             {children}
           </Wrapper>
         </body>
-            </QueryClientProvider>
+      </QueryClientProvider>
 
-      </html>
+    </html>
   );
 }
