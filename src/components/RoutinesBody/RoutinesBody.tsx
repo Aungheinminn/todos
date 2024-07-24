@@ -2,7 +2,23 @@ import RoutineCard from "../RoutineCard/RoutineCard";
 
 const RoutinesBody = () => {
     return (
-        <div className="w-full flex flex-col items-center gap-y-3">
+        <div className="grid grid-cols-2 gap-2 mb-12 overflow-auto">
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
+            <RoutineCard />
             <RoutineCard />
             <RoutineCard />
             <RoutineCard />
