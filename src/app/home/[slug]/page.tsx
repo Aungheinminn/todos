@@ -6,8 +6,7 @@ import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import Badge from "@/components/Badge/Badge";
-
-
+import { dayStyle, headStyle, navStyle, headCellStyle, monthStyle } from "@/local_consts/daypicker.styles"
 const Home = ({ params }: { params: { slug: string}}) => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
     useQuery('currentUser', getCurrentUser, {
@@ -38,8 +37,15 @@ const Home = ({ params }: { params: { slug: string}}) => {
         <div className="w-full pt-[50px] text-black flex items-center flex-col">
             <div className="mt-1" />
             <Badge title="Heads up!" desc="You can add components to your app using the cli." />
-            <div className="w-[85%] flex items-center justify-center bg-[#38bdf8] my-4 rounded-lg">
+            <div className="w-[85%] [&>div]:w-full flex items-center justify-center my-4 rounded-lg">
                 <DayPicker
+                    styles={{
+                        day: dayStyle,
+                        caption: headStyle,
+                        nav: navStyle,
+                        head_cell: headCellStyle,
+                        month: monthStyle,
+                    }}
                     mode="multiple"
                     selected={selectedDates}
                 />

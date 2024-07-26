@@ -1,7 +1,6 @@
 "use client"
 import { redirect } from "next/navigation";
 
-
 export default function Page() {
   const a = "a"
   if(a) {

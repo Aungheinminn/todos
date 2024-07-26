@@ -6,7 +6,6 @@ import { MobileNavbar, WebNavbar } from "@/components/Navbar/Navbar";
 import Bottombar from "@/components/Bottombar/Bottombar";
 import TopicsCommand from "@/components/TopicsCommand/TopicCommand";
 import Wrapper from "@/components/Wrapper/Wrapper";
-import "react-day-picker/dist/style.css";
 
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
@@ -22,13 +21,14 @@ export default function RootLayout({
   
   return (
     <html lang="en">
-      <QueryClientProvider client={queryClient}>
-        <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
+      <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
+        <QueryClientProvider client={queryClient}>
           <Wrapper>
             {children}
           </Wrapper>
-        </body>
-      </QueryClientProvider>
+        </QueryClientProvider>
+
+      </body>
 
     </html>
   );
