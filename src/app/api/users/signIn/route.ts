@@ -2,6 +2,7 @@ import clientPromise from "@/lib/database";
 import { decryptPassword } from "@/lib/hash.service";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+import { env } from "@/env";
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -24,7 +25,7 @@ export const GET = async (req: NextRequest) => {
                 email: user.email,
                 name: user.username
             }
-            const token = jwt.sign(tokenData, process.env.JWT_SECRET ?? '', { expiresIn: '1h' });
+            const token = jwt.sign(tokenData, env.JWT_SECRET ?? '', { expiresIn: '1h' });
             if(comparePassword) {
 
                 const response = NextResponse.json({ message: 'Login Successful', data: {

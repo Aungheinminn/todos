@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 // import jwt from 'jsonwebtoken';
-import * as jose from 'jose'
+import * as jose from 'jose';
+import { env } from "@/env";
 
 
 export const middleware = async (req: NextRequest) => {
@@ -13,7 +14,7 @@ export const middleware = async (req: NextRequest) => {
     }
 
     try {
-        const secretKey = new TextEncoder().encode(process.env.JWT_SECRET ?? '');
+        const secretKey = new TextEncoder().encode(env.JWT_SECRET ?? '');
         if (!secretKey) {
             console.log('JWT secret key is not set');
             return new NextResponse('Internal Server Error', { status: 500 });
