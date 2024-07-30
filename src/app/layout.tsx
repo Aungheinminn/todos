@@ -7,6 +7,7 @@ import Bottombar from "@/components/Bottombar/Bottombar";
 import TopicsCommand from "@/components/TopicsCommand/TopicCommand";
 import Wrapper from "@/components/Wrapper/Wrapper";
 
+
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 
 const queryClient = new QueryClient()

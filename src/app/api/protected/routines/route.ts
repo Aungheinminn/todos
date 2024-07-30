@@ -1,5 +1,5 @@
 import clientPromise from "@/lib/database";
-import { RoutineSchema } from "@/lib/models/user.model";
+import { RoutineSchema } from "@/lib/models/routine.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (request: NextRequest) => {

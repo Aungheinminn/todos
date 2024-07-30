@@ -11,7 +11,7 @@ type BadgeProps = {
 }
 const Badge:React.FC<BadgeProps> = ({ title, desc }) => {
     return (
-        <Alert className="w-[85%] bg-[#58ed18]">
+        <Alert className="w-full bg-[#58ed18]">
             <Terminal className="h-4 w-4" />
             <AlertTitle>{title}</AlertTitle>
             <AlertDescription className="line-clamp-1">
