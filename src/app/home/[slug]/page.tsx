@@ -6,18 +6,18 @@ import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import Badge from "@/components/Badge/Badge";
-import { dayStyle, headStyle, navStyle, headCellStyle, monthStyle } from "@/local_consts/daypicker.styles"
+import 'react-day-picker/dist/style.css'
+import { dayStyle, headStyle, navStyle, headCellStyle, monthStyle, cellStyle, tableStyle } from "@/local_consts/daypicker.styles"
+
 const Home = ({ params }: { params: { slug: string}}) => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
+    const [selectedDates, setSelectedDates] = useState<any[]>([])
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {
             updateCurrentUser(data.data.currentUser)
         }
     })
     console.log('current',currentUser)
-
-
-    const [selectedDates, setSelectedDates] = useState<any[]>([])
 
     const handleAddDate = async () => {
         const newDate = new Date() as any
@@ -26,25 +26,31 @@ const Home = ({ params }: { params: { slug: string}}) => {
             date: newDate,
             userId: currentUser?._id
         }
-        // setSelectedDates([...selectedDates, newDate])
+        setSelectedDates([...selectedDates, newDate])
         await createItems(data)
+        console.log('new date', newDate)
     }
     const handleRemoveDate = () => {
         //No need yet
     }
 
+
     return (
-        <div className="w-full pt-[50px] text-black flex items-center flex-col">
+        <div className="w-full pt-[50px] text-black flex items-center flex-col justify-center">
             <div className="mt-1" />
-            <Badge title="Heads up!" desc="You can add components to your app using the cli." />
-            <div className="w-[85%] [&>div]:w-full flex items-center justify-center my-4 rounded-lg">
+            <div className="w-full px-2">
+                <Badge title="Heads up!" desc="You can add components to your app using the cli." />
+            </div>
+            <div className="w-[95%] flex items-center justify-center my-4 rounded-lg border-2 border-[#34aeeb] bg-[#2C3E50]">
                 <DayPicker
                     styles={{
                         day: dayStyle,
                         caption: headStyle,
                         nav: navStyle,
                         head_cell: headCellStyle,
-                        month: monthStyle,
+                        // month: monthStyle,
+                        // cell: cellStyle,
+                        // table: tableStyle,
                     }}
                     mode="multiple"
                     selected={selectedDates}

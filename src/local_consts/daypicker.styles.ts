@@ -1,7 +1,7 @@
 export const dayStyle = {
     fontWeight: "normal",
-    margin: "10px",
-    color: "#34aeeb"
+    margin: "10px 0",
+    color: "#34aeeb",
 };
 export const headStyle = {
     display: "flex",
@@ -19,7 +19,8 @@ export const navStyle = {
     color: "#34aeeb" 
 }
 export const headCellStyle = {
-    color: "#34aeeb"
+    color: "#34aeeb",
+    padding: "0 0 15px 0"
 }
 export const monthStyle = {
     width: "auto",
@@ -27,4 +28,10 @@ export const monthStyle = {
     border: "2px solid #34aeeb",
     borderRadius: "10px",
     padding: "10px 12px"
+}
+export const cellStyle = {
+    textAlign: "center"
+}
+export const tableStyle = {
+    width: "100%"
 }
