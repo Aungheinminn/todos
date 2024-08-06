@@ -36,7 +36,7 @@ const PopupComponent:React.FC<PopupComponentProps> = ({ process, trigger}) => {
         <AlertDialogTrigger asChild>
             <Button className="w-[90px] h-[40px] bg-[#0ea5e9] border-0 rounded-lg p-2">{trigger}</Button>
         </AlertDialogTrigger>
-        <AlertDialogContent className="bg-[#334155]">
+        <AlertDialogContent className="bg-[#334155] rounded-lg">
             <AlertDialogHeader>
                 <AlertDialogTitle>Create a routine</AlertDialogTitle>
                 <div className="flex flex-col">

@@ -19,7 +19,8 @@ const config = {
     },
     extend: {
       transitionProperty: {
-        'width': 'width'
+        'width': 'width',
+        'display': 'display'
       },
       boxShadow:{
         'rightEffect': '-1px -10px 0px 0px #FFFFFF',
