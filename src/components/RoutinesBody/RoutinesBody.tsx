@@ -1,4 +1,4 @@
-import RoutineCard from "../RoutineCard/RoutineCard";
+import RoutineCard from "../CardComponent/CardComponent";
 
 const RoutinesBody = () => {
     return (
