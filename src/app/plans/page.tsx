@@ -17,7 +17,7 @@ type PlansBodyProps = {
 
 const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) => {
     return (
-            <div className="w-full flex justify-between items-center gap-x-2 px-1">
+            <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
                 <Search search={search} onChange={onChange}  type="normal" />             
                 <PopupComponent process={onCreate} trigger="Add a plan" />
             </div>
