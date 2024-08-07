@@ -7,9 +7,14 @@ import Link from "next/link"
 import { useState } from "react"
 import back from "@/assets/arrow_left_black.svg"
 import add from "@/assets/add_white.svg"
+import cookieIcon from "@/assets/cookie.svg"
 
 type PlanHeaderProps = {
     plan: any
+}
+
+type PlanOverviewProps = {
+    plan: any;
 }
 
 type PlanRoutinesProps = {
@@ -35,6 +40,49 @@ const PlanHeader:React.FC<PlanHeaderProps> = ({
     )
 }
 
+const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
+    return (
+        <div className="w-full grid grid-cols-2 px-1 gap-1 mb-4">
+            <div className="flex justify-start items-center border-2 border-[#0ea5e9] h-[60px] rounded-lg">
+                <div className="flex flex-col mx-2">
+                    <div className="flex items-center gap-x-2">
+                        <Image src={cookieIcon} alt="cookie icon" />
+                        <span className="text-[#0ea5e9] text-lg font-medium">80</span>
+                    </div>
+                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Day Streak</p>
+                </div>
+            </div>
+            <div className="flex justify-start items-center border-2 border-[#0ea5e9] h-[60px] rounded-lg">
+                <div className="flex flex-col mx-2">
+                    <div className="flex items-center gap-x-2">
+                        <Image src={cookieIcon} alt="cookie icon" />
+                        <span className="text-[#0ea5e9] text-lg font-medium">80</span>
+                    </div>
+                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Total Routines</p>
+                </div>
+            </div>
+            <div className="flex justify-start items-center border-2 border-[#0ea5e9] h-[60px] rounded-lg">
+                <div className="flex flex-col mx-2">
+                    <div className="flex items-center gap-x-2">
+                        <Image src={cookieIcon} alt="cookie icon" />
+                        <span className="text-[#0ea5e9] text-lg font-medium">80</span>
+                    </div>
+                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Total Items</p>
+                </div>
+            </div>
+            <div className="flex justify-start items-center border-2 border-[#0ea5e9] h-[60px] rounded-lg">
+                <div className="flex flex-col mx-2">
+                    <div className="flex items-center gap-x-2">
+                        <Image src={cookieIcon} alt="cookie icon" />
+                        <span className="text-[#0ea5e9] text-lg font-medium">80</span>
+                    </div>
+                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Day Snippets</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan }) => {
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
@@ -42,7 +90,7 @@ const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan }) => {
                 <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
                 <button className="flex justify-betweeen items-center gap-x-1 bg-[#0ea5e9] px-2 py-[2px] rounded-md">
                     <Image src={add} alt="add" className="w-5 h-5" />
-                    <p>Add a routine</p>
+                    <p className="line-clamp-1">Add</p>
                 </button>
             </div>
             <div className="cursor-pointer w-full flex flex-col">
@@ -63,13 +111,13 @@ const PlanDailyActivityItems:React.FC<PlanDailyActivityItemsProps> = ({ plan }) 
         return colors[Math.floor(Math.random() * colors.length)]
     }
     return (
-        <div className="w-full flex flex-col p-1 gap-y-2">
+        <div className="w-full flex flex-col p-1 gap-y-2 p-1">
             <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily activity items</p>
-            <div className="flex flex-wrap">
+            <div className="flex flex-wrap gap-1">
                 { Array.from({ length: 10}).map((_, index) => (
-                    <Badge style={{
+                    <Badge key={index} style={{
                         backgroundColor: randomColor()
-                    }} className="cursor-pointer m-[2px] h-[30px] line-clamp-1 flex justify-self-stretch items-center justify-center text-md rounded-3xl">
+                    }} className="cursor-pointer h-[30px] line-clamp-1 flex justify-self-stretch items-center justify-center text-md rounded-3xl">
                         <TooltipComponent text={`text - ${ index }`} />
                     </Badge>
                 ))}
@@ -93,6 +141,7 @@ const Plan = ({ params }: {
     return (
         <div className="w-full pt-[50px]">
             <PlanHeader plan={plan} />
+            <PlanOverview plan={plan} />
             <PlanRoutines plan={plan} />
             <PlanDailyActivityItems plan={plan} />
         </div>
