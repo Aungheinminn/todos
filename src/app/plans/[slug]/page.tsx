@@ -8,6 +8,7 @@ import { useState } from "react"
 import back from "@/assets/arrow_left_black.svg"
 import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
+import PopupComponent from "@/components/Popup/Popup"
 
 type PlanHeaderProps = {
     plan: any
@@ -19,6 +20,7 @@ type PlanOverviewProps = {
 
 type PlanRoutinesProps = {
     plan: any;
+    onCreate: (data: any) => void;
 }
 
 type PlanDailyActivityItemsProps = {
@@ -83,15 +85,16 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
     )
 }
 
-const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan }) => {
+const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan, onCreate }) => {
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
             <div className="w-full flex justify-between items-center">
                 <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
-                <button className="flex justify-betweeen items-center gap-x-1 bg-[#0ea5e9] px-2 py-[2px] rounded-md">
-                    <Image src={add} alt="add" className="w-5 h-5" />
-                    <p className="line-clamp-1">Add</p>
-                </button>
+                {/* <button className="flex justify-betweeen items-center gap-x-1 bg-[#0ea5e9] px-2 py-[2px] rounded-md"> */}
+                    {/* <Image src={add} alt="add" className="w-5 h-5" />                     */}
+                    <PopupComponent process={onCreate} trigger="Add " type="routine" items={['mock 1', 'mock 2', 'mock 3']} />
+
+                {/* </button> */}
             </div>
             <div className="cursor-pointer w-full flex flex-col">
                 <div className="relative transition duration-300 ease-in-out group hover:border-[#C0C0C0] w-full h-[45px] flex items-center justify-start border-2 border-b-4 border-[#0ea5e9] rounded-md">
@@ -138,11 +141,17 @@ const Plan = ({ params }: {
         id: 'mock1',
         name: 'Mock 1',
     })
+
+    const handleCreateRoutine = async (data: any) => { 
+        console.log('data', data)
+    }
+
+
     return (
         <div className="w-full pt-[50px]">
             <PlanHeader plan={plan} />
             <PlanOverview plan={plan} />
-            <PlanRoutines plan={plan} />
+            <PlanRoutines plan={plan} onCreate={handleCreateRoutine} />
             <PlanDailyActivityItems plan={plan} />
         </div>
     )
