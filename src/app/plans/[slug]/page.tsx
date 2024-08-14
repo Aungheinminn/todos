@@ -9,6 +9,7 @@ import back from "@/assets/arrow_left_black.svg"
 import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
 import PopupComponent from "@/components/Popup/Popup"
+import { useCurrentUserStore } from "@/lib/userStore"
 
 type PlanHeaderProps = {
     plan: any
@@ -136,14 +137,21 @@ const PlanDailyActivityItems:React.FC<PlanDailyActivityItemsProps> = ({ plan }) 
 const Plan = ({ params }: {
     params: { slug: string}
 }) => {
-    console.log('params', params.slug)
+    const { slug } = params
+
     const [plan, setPlan] = useState({
         id: 'mock1',
         name: 'Mock 1',
     })
+    const { currentUser } = useCurrentUserStore(state=> state) 
 
     const handleCreateRoutine = async (data: any) => { 
         console.log('data', data)
+        const routineData = {
+            name: data.name,
+            planId: plan.id,
+            userId: currentUser?._id ?? ''
+        }
     }
 
 
