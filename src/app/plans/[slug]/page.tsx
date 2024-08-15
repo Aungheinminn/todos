@@ -10,6 +10,9 @@ import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
 import PopupComponent from "@/components/Popup/Popup"
 import { useCurrentUserStore } from "@/lib/userStore"
+import { useMutation, useQuery, useQueryClient } from "react-query"
+import { getPlanById, getPlansByUser } from "@/lib/plan.service"
+import { createRoutine, getRoutinesByPlanId } from "@/lib/routines.service"
 
 type PlanHeaderProps = {
     plan: any
@@ -91,11 +94,7 @@ const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan, onCreate }) => {
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
             <div className="w-full flex justify-between items-center">
                 <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
-                {/* <button className="flex justify-betweeen items-center gap-x-1 bg-[#0ea5e9] px-2 py-[2px] rounded-md"> */}
-                    {/* <Image src={add} alt="add" className="w-5 h-5" />                     */}
-                    <PopupComponent process={onCreate} trigger="Add " type="routine" items={['mock 1', 'mock 2', 'mock 3']} />
-
-                {/* </button> */}
+                <PopupComponent process={onCreate} trigger="Add " type="routine" />
             </div>
             <div className="cursor-pointer w-full flex flex-col">
                 <div className="relative transition duration-300 ease-in-out group hover:border-[#C0C0C0] w-full h-[45px] flex items-center justify-start border-2 border-b-4 border-[#0ea5e9] rounded-md">
@@ -138,19 +137,49 @@ const Plan = ({ params }: {
     params: { slug: string}
 }) => {
     const { slug } = params
+    const { currentUser } = useCurrentUserStore(state=> state)
+    
+    const queryClient = useQueryClient()
+    console.log('currentUser', currentUser)
 
-    const [plan, setPlan] = useState({
-        id: 'mock1',
-        name: 'Mock 1',
+    const { data: plan, isLoading, error } = useQuery('plan', () => getPlanById(slug))
+    const { data: routines } = useQuery('routines', () => getRoutinesByPlanId(plan._id ?? ''))
+
+    console.log('routines', routines)
+
+    const { mutate } = useMutation({
+        mutationFn: createRoutine,
+        onMutate: async (data: any) => {
+            await queryClient.cancelQueries('routines')
+            const previousData = queryClient.getQueryData('routines')
+            queryClient.setQueryData('routines', (old: any) => [...old, data])
+
+            return { previousData }
+        },
+        onSettled: () => queryClient.invalidateQueries('routines')
     })
-    const { currentUser } = useCurrentUserStore(state=> state) 
+
+
+    // const [plan, setPlan] = useState({
+    //     id: 'mock1',
+    //     name: 'Mock 1',
+    // })
+
+    if(isLoading) return <div>Loading...</div>
+
+    if(error) return <div>Error: {error.toString()}</div>
 
     const handleCreateRoutine = async (data: any) => { 
         console.log('data', data)
         const routineData = {
             name: data.name,
-            planId: plan.id,
-            userId: currentUser?._id ?? ''
+            plan_id: plan._id,
+            user_id: currentUser?._id ?? ''
+        }
+        try {
+            mutate(routineData)
+        } catch (error) {
+            console.error('Error creating routine:', error)
         }
     }
 

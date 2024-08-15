@@ -6,10 +6,10 @@ import { getPlansByUser, postPlans } from "@/lib/plan.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
 import { useState } from "react"
-import { QueryClient, useMutation, useQuery } from "react-query"
+import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 
 type Plan = {
-    _id: string;
+    _id?: string;
     name: string;
     user_id: string;
 }
@@ -35,7 +35,7 @@ const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) =
 
 const PlansBody:React.FC<PlansBodyProps> = ({ plans }) => {
     return (
-        <div className="grid grid-cols-1 gap-2 mb-12 px-1 overflow-auto">
+        <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
             {plans.map((plan, index) => (
                 <Link href={`/plans/${plan._id}`} key={index}>
                     <CardComponent key={index} title={plan.name} />
@@ -49,7 +49,7 @@ const Plans = () => {
     const { currentUser } = useCurrentUserStore(state=> state) 
     const [searchText, setSearchText] = useState<string>('')
 
-    const queryClient = new QueryClient()
+    const queryClient = useQueryClient()
     const { data: plans, isLoading, error } = useQuery('plans', () => getPlansByUser(currentUser?._id ?? ''))
 
 
@@ -66,14 +66,15 @@ const Plans = () => {
             user_id: currentUser?._id ?? ''
         }
 
-        const response = await postPlans(planData)
-        if(response) {
-            console.log(response)
+        try {
+            mutate(planData);
+        } catch (error) {
+            console.error('Error creating plan:', error);
         }
     }
 
-    useMutation({
-        mutationFn: handleCreatePlan,
+    const { mutate } = useMutation({
+        mutationFn: postPlans,
         onMutate: async (data: Plan) => {
             await queryClient.cancelQueries('plans')
 
@@ -89,10 +90,10 @@ const Plans = () => {
         onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
     })
 
-    if(!currentUser) {
-        alert('You need to be logged in to view this page');
-        window.location.href = '/signIn'
-    }
+    // if(!currentUser) {
+    //     alert('You need to be logged in to view this page');
+    //     window.location.href = '/signIn'
+    // }
 
     console.log('currentUser', currentUser)
 
