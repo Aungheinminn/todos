@@ -1,10 +1,10 @@
 import { z } from "zod";
 
 export const RoutineSchema = z.object({
-    name: z.string(),
+    name: z.string().min(1),
     icon: z.string().nullable().optional(),
-    plan_id: z.string(),
-    user_id: z.string(),
+    plan_id: z.string().min(1),
+    user_id: z.string().min(1),
 })
 
 export type RoutineModel = z.infer<typeof RoutineSchema>;
