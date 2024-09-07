@@ -9,6 +9,7 @@ import Wrapper from "@/components/Wrapper/Wrapper";
 
 
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import DetailPopup from "@/components/DetailPopup/DetailPopup";
 
 const queryClient = new QueryClient()
 
@@ -27,10 +28,9 @@ export default function RootLayout({
           <Wrapper>
             {children}
           </Wrapper>
+          <DetailPopup />
         </QueryClientProvider>
-
       </body>
-
     </html>
   );
 }

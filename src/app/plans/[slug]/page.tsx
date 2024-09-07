@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import back from "@/assets/arrow_left_black.svg"
 import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
@@ -13,9 +13,16 @@ import { useCurrentUserStore } from "@/lib/userStore"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { getPlanById, getPlansByUser } from "@/lib/plan.service"
 import { createRoutine, getRoutinesByPlanId } from "@/lib/routines.service"
+import { RoutineType } from "@/lib/types/routine.type"
+import { PlanType } from "@/lib/types/plan.type"
+import { getCurrentUser } from "@/lib/users.service"
+import Loading from "@/components/Loading/Loading"
+import PlanLoading from "./loading"
+import { usePopupStore } from "@/lib/popupStore"
 
 type PlanHeaderProps = {
-    plan: any
+    plan: any,
+    isPlanLoading: boolean
 }
 
 type PlanOverviewProps = {
@@ -23,7 +30,8 @@ type PlanOverviewProps = {
 }
 
 type PlanRoutinesProps = {
-    plan: any;
+    routines: RoutineType[];
+    plan: PlanType;
     onCreate: (data: any) => void;
 }
 
@@ -32,8 +40,13 @@ type PlanDailyActivityItemsProps = {
 }
 
 const PlanHeader:React.FC<PlanHeaderProps> = ({
-    plan
+    plan,
+    isPlanLoading
 }) => {
+    if(isPlanLoading) {
+        return <Skeleton className="w-full h-[120px] bg-[#cbd5e1] rounded-md" />
+    }
+
     return (
         <div className="relative w-full flex justify-between items-center p-1 mb-4">
             <Skeleton className="w-full h-[120px] bg-[#cbd5e1] rounded-md" />
@@ -89,18 +102,28 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
     )
 }
 
-const PlanRoutines:React.FC<PlanRoutinesProps> = ({ plan, onCreate }) => {
+const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) => {
+    const { openPopup, popupData } = usePopupStore()
+    const handleOpenDetailPopup = (routine: RoutineType) => {
+        popupData.title = 'Routine Details'
+        popupData.name = routine.name
+        openPopup()
+    }
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
             <div className="w-full flex justify-between items-center">
                 <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
                 <PopupComponent process={onCreate} trigger="Add " type="routine" />
             </div>
-            <div className="cursor-pointer w-full flex flex-col">
-                <div className="relative transition duration-300 ease-in-out group hover:border-[#C0C0C0] w-full h-[45px] flex items-center justify-start border-2 border-b-4 border-[#0ea5e9] rounded-md">
-                    <p className="transition duration-300 ease-in-out text-md font-medium text-[#0ea5e9] m-2 group-hover:opacity-0">Mock 1</p>
-                    <p className="absolute left-1/2 -translate-x-1/2 transition duration-300 ease-in-out text-md font-medium text-[#C0C0C0] m-2 opacity-0 group-hover:opacity-100"> Click for details</p>
-                </div>
+            <div className="cursor-pointer w-full flex flex-col gap-y-1">
+                {
+                    routines && routines.map((routine) => (
+                        <div key={routine._id} onClick={() => handleOpenDetailPopup(routine)} className="relative transition duration-300 ease-in-out group hover:border-[#C0C0C0] w-full h-[45px] flex items-center justify-start border-2 border-b-4 border-[#0ea5e9] rounded-md">
+                            <p className="w-[120px] truncate transition duration-300 ease-in-out text-md font-medium text-[#0ea5e9] m-2 group-hover:opacity-0">{routine.name}</p>
+                            <p className="absolute left-1/2 -translate-x-1/2 transition duration-300 ease-in-out text-md font-medium text-[#C0C0C0] m-2 opacity-0 group-hover:opacity-100"> Click for details</p>
+                        </div>
+                    ))
+                }
             </div>
 
         </div>
@@ -137,39 +160,50 @@ const Plan = ({ params }: {
     params: { slug: string}
 }) => {
     const { slug } = params
-    const { currentUser } = useCurrentUserStore(state=> state)
-    
-    const queryClient = useQueryClient()
-    console.log('currentUser', currentUser)
 
-    const { data: plan, isLoading, error } = useQuery('plan', () => getPlanById(slug))
-    const { data: routines } = useQuery('routines', () => getRoutinesByPlanId(plan._id ?? ''))
+    const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
+    
+    useQuery('currentUser', getCurrentUser, {
+        onSuccess: (data) => {
+            updateCurrentUser(data.data.currentUser)
+            console.log('data', data)
+        }
+    })
+
+    console.log('currentUser', currentUser)   
+
+    const queryClient = useQueryClient()
+
+
+    const { data: plan, isLoading: isPlanLoading } = useQuery({
+        queryKey: ['plan', slug],
+        queryFn: () => getPlanById(slug),
+        enabled: !!currentUser
+    })
+
+    console.log('plan', plan)
+
+    const { data: routines, isLoading: isRoutinesLoading } = useQuery({
+        queryKey: ['routines', plan?._id],
+        queryFn: () => getRoutinesByPlanId(plan?._id),
+        enabled: !!plan
+    })
 
     console.log('routines', routines)
 
-    const { mutate } = useMutation({
+    const routineMutation = useMutation({
         mutationFn: createRoutine,
-        onMutate: async (data: any) => {
+        onMutate: async (data: RoutineType) => {
             await queryClient.cancelQueries('routines')
             const previousData = queryClient.getQueryData('routines')
-            queryClient.setQueryData('routines', (old: any) => [...old, data])
+            queryClient.setQueryData(['routines'], (old: any) => old ? [...old, data] : [])
 
             return { previousData }
         },
         onSettled: () => queryClient.invalidateQueries('routines')
     })
 
-
-    // const [plan, setPlan] = useState({
-    //     id: 'mock1',
-    //     name: 'Mock 1',
-    // })
-
-    if(isLoading) return <div>Loading...</div>
-
-    if(error) return <div>Error: {error.toString()}</div>
-
-    const handleCreateRoutine = async (data: any) => { 
+    const handleCreateRoutine = async (data: RoutineType) => { 
         console.log('data', data)
         const routineData = {
             name: data.name,
@@ -177,20 +211,25 @@ const Plan = ({ params }: {
             user_id: currentUser?._id ?? ''
         }
         try {
-            mutate(routineData)
+            routineMutation.mutate(routineData)
         } catch (error) {
             console.error('Error creating routine:', error)
         }
     }
-
+    
+    if (!currentUser || !plan || isPlanLoading || isRoutinesLoading) {
+        return <Loading />
+    }
 
     return (
-        <div className="w-full pt-[50px]">
-            <PlanHeader plan={plan} />
-            <PlanOverview plan={plan} />
-            <PlanRoutines plan={plan} onCreate={handleCreateRoutine} />
-            <PlanDailyActivityItems plan={plan} />
-        </div>
+        <Suspense fallback={<PlanLoading />}>
+            <div className="w-full pt-[50px]">
+                <PlanHeader plan={plan} isPlanLoading={isPlanLoading} />
+                <PlanOverview plan={plan} />
+                <PlanRoutines routines={routines} plan={plan} onCreate={handleCreateRoutine} />
+                <PlanDailyActivityItems plan={plan} />
+            </div>
+        </Suspense>
     )
 }
 export default Plan

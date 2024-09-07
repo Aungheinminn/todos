@@ -1,12 +1,15 @@
 "use client"
 import CardComponent from "@/components/CardComponent/CardComponent"
+import Loading from "@/components/Loading/Loading"
 import PopupComponent from "@/components/Popup/Popup"
 import Search from "@/components/Search/Search"
 import { getPlansByUser, postPlans } from "@/lib/plan.service"
+import { getCurrentUser } from "@/lib/users.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
+import PlansLoading from "./loading"
 
 type Plan = {
     _id?: string;
@@ -46,13 +49,23 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans }) => {
 }
 
 const Plans = () => {
-    const { currentUser } = useCurrentUserStore(state=> state) 
+    const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
+
+    useQuery('currentUser', getCurrentUser, {
+        onSuccess: (data) => {
+            updateCurrentUser(data.data.currentUser)
+        }
+    })
+
     const [searchText, setSearchText] = useState<string>('')
 
     const queryClient = useQueryClient()
-    const { data: plans, isLoading, error } = useQuery('plans', () => getPlansByUser(currentUser?._id ?? ''))
-
-
+    
+    const { data: plans, isLoading: isPlansLoading } = useQuery({
+        queryKey: ['plans', currentUser?._id],
+        queryFn: () => getPlansByUser(currentUser?._id ?? ''),
+        enabled: !!currentUser?._id
+    })
 
     console.log('plans', plans)
 
@@ -90,22 +103,20 @@ const Plans = () => {
         onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
     })
 
-    // if(!currentUser) {
-    //     alert('You need to be logged in to view this page');
-    //     window.location.href = '/signIn'
-    // }
 
     console.log('currentUser', currentUser)
 
-    if(isLoading) return <div>Loading...</div>
-
-    if(error) return <div>Error: {error.toString()}</div>
+    if(!currentUser || !plans || isPlansLoading) {
+        return <Loading />
+    }
 
     return (
-        <div className="w-full flex flex-col gap-y-3 pt-[50px]">
-            <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
-            <PlansBody plans={plans} />
-        </div>
+        <Suspense fallback={<PlansLoading />}>
+            <div className="w-full flex flex-col gap-y-3 pt-[50px]">
+                <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
+                <PlansBody plans={plans} />
+            </div>
+        </Suspense>
     )
 }
 
