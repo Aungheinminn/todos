@@ -10,10 +10,13 @@ import Link from "next/link"
 import { Suspense, useState } from "react"
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 import PlansLoading from "./loading"
+import { useActionPopupStore } from "@/lib/popupStore"
+import { Button } from "@/components/ui/button"
 
 type Plan = {
     _id?: string;
     name: string;
+    description?: string;
     user_id: string;
 }
 
@@ -28,10 +31,20 @@ type PlansBodyProps = {
 }
 
 const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) => {
+    const { openPopup, popupData } = useActionPopupStore(state => state)
+
+    const handleAddPlan = () => {
+        popupData.name = ''
+        popupData.type = 'plan'
+        popupData.items = []
+        popupData.process = onCreate
+        openPopup()
+    }
+
     return (
             <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
                 <Search search={search} onChange={onChange}  type="normal" />             
-                <PopupComponent process={onCreate} trigger="Add a plan" type="plan" />
+                <Button className="bg-[#0ea5e9]" onClick={handleAddPlan}>Add a plan</Button>
             </div>
     )
 }
@@ -76,24 +89,25 @@ const Plans = () => {
     const handleCreatePlan = async (data: any) => {
         const planData = {
             name: data.name,
+            description: data.description,
             user_id: currentUser?._id ?? ''
         }
 
         try {
-            mutate(planData);
+            mutation.mutate(planData);
         } catch (error) {
             console.error('Error creating plan:', error);
         }
     }
 
-    const { mutate } = useMutation({
+    const mutation = useMutation({
         mutationFn: postPlans,
         onMutate: async (data: Plan) => {
             await queryClient.cancelQueries('plans')
 
             const previousPlans = queryClient.getQueryData('plans')
 
-            queryClient.setQueryData('plans', (old: any) => [data, ...old])
+            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
 
             return { previousPlans }
         },

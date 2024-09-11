@@ -18,7 +18,8 @@ import { PlanType } from "@/lib/types/plan.type"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
 import PlanLoading from "./loading"
-import { usePopupStore } from "@/lib/popupStore"
+import { useActionPopupStore, usePopupStore } from "@/lib/popupStore"
+import { Button } from "@/components/ui/button"
 
 type PlanHeaderProps = {
     plan: any,
@@ -95,7 +96,7 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
                         <Image src={cookieIcon} alt="cookie icon" />
                         <span className="text-[#0ea5e9] text-lg font-medium">80</span>
                     </div>
-                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Day Snippets</p>
+                    <p className="text-sm text-[#C0C0C0] ml-8 line-clamp-1">Total Snippets</p>
                 </div>
             </div>
         </div>
@@ -104,16 +105,23 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
 
 const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) => {
     const { openPopup, popupData } = usePopupStore()
+    const { openPopup: actionOpenPopup, popupData: actionPopupData } = useActionPopupStore(state=>state)
     const handleOpenDetailPopup = (routine: RoutineType) => {
         popupData.title = 'Routine Details'
         popupData.name = routine.name
         openPopup()
     }
+    const handleActionPopup = () => {
+        actionPopupData.name = ''
+        actionPopupData.type = 'routine'
+        actionPopupData.process = onCreate
+        actionOpenPopup()
+    }
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
             <div className="w-full flex justify-between items-center">
                 <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
-                <PopupComponent process={onCreate} trigger="Add " type="routine" />
+                <Button className="bg-[#0ea5e9]" onClick={handleActionPopup}>Add</Button>
             </div>
             <div className="cursor-pointer w-full flex flex-col gap-y-1">
                 {

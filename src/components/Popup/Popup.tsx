@@ -15,17 +15,22 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import React, { SetStateAction, useState } from "react";
 import { Dropdown } from "react-day-picker";
 import DropdownComponent from "../DropdownComponent/DropdownComponent";
+import { useActionPopupStore } from "@/lib/popupStore";
 
 type PopupComponentProps = {
+    title?: string;
     type: 'plan' | 'routine' | 'activity';
     process: (data: any) => void;
     trigger: string;
     items?: any;
+    className?: string;
 }
 
 type PlanPopupProps = {
     name: string;
+    description: string;
     setName: React.Dispatch<SetStateAction<string>>;
+    setDescription: React.Dispatch<SetStateAction<string>>;
 }
 
 type RoutinePopupProps = {
@@ -40,13 +45,17 @@ type ActivityPopupProps = {
     onSelectRoutine: (value: string) => void;
 }
 
-const PlanPopup: React.FC<PlanPopupProps> = ({ name, setName }) => {
+const PlanPopup: React.FC<PlanPopupProps> = ({ name, description, setName, setDescription }) => {
     return(
         <AlertDialogHeader>
             <AlertDialogTitle>Create a plan</AlertDialogTitle>
             <div className="flex flex-col justify-start">
-                <label className="mb-2 text-start" htmlFor="name">Name</label>
-                <input className="text-black p-1 py-2 rounded-md" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                <label className="mb-2 text-start" htmlFor="name">Name *</label>
+                <input className="text-black p-2 rounded-md" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="flex flex-col justify-start">
+                <label className="mb-2 text-start" htmlFor="description">Description</label>
+                <input className="text-black p-2 rounded-md" type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
         </AlertDialogHeader>
     )
@@ -77,33 +86,42 @@ const ActivityPopup: React.FC<ActivityPopupProps> = ({ name, setName, items, onS
     )
 }
 
-const PopupComponent:React.FC<PopupComponentProps> = ({ type, process, trigger, items }) => {
-    const [name, setName] = useState<string>('')
-    const [selectedRoutine, setSelectedRoutine] = useState<string>('')
+const PopupComponent:React.FC = () => {
+    const { isOpen, closePopup, popupData } = useActionPopupStore(state => state)
+    const [name, setName] = useState<string>(popupData.name)
+    const [desc, setDesc] = useState<string>(popupData.description ? popupData.description : '')
+    const [items, setItems] = useState(popupData.items ? popupData.items : [])
 
     const handleSelectRoutine = (value: string) => {
-        setSelectedRoutine(value)
+        setItems(value)
     }
 
     const handleProcess = () => {
         const data = {
             name: name,
+            description: desc,
             icon: '',
         }
-        process(data)
+        console.log(data, 'data')
+        popupData.process(data)
         setName('')
+        setDesc('')
+        closePopup()
+    }
+
+    const handleCancel = () => {
+        setName('')
+        setDesc('')
+        closePopup()
     }
     return (
-        <AlertDialog>
-        <AlertDialogTrigger asChild>
-            <Button className="w-[90px] h-[40px] bg-[#0ea5e9] border-0 rounded-lg p-2">{trigger}</Button>
-        </AlertDialogTrigger>
+        <AlertDialog open={isOpen}>
         <AlertDialogContent className="w-[320px] bg-[#334155] rounded-lg">
-            {type === 'plan' && <PlanPopup name={name} setName={setName} />}
-            {type === 'routine' && <RoutinePopup name={name} setName={setName} />}
-            {type === 'activity' && <ActivityPopup name={name} setName={setName} items={items} onSelectRoutine={handleSelectRoutine} />}
+        {popupData.type === 'plan' && <PlanPopup name={name} description={desc} setName={setName} setDescription={setDesc} />}
+            {popupData.type === 'routine' && <RoutinePopup name={name} setName={setName} />}
+            {popupData.type === 'activity' && <ActivityPopup name={name} setName={setName} items={items} onSelectRoutine={handleSelectRoutine} />}
             <AlertDialogFooter className="w-full flex flex-row justify-ceter items-center gap-x-1">
-                <AlertDialogCancel className="text-black w-1/2 m-0 p-0" onClick={() => setName('')}>Cancel</AlertDialogCancel>
+                <AlertDialogCancel className="text-black w-1/2 m-0 p-0" onClick={handleCancel}>Cancel</AlertDialogCancel>
                 <AlertDialogAction className="w-1/2 m-0 p-0" onClick={handleProcess}>Continue</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
