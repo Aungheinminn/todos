@@ -1,5 +1,8 @@
-export const postPlans = async (data: any) => {
+import { PlanType } from "./types/plan.type";
+
+export const postPlans = async (data: PlanType) => {
     try {
+        console.log('api data', data)
         const response = await fetch('http://localhost:3000/api/protected/plans', {
             method: 'POST',
             headers: {
