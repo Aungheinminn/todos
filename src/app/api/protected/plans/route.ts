@@ -6,17 +6,21 @@ export const POST = async (req: NextRequest) => {
     try{
         const body = await req.json();
         const planData = PlanSchema.parse(body);
-
+        const data = {
+            ...planData,
+            date: new Date().toISOString()
+        }
         const client = await clientPromise;
         const db = client.db('remarker_next');
 
-        const plan = await db.collection("plans").insertOne(planData);
+        const plan = await db.collection("plans").insertOne(data);
         const res = await db.collection("plans").findOne({ _id: plan.insertedId });
         if(res){
             return NextResponse.json({ message: "Active Plan successfully created", data: {
                _id: res._id,
                name: res.name,
-               description: res.description ?? ''
+               description: res.description ?? '',
+               date: res.date
             } }, { status: 200 });
         } else {
             return NextResponse.json({ error: "Failed to create a plan" }, { status: 400 });

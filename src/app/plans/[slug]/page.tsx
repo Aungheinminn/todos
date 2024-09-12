@@ -113,6 +113,7 @@ const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) 
     }
     const handleActionPopup = () => {
         actionPopupData.name = ''
+        actionPopupData.description = ''
         actionPopupData.type = 'routine'
         actionPopupData.process = onCreate
         actionOpenPopup()
@@ -215,6 +216,7 @@ const Plan = ({ params }: {
         console.log('data', data)
         const routineData = {
             name: data.name,
+            description: data.description,
             plan_id: plan._id,
             user_id: currentUser?._id ?? ''
         }
