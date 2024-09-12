@@ -7,13 +7,24 @@ export const POST = async (request: NextRequest) => {
         const body = await request.json();
         const routineData = RoutineSchema.parse(body);
 
+        const data = {
+            ...routineData,
+            date: new Date().toISOString()
+        }
+
         const client = await clientPromise;
         const db = client.db('remarker_next');
 
-        await db.collection('routines').insertOne(routineData);
-        const routine = await db.collection('routines').findOne({ name: routineData.name });
-        if(routine){
-            return NextResponse.json({ message: 'Routine successfully created', data: routine }, { status: 200 });
+        const routine = await db.collection('routines').insertOne(data);
+        const res = await db.collection('routines').findOne({ _id: routine.insertedId });
+        if(res){
+            return NextResponse.json({ message: 'Routine successfully created', data: {
+                name: res.name,
+                description: res.description ?? '',
+                user_id: res.user_id,
+                plan_id: res.plan_id,
+                date: res.date
+            } }, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Failed to create routine' }, { status: 400 });
         }

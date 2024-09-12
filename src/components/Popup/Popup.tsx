@@ -35,7 +35,9 @@ type PlanPopupProps = {
 
 type RoutinePopupProps = {
     name: string;
+    description: string;
     setName: React.Dispatch<SetStateAction<string>>;
+    setDescription: React.Dispatch<SetStateAction<string>>;
 }
 
 type ActivityPopupProps = {
@@ -61,13 +63,17 @@ const PlanPopup: React.FC<PlanPopupProps> = ({ name, description, setName, setDe
     )
 }
 
-const RoutinePopup: React.FC<RoutinePopupProps> = ({ name, setName }) => {
+const RoutinePopup: React.FC<RoutinePopupProps> = ({ name, description, setName, setDescription }) => {
     return(
         <AlertDialogHeader>
             <AlertDialogTitle>Create a routine</AlertDialogTitle>
             <div className="flex flex-col">
                 <label className="mb-2" htmlFor="name">Name</label>
                 <input className="text-black py-2 px-3 rounded-md w-full focus:outline-[#0ea5e9]" type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            </div>
+            <div className="flex flex-col justify-start">
+                <label className="mb-2 text-start" htmlFor="description">Description</label>
+                <input className="text-black p-2 rounded-md" type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
         </AlertDialogHeader>
     )
@@ -118,7 +124,7 @@ const PopupComponent:React.FC = () => {
         <AlertDialog open={isOpen}>
         <AlertDialogContent className="w-[320px] bg-[#334155] rounded-lg">
         {popupData.type === 'plan' && <PlanPopup name={name} description={desc} setName={setName} setDescription={setDesc} />}
-            {popupData.type === 'routine' && <RoutinePopup name={name} setName={setName} />}
+            {popupData.type === 'routine' && <RoutinePopup name={name} description={desc} setName={setName} setDescription={setDesc} />}
             {popupData.type === 'activity' && <ActivityPopup name={name} setName={setName} items={items} onSelectRoutine={handleSelectRoutine} />}
             <AlertDialogFooter className="w-full flex flex-row justify-ceter items-center gap-x-1">
                 <AlertDialogCancel className="text-black w-1/2 m-0 p-0" onClick={handleCancel}>Cancel</AlertDialogCancel>
