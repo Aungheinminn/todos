@@ -10,7 +10,7 @@ import 'react-day-picker/dist/style.css'
 import { dayStyle, headStyle, navStyle, headCellStyle, monthStyle, cellStyle, tableStyle } from "@/local_consts/daypicker.styles"
 import HomeLoading from "./loading";
 
-const Home = ({ params }: { params: { slug: string}}) => {
+const Home = () => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
     const [selectedDates, setSelectedDates] = useState<any[]>([])
     useQuery('currentUser', getCurrentUser, {
