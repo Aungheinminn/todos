@@ -20,20 +20,20 @@ const Home = () => {
     })
     console.log('current',currentUser)
 
-    const handleAddDate = async () => {
-        const newDate = new Date() as any
-        console.log(newDate, typeof newDate)
-        const data = {
-            date: newDate,
-            userId: currentUser?._id
-        }
-        setSelectedDates([...selectedDates, newDate])
-        await createItems(data)
-        console.log('new date', newDate)
-    }
-    const handleRemoveDate = () => {
-        //No need yet
-    }
+    // const handleAddDate = async () => {
+    //     const newDate = new Date() as any
+    //     console.log(newDate, typeof newDate)
+    //     const data = {
+    //         date: newDate,
+    //         userId: currentUser?._id
+    //     }
+    //     setSelectedDates([...selectedDates, newDate])
+    //     await createItems(data)
+    //     console.log('new date', newDate)
+    // }
+    // const handleRemoveDate = () => {
+    //     //No need yet
+    // }
 
 
     return (
@@ -58,11 +58,6 @@ const Home = () => {
                         selected={selectedDates}
                     />
                 </div>
-                <div className="w-full flex justify-center items-center gap-x-3">
-                    <button className="cursor-pointer w-[150px] h-[40px] bg-[#0ea5e9] rounded-md text-white text-md font-normal" onClick={handleAddDate}>Commit</button>
-                    <button className="cursor-pointer w-[150px] h-[40px] bg-[#be123c] rounded-md text-white text-md font-normal" onClick={handleRemoveDate}>Remove</button>
-                </div>
-
             </div>
         </Suspense>
     )
