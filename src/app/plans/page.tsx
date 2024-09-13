@@ -54,7 +54,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans }) => {
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
             {plans.map((plan, index) => (
                 <Link href={`/plans/${plan._id}`} key={index}>
-                    <CardComponent key={index} title={plan.name} />
+                    <CardComponent key={index} plan={plan} />
                 </Link>
             ))}
         </div>
