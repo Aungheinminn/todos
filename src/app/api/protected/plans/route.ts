@@ -8,7 +8,7 @@ export const POST = async (req: NextRequest) => {
         const planData = PlanSchema.parse(body);
         const data = {
             ...planData,
-            date: new Date().toISOString()
+            createdAt: new Date().toISOString()
         }
         const client = await clientPromise;
         const db = client.db('remarker_next');
@@ -20,7 +20,7 @@ export const POST = async (req: NextRequest) => {
                _id: res._id,
                name: res.name,
                description: res.description ?? '',
-               date: res.date
+               createdAt: res.createdAt
             } }, { status: 200 });
         } else {
             return NextResponse.json({ error: "Failed to create a plan" }, { status: 400 });

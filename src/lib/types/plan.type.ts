@@ -4,5 +4,5 @@ export type PlanType = {
     description?: string;
     icon?: string | null;
     user_id: string;
-    date?: string;
+    createdAt?: string;
 }

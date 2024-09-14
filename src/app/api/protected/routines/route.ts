@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
 
         const data = {
             ...routineData,
-            date: new Date().toISOString()
+            createdAt: new Date().toISOString()
         }
 
         const client = await clientPromise;
@@ -23,7 +23,7 @@ export const POST = async (request: NextRequest) => {
                 description: res.description ?? '',
                 user_id: res.user_id,
                 plan_id: res.plan_id,
-                date: res.date
+                createdAt: res.createdAt
             } }, { status: 200 });
         } else {
             return NextResponse.json({ error: 'Failed to create routine' }, { status: 400 });
