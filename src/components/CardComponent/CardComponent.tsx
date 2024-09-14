@@ -4,22 +4,63 @@ import deleteRoutine from "@/assets/delete.svg"
 import editRoutine from "@/assets/edit.svg"
 import { Skeleton } from "../ui/skeleton";
 import TooltipComponent from "../Tooltip/Tooltip";
-import planLogo from "@/assets/fitness_icon.svg"
+import planLogo from "@/assets/plan.svg"
+import more from "@/assets/more.svg"
+import editIcon from "@/assets/edit.svg"
+import deleteIcon from "@/assets/remove.svg"
+
+import hoverMore from "@/assets/hover_more.svg"
 import { PlanType } from "@/lib/types/plan.type";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
+const PopoverComponent = () => {
+    return (
+        <Popover>
+            <PopoverTrigger>
+                <button className="group p-[2px] border-2 border-[#78717C] hover:border-[#E7E5E6] rounded-md">
+                    <Image className="block group-hover:hidden" src={more} alt="more" />
+                    <Image className="hidden group-hover:block" src={hoverMore} alt="hover more" />
+                </button>
+            </PopoverTrigger>
+            <PopoverContent className="p-1 flex flex-col gap-y-1">
+                <div className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
+                    <Image src={editIcon} alt="edit"/>
+                    <p className="text-md font-medium">Edit</p>
+                </div>
+                <div className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
+                    <Image src={deleteIcon} alt="delete"/>
+                    <p className="text-md font-medium">Delete</p>
+                </div>
+            </PopoverContent>
+        </Popover>
+    )
+}
 
 const CardComponent = ({ plan }: {
     plan: PlanType;
 }) => {
-    const date = plan.date ? new Date(plan.date).toUTCString().split(' ').slice(0, 3).join(' ') : '' ;
+    const date = plan.createdAt ? new Date(plan.createdAt).toUTCString().split(' ').slice(0, 4).join(' ') : '' ;
      
     return (
-        <div className="w-full flex justify-center items-center gap-x-3 bg-[#cbd5e1] p-2 rounded-md cursor-pointer">
-            <div className="w-[80px] h-[50px] flex justify-center items-center p-2 bg-[#0ea5e9] opacity-40 border-2 border-white rounded-md">
-                <Image className="w-[70px] h-full" src={planLogo} alt="plan logo" />
+        <div className="w-full flex flex-col justify-start gap-3 bg-[#cbd5e1] p-2 rounded-md cursor-pointer">
+            <div className="flex gap-x-3 border-b border-{#E7E5E4} pb-3 pt-1">
+                <div className="w-[50px] h-[50px] p-2 bg-[#0ea5e9] opacity-40 border-2 border-white rounded-md">
+                    <Image className="w-full h-full" src={planLogo} alt="plan logo" />
+                </div>
+                <div className="flex flex-col items-start">
+                    <TooltipComponent text={plan.name} />
+                    <p className="text-sm line-clamp-1">{plan.description}</p>
+                </div>
             </div>
-            <div className="w-full flex flex-col justify-start items-start text-[#64748b]">
-                <TooltipComponent text={plan.name} />
-                <span className="text-sm">{date}</span>
+
+            <div className="flex justify-between items-center pb-2">
+                <div className="flex justify-start items-center gap-x-1 text-black">
+                    <span className="text-md text-[#78717C] font-medium">Created At:</span>
+                    <span className="text-md">{date}</span>                   
+                </div>
+                <div onClick={(e) => e.preventDefault()}>
+                    <PopoverComponent />
+                </div>
             </div>
         </div>
     );

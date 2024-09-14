@@ -5,4 +5,5 @@ export type RoutineType = {
     icon?: string | null;
     user_id: string;
     plan_id: string;
+    createdAt?: string
 }
