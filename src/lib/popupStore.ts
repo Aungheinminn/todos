@@ -1,4 +1,3 @@
-import { set } from "date-fns"
 import { create } from "zustand"
 
 interface DetailPopupStore {
@@ -24,6 +23,17 @@ interface ActionPopupStore {
     }
 }
 
+interface DeletePopupStore {
+    isOpen: boolean;
+    openPopup: () => void;
+    closePopup: () => void;
+    popupData: {
+        itemToDelete: string;
+        process: (data: string) => void;        
+    }
+
+}
+
 export const usePopupStore = create<DetailPopupStore>((set) => ({
     isOpen: false,
     openPopup: () => set({ isOpen: true }),
@@ -44,5 +54,15 @@ export const useActionPopupStore = create<ActionPopupStore>((set) => ({
         type: '',
         process: () => {},
         items: []
+    }
+}))
+
+export const useDeletePopupStore = create<DeletePopupStore>((set) =>({
+    isOpen: false,
+    openPopup: () => set({ isOpen: true}),
+    closePopup: () => set({ isOpen: false}),
+    popupData: {
+        itemToDelete: '',
+        process: () => {}        
     }
 }))
