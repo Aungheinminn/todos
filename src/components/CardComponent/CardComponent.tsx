@@ -12,8 +12,16 @@ import deleteIcon from "@/assets/remove.svg"
 import hoverMore from "@/assets/hover_more.svg"
 import { PlanType } from "@/lib/types/plan.type";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { useDeletePopupStore } from "@/lib/popupStore";
 
-const PopoverComponent = () => {
+const PopoverComponent = ({ plan }: {
+    plan: PlanType
+}) => {
+    const { openPopup, popupData } = useDeletePopupStore(state => state)
+    const handleDelete = () => {
+        openPopup();
+        popupData.itemToDelete = plan._id ? plan._id : ''
+    }
     return (
         <Popover>
             <PopoverTrigger>
@@ -27,7 +35,7 @@ const PopoverComponent = () => {
                     <Image src={editIcon} alt="edit"/>
                     <p className="text-md font-medium">Edit</p>
                 </div>
-                <div className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
+                <div onClick={handleDelete} className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
                     <Image src={deleteIcon} alt="delete"/>
                     <p className="text-md font-medium">Delete</p>
                 </div>
@@ -54,12 +62,12 @@ const CardComponent = ({ plan }: {
             </div>
 
             <div className="flex justify-between items-center pb-2">
-                <div className="flex justify-start items-center gap-x-1 text-black">
+                <div className="flex justify-start items-center gap-x-2 text-black">
                     <span className="text-md text-[#78717C] font-medium">Created At:</span>
                     <span className="text-md">{date}</span>                   
                 </div>
                 <div onClick={(e) => e.preventDefault()}>
-                    <PopoverComponent />
+                    <PopoverComponent plan={plan} />
                 </div>
             </div>
         </div>

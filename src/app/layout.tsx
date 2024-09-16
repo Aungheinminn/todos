@@ -11,6 +11,7 @@ import Wrapper from "@/components/Wrapper/Wrapper";
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
 import DetailPopup from "@/components/DetailPopup/DetailPopup";
 import PopupComponent from "@/components/Popup/Popup";
+import DeletePopup from "@/components/DeletePopup/DeletePopup";
 
 const queryClient = new QueryClient()
 
@@ -31,6 +32,7 @@ export default function RootLayout({
           </Wrapper>
           <DetailPopup />
           <PopupComponent />
+          <DeletePopup />
         </QueryClientProvider>
       </body>
     </html>
