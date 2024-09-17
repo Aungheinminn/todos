@@ -3,7 +3,7 @@ import CardComponent from "@/components/CardComponent/CardComponent"
 import Loading from "@/components/Loading/Loading"
 import PopupComponent from "@/components/Popup/Popup"
 import Search from "@/components/Search/Search"
-import { getPlansByUser, postPlans } from "@/lib/plan.service"
+import { deletePlan, getPlansByUser, postPlans } from "@/lib/plan.service"
 import { getCurrentUser } from "@/lib/users.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
@@ -12,6 +12,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 import PlansLoading from "./loading"
 import { useActionPopupStore } from "@/lib/popupStore"
 import { Button } from "@/components/ui/button"
+import NotFound from "@/components/NotFound/NotFound"
 
 type Plan = {
     _id?: string;
@@ -28,6 +29,50 @@ type PlansHeaderProps = {
 
 type PlansBodyProps = {
     plans: Plan[];
+    onDelete: (id: string) => void;
+}
+
+const useMutationsHook = () => {
+    const queryClient = useQueryClient()
+
+     const createMutation = useMutation({
+        mutationFn: postPlans,
+        onMutate: async (data: Plan) => {
+            await queryClient.cancelQueries('plans')
+
+            const previousPlans = queryClient.getQueryData('plans')
+
+            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
+
+            return { previousPlans }
+        },
+        onError: (error, variables, context: any) => {
+            queryClient.setQueryData('plans', context.previousPlans)
+        },
+        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
+    })
+
+    const deleteMutation = useMutation({
+        mutationFn: deletePlan,
+        onMutate: async (data: string) => {
+            await queryClient.cancelQueries('plans')
+
+            const previousPlans = queryClient.getQueryData('plans')
+
+            queryClient.setQueryData('plans', (old: any) => old ? old.filter((o: any) => o._id === data) : [])
+
+            return { previousPlans }
+        },
+        onError: (error, variables, context: any) => {
+            queryClient.setQueryData('plans', context.previousPlans)
+        },
+        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
+    })
+
+    return {
+        createMutation,
+        deleteMutation
+    }
 }
 
 const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) => {
@@ -49,12 +94,15 @@ const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) =
     )
 }
 
-const PlansBody:React.FC<PlansBodyProps> = ({ plans }) => {
+const PlansBody:React.FC<PlansBodyProps> = ({ plans, onDelete }) => {
+    if(plans && plans.length === 0) {
+        return <NotFound context="No Plan is found!" />
+    }
     return (
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
             {plans.map((plan, index) => (
                 <Link href={`/plans/${plan._id}`} key={index}>
-                    <CardComponent key={index} plan={plan} />
+                    <CardComponent key={index} plan={plan} onDelete={onDelete} />
                 </Link>
             ))}
         </div>
@@ -63,6 +111,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans }) => {
 
 const Plans = () => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
+    const { createMutation, deleteMutation } = useMutationsHook()
 
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {
@@ -72,7 +121,6 @@ const Plans = () => {
 
     const [searchText, setSearchText] = useState<string>('')
 
-    const queryClient = useQueryClient()
     
     const { data: plans, isLoading: isPlansLoading } = useQuery({
         queryKey: ['plans', currentUser?._id],
@@ -94,28 +142,19 @@ const Plans = () => {
         }
 
         try {
-            mutation.mutate(planData);
+            createMutation.mutate(planData);
         } catch (error) {
             console.error('Error creating plan:', error);
         }
     }
 
-    const mutation = useMutation({
-        mutationFn: postPlans,
-        onMutate: async (data: Plan) => {
-            await queryClient.cancelQueries('plans')
-
-            const previousPlans = queryClient.getQueryData('plans')
-
-            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
-
-            return { previousPlans }
-        },
-        onError: (error, variables, context: any) => {
-            queryClient.setQueryData('plans', context.previousPlans)
-        },
-        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
-    })
+    const handleDeletePlan = async (id: string) => {
+        try {
+            deleteMutation.mutate(id)
+        } catch (error) {
+            console.error('Error deleting plan', error)
+        }
+    }
 
 
     console.log('currentUser', currentUser)
@@ -128,7 +167,7 @@ const Plans = () => {
         <Suspense fallback={<PlansLoading />}>
             <div className="w-full flex flex-col gap-y-3 pt-[50px]">
                 <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
-                <PlansBody plans={plans} />
+                <PlansBody plans={plans} onDelete={handleDeletePlan} />
             </div>
         </Suspense>
     )

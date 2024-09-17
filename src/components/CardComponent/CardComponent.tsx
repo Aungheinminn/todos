@@ -14,13 +14,15 @@ import { PlanType } from "@/lib/types/plan.type";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { useDeletePopupStore } from "@/lib/popupStore";
 
-const PopoverComponent = ({ plan }: {
-    plan: PlanType
+const PopoverComponent = ({ plan, onDelete }: {
+    plan: PlanType,
+    onDelete: (id: string) => void;
 }) => {
     const { openPopup, popupData } = useDeletePopupStore(state => state)
     const handleDelete = () => {
-        openPopup();
         popupData.itemToDelete = plan._id ? plan._id : ''
+        popupData.process = onDelete        
+        openPopup();
     }
     return (
         <Popover>
@@ -44,8 +46,9 @@ const PopoverComponent = ({ plan }: {
     )
 }
 
-const CardComponent = ({ plan }: {
+const CardComponent = ({ plan, onDelete }: {
     plan: PlanType;
+    onDelete: (id: string) => void;
 }) => {
     const date = plan.createdAt ? new Date(plan.createdAt).toUTCString().split(' ').slice(0, 4).join(' ') : '' ;
      
@@ -67,7 +70,7 @@ const CardComponent = ({ plan }: {
                     <span className="text-md">{date}</span>                   
                 </div>
                 <div onClick={(e) => e.preventDefault()}>
-                    <PopoverComponent plan={plan} />
+                    <PopoverComponent plan={plan} onDelete={onDelete} />
                 </div>
             </div>
         </div>

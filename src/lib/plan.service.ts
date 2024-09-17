@@ -61,3 +61,15 @@ export const getPlansByUser = async (user_id: string) => {
         console.error(e);
     }
 }
+
+export const deletePlan = async (id: string) => {
+    try {
+        const response = await fetch(`http://localhost:3000/api/protected/plans/${id}`, {
+            method: 'DELETE'
+        })
+        const res = await response.json()
+        return res.data
+    } catch(e) {
+        console.error(e)
+    }
+}
