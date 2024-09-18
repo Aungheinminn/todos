@@ -12,17 +12,32 @@ import deleteIcon from "@/assets/remove.svg"
 import hoverMore from "@/assets/hover_more.svg"
 import { PlanType } from "@/lib/types/plan.type";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useDeletePopupStore } from "@/lib/popupStore";
+import { useDeletePopupStore, useEditPopupStore } from "@/lib/popupStore";
 
-const PopoverComponent = ({ plan, onDelete }: {
+const PopoverComponent = ({ plan, onEdit, onDelete }: {
     plan: PlanType,
+    onEdit: ({ id, data}: {
+        id: string,
+        data: PlanType
+    }) => void;
     onDelete: (id: string) => void;
 }) => {
-    const { openPopup, popupData } = useDeletePopupStore(state => state)
+    const { openPopup: openDeletePopup, popupData: deletePopupData } = useDeletePopupStore(state => state)
+    const { openPopup: openEditPopup, popupData: editPopupData } = useEditPopupStore(state => state)
     const handleDelete = () => {
-        popupData.itemToDelete = plan._id ? plan._id : ''
-        popupData.process = onDelete        
-        openPopup();
+        deletePopupData.itemToDelete = plan._id ? plan._id : ''
+        deletePopupData.process = onDelete        
+        openDeletePopup();
+    }
+
+    const handleEdit = () => {
+        editPopupData.id = plan._id
+        editPopupData.name = plan.name
+        editPopupData.description = plan.description
+        editPopupData.userId = plan.user_id
+        editPopupData.type = 'editPlan'
+        editPopupData.process = onEdit
+        openEditPopup()
     }
     return (
         <Popover>
@@ -33,7 +48,7 @@ const PopoverComponent = ({ plan, onDelete }: {
                 </button>
             </PopoverTrigger>
             <PopoverContent className="p-1 flex flex-col gap-y-1">
-                <div className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
+                <div onClick={handleEdit} className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">
                     <Image src={editIcon} alt="edit"/>
                     <p className="text-md font-medium">Edit</p>
                 </div>
@@ -46,8 +61,12 @@ const PopoverComponent = ({ plan, onDelete }: {
     )
 }
 
-const CardComponent = ({ plan, onDelete }: {
+const CardComponent = ({ plan, onEdit, onDelete }: {
     plan: PlanType;
+    onEdit: ({ id, data}: {
+        id: string,
+        data: PlanType
+    }) => void;
     onDelete: (id: string) => void;
 }) => {
     const date = plan.createdAt ? new Date(plan.createdAt).toUTCString().split(' ').slice(0, 4).join(' ') : '' ;
@@ -70,7 +89,7 @@ const CardComponent = ({ plan, onDelete }: {
                     <span className="text-md">{date}</span>                   
                 </div>
                 <div onClick={(e) => e.preventDefault()}>
-                    <PopoverComponent plan={plan} onDelete={onDelete} />
+                    <PopoverComponent plan={plan} onEdit={onEdit} onDelete={onDelete} />
                 </div>
             </div>
         </div>

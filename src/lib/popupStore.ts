@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { PlanType } from "./types/plan.type"
 
 interface DetailPopupStore {
     isOpen: boolean
@@ -10,7 +11,7 @@ interface DetailPopupStore {
     }
 }
 
-interface ActionPopupStore {
+interface CreatePopupStore {
     isOpen: boolean
     openPopup: () => void
     closePopup: () => void
@@ -19,7 +20,20 @@ interface ActionPopupStore {
         description?: string
         type: string;
         process: (data: any) => void;
-        items?: any;
+    }
+}
+
+interface EditPopupStore {
+    isOpen: boolean
+    openPopup: () => void
+    closePopup: () => void
+    popupData: {
+        id?: string;
+        userId: string;
+        name: string;        
+        description?: string
+        type: string;
+        process: (data: any) => void;
     }
 }
 
@@ -44,7 +58,7 @@ export const usePopupStore = create<DetailPopupStore>((set) => ({
     }
 }))
 
-export const useActionPopupStore = create<ActionPopupStore>((set) => ({
+export const useCreatePopupStore = create<CreatePopupStore>((set) => ({
     isOpen: false,
     openPopup: () => set({ isOpen: true }),
     closePopup: () => set({ isOpen: false }),
@@ -53,7 +67,20 @@ export const useActionPopupStore = create<ActionPopupStore>((set) => ({
         description: '',
         type: '',
         process: () => {},
-        items: []
+    }
+}))
+
+export const useEditPopupStore = create<EditPopupStore>((set) => ({
+    isOpen: false,
+    openPopup: () => set({ isOpen: true }),
+    closePopup: () => set({ isOpen: false }),
+    popupData: {
+        id: '',
+        userId: '',
+        name: '',        
+        description: '',
+        type: '',
+        process: () => {},
     }
 }))
 

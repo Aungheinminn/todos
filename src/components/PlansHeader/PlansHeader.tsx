@@ -1,7 +1,7 @@
 'use client'
 import { useState } from "react";
 import Search from "../Search/Search";
-import PopupComponent from "../Popup/Popup";
+import PopupComponent from "../CreatePopup/CreatePopup";
 import { RoutineType } from "@/lib/types/routine.type";
 import SelectComponent from "../Select/Select";
 import Link from "next/link";

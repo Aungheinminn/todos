@@ -8,7 +8,7 @@ import { Suspense, useState } from "react"
 import back from "@/assets/arrow_left_black.svg"
 import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
-import PopupComponent from "@/components/Popup/Popup"
+import PopupComponent from "@/components/CreatePopup/CreatePopup"
 import { useCurrentUserStore } from "@/lib/userStore"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { getPlanById, getPlansByUser } from "@/lib/plan.service"
@@ -18,7 +18,7 @@ import { PlanType } from "@/lib/types/plan.type"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
 import PlanLoading from "./loading"
-import { useActionPopupStore, usePopupStore } from "@/lib/popupStore"
+import { useCreatePopupStore, usePopupStore } from "@/lib/popupStore"
 import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
 
@@ -106,7 +106,7 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
 
 const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) => {
     const { openPopup, popupData } = usePopupStore()
-    const { openPopup: actionOpenPopup, popupData: actionPopupData } = useActionPopupStore(state=>state)
+    const { openPopup: actionOpenPopup, popupData: actionPopupData } = useCreatePopupStore(state=>state)
     const handleOpenDetailPopup = (routine: RoutineType) => {
         popupData.title = 'Routine Details'
         popupData.name = routine.name
@@ -115,7 +115,7 @@ const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) 
     const handleActionPopup = () => {
         actionPopupData.name = ''
         actionPopupData.description = ''
-        actionPopupData.type = 'routine'
+        actionPopupData.type = 'createRoutine'
         actionPopupData.process = onCreate
         actionOpenPopup()
     }

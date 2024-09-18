@@ -1,25 +1,19 @@
 "use client"
 import CardComponent from "@/components/CardComponent/CardComponent"
 import Loading from "@/components/Loading/Loading"
-import PopupComponent from "@/components/Popup/Popup"
+import PopupComponent from "@/components/CreatePopup/CreatePopup"
 import Search from "@/components/Search/Search"
-import { deletePlan, getPlansByUser, postPlans } from "@/lib/plan.service"
+import { deletePlan, editPlanById, getPlansByUser, postPlans } from "@/lib/plan.service"
 import { getCurrentUser } from "@/lib/users.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
 import { Suspense, useState } from "react"
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 import PlansLoading from "./loading"
-import { useActionPopupStore } from "@/lib/popupStore"
+import { useCreatePopupStore } from "@/lib/popupStore"
 import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
-
-type Plan = {
-    _id?: string;
-    name: string;
-    description?: string;
-    user_id: string;
-}
+import { PlanType } from "@/lib/types/plan.type"
 
 type PlansHeaderProps = {
     search: string;
@@ -28,7 +22,11 @@ type PlansHeaderProps = {
 }
 
 type PlansBodyProps = {
-    plans: Plan[];
+    plans: PlanType[];
+    onEdit: ({ id, data}: {
+        id: string,
+        data: PlanType
+    }) => void;
     onDelete: (id: string) => void;
 }
 
@@ -37,7 +35,7 @@ const useMutationsHook = () => {
 
      const createMutation = useMutation({
         mutationFn: postPlans,
-        onMutate: async (data: Plan) => {
+        onMutate: async (data: PlanType) => {
             await queryClient.cancelQueries('plans')
 
             const previousPlans = queryClient.getQueryData('plans')
@@ -69,19 +67,36 @@ const useMutationsHook = () => {
         onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
     })
 
+    const editMutation = useMutation({
+        mutationFn: editPlanById,
+        onMutate: async ({ id, data }) => {
+            await queryClient.cancelQueries('plans')
+
+            const previousPlans = queryClient.getQueryData('plans')
+
+            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
+
+            return { previousPlans }
+        },
+        onError: (error, variables, context: any) => {
+            queryClient.setQueryData('plans', context.previousPlans)
+        },
+        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
+    })
+
     return {
         createMutation,
-        deleteMutation
+        deleteMutation,
+        editMutation
     }
 }
 
 const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) => {
-    const { openPopup, popupData } = useActionPopupStore(state => state)
+    const { openPopup, popupData } = useCreatePopupStore(state => state)
 
     const handleAddPlan = () => {
         popupData.name = ''
-        popupData.type = 'plan'
-        popupData.items = []
+        popupData.type = 'createPlan'
         popupData.process = onCreate
         openPopup()
     }
@@ -94,7 +109,7 @@ const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) =
     )
 }
 
-const PlansBody:React.FC<PlansBodyProps> = ({ plans, onDelete }) => {
+const PlansBody:React.FC<PlansBodyProps> = ({ plans, onEdit, onDelete }) => {
     if(plans && plans.length === 0) {
         return <NotFound context="No Plan is found!" />
     }
@@ -102,7 +117,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans, onDelete }) => {
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
             {plans.map((plan, index) => (
                 <Link href={`/plans/${plan._id}`} key={index}>
-                    <CardComponent key={index} plan={plan} onDelete={onDelete} />
+                    <CardComponent key={index} onEdit={onEdit} plan={plan} onDelete={onDelete} />
                 </Link>
             ))}
         </div>
@@ -111,7 +126,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans, onDelete }) => {
 
 const Plans = () => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
-    const { createMutation, deleteMutation } = useMutationsHook()
+    const { createMutation, deleteMutation, editMutation } = useMutationsHook()
 
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {
@@ -156,6 +171,17 @@ const Plans = () => {
         }
     }
 
+    const handleEditPlan = async ({id, data}: {
+        id: string,
+        data: PlanType
+    }) => {
+        try {
+            editMutation.mutate({ id, data })
+        }  catch (error) {
+            console.error('Error editing plan', error)
+        }
+    }
+
 
     console.log('currentUser', currentUser)
 
@@ -167,7 +193,7 @@ const Plans = () => {
         <Suspense fallback={<PlansLoading />}>
             <div className="w-full flex flex-col gap-y-3 pt-[50px]">
                 <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
-                <PlansBody plans={plans} onDelete={handleDeletePlan} />
+                <PlansBody plans={plans} onEdit={handleEditPlan} onDelete={handleDeletePlan} />
             </div>
         </Suspense>
     )
