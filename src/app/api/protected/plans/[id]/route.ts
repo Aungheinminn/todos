@@ -3,7 +3,7 @@ import { PlanSchema } from "@/lib/models/activePlan.model";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req:NextRequest ,{ params }: {
+export const GET = async (req:NextRequest , { params }: {
     params: {
         id: string;
     }
@@ -32,16 +32,17 @@ export const GET = async (req:NextRequest ,{ params }: {
     }
 }
 
-export const PUT = async (req: NextRequest, { params }: {
-    params:{
-        id: string;
-    }
-}) => {
+export const PUT = async (
+    req: NextRequest,
+    { params }: { params: { id: string } }
+) => {
     if(!params) {
         return NextResponse.json({ error: "Plan ID is required" }, { status: 400 });
     }
     const { id } = params;
-    const planData = PlanSchema.parse(req.body);
+    const reqBody = await new Response(req.body).json()    
+
+    const planData = PlanSchema.parse(reqBody);
     try {
         const client = await clientPromise;
         const db = client.db('remarker_next');

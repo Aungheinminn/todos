@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { RoutineType } from "@/lib/types/routine.type";
 import { useCurrentUserStore } from "@/lib/userStore";
-import React, { SetStateAction, useState } from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import { Dropdown } from "react-day-picker";
 import DropdownComponent from "../DropdownComponent/DropdownComponent";
 import { useEditPopupStore } from "@/lib/popupStore";
@@ -74,11 +74,15 @@ const EditRoutinePopup: React.FC<RoutinePopupProps> = ({ name, description, setN
 
 const EditPopupComponent:React.FC = () => {
     const { isOpen, closePopup, popupData } = useEditPopupStore(state => state)
-    console.log(popupData)
+    console.log(popupData, typeof popupData.name, typeof popupData.description)
 
-    const [name, setName] = useState<string>(popupData.name || '')
-    const [desc, setDesc] = useState<string>(popupData.description || '')
-    console.log(name, desc)
+    const [name, setName] = useState<string>('')
+    const [desc, setDesc] = useState<string | undefined>('')
+
+    useEffect(() => {
+        setName(popupData.name)
+        setDesc(popupData.description)
+    }, [popupData.name, popupData.description])
 
     const handleProcess = () => {
         const data = {
@@ -96,8 +100,8 @@ const EditPopupComponent:React.FC = () => {
     }
 
     const handleCancel = () => {
-        setName('')
-        setDesc('')
+        popupData.name = ''
+        popupData.description = ''
         closePopup()
     }
     return (
