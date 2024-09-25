@@ -31,14 +31,9 @@ type PlanOverviewProps = {
     plan: any;
 }
 
-type PlanRoutinesProps = {
+type PlanItemsProps = {
     routines: RoutineType[];
-    plan: PlanType;
     onCreate: (data: any) => void;
-}
-
-type PlanDailyActivityItemsProps = {
-    plan: any
 }
 
 const PlanHeader:React.FC<PlanHeaderProps> = ({
@@ -104,7 +99,7 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
     )
 }
 
-const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) => {
+const PlanItems:React.FC<PlanItemsProps> = ({ routines, onCreate }) => {
     const { openPopup, popupData } = usePopupStore()
     const { openPopup: actionOpenPopup, popupData: actionPopupData } = useCreatePopupStore(state=>state)
     const handleOpenDetailPopup = (routine: RoutineType) => {
@@ -122,11 +117,10 @@ const PlanRoutines:React.FC<PlanRoutinesProps> = ({ routines, plan, onCreate }) 
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
             <div className="w-full flex justify-between items-center">
-                <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily routines</p>
-                <Button className="bg-[#0ea5e9]" onClick={handleActionPopup}>Add</Button>
+                <p className="text-lg font-medium text-[#0ea5e9]">Related Items</p>
             </div>
             { routines && routines.length === 0 ? 
-                <NotFound context="No Routine is found!" /> :
+                <NotFound context="No Item is found!" /> :
                 <div className="cursor-pointer w-full flex flex-col gap-y-1">
                     {
                         routines && routines.map((routine) => (
@@ -240,8 +234,7 @@ const Plan = ({ params }: {
             <div className="w-full pt-[50px]">
                 <PlanHeader plan={plan} isPlanLoading={isPlanLoading} />
                 <PlanOverview plan={plan} />
-                <PlanRoutines routines={routines} plan={plan} onCreate={handleCreateRoutine} />
-                {/* <PlanDailyActivityItems plan={plan} /> */}
+                <PlanItems routines={routines} onCreate={handleCreateRoutine} />
             </div>
         </Suspense>
     )
