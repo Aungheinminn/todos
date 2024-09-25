@@ -72,7 +72,7 @@ const CardComponent = ({ plan, onEdit, onDelete }: {
     const date = plan.createdAt ? new Date(plan.createdAt).toUTCString().split(' ').slice(0, 4).join(' ') : '' ;
      
     return (
-        <div className="w-full flex flex-col justify-start gap-3 bg-[#cbd5e1] p-2 rounded-md cursor-pointer">
+        <div className="transition-all w-full flex flex-col justify-start gap-3 bg-[#cbd5e1] border-2 border-[#78717C] p-2 rounded-lg cursor-pointer hover:border-[#5b21b6]">
             <div className="flex gap-x-3 border-b border-{#E7E5E4} pb-3 pt-1">
                 <div className="w-[50px] h-[50px] p-2 bg-[#0ea5e9] opacity-40 border-2 border-white rounded-md">
                     <Image className="w-full h-full" src={planLogo} alt="plan logo" />
