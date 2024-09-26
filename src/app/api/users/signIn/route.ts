@@ -28,7 +28,7 @@ export const GET = async (req: NextRequest) => {
             const token = jwt.sign(tokenData, env.JWT_SECRET ?? '', { expiresIn: '1h' });
             if(comparePassword) {
 
-                const response = NextResponse.json({ message: 'Login Successful', data: {
+                const response = NextResponse.json({ success: true, message: 'Login Successful', data: {
                     id: user._id,
                     name: user.username,
                     email: user.email,
@@ -51,6 +51,6 @@ export const GET = async (req: NextRequest) => {
         }
     } catch (e) {
         console.error(e);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
     }
 }

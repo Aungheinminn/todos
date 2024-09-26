@@ -1,8 +1,8 @@
 'use client'
 import Loading from "@/components/Loading/Loading"
 
-const SignInLoading = () => {
+const LoginLoading = () => {
     return <Loading />
 }
 
-export default SignInLoading
+export default LoginLoading
