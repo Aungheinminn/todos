@@ -27,7 +27,7 @@ export const loginUser = async (datas: CredentialModel) => {
         });
 
         return res.json();
-    } catch (e) {
+    } catch (e) {       
         console.log(e);
     }
 };
