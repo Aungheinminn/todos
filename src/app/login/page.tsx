@@ -3,6 +3,8 @@ import { Suspense, useState } from "react";
 import { loginUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import LoginLoading from "./loading";
+import Image from "next/image";
+import back from "@/assets/caret_whtie.svg"
 
 interface StepOneProps {
     email: string;
@@ -16,6 +18,7 @@ interface StepTwoProps {
     email: string;
     password: string;
     setPassword: (password: string) => void;
+    passwordError: string;
     handleSignIn: () => void;
 }
 
@@ -56,22 +59,23 @@ const StepOne: React.FC<StepOneProps> = ({ email, setEmail, emailError, setEmail
     );
 };
 
-const StepTwo: React.FC<StepTwoProps> = ({ email, password, setPassword, handleSignIn }) => {
+const StepTwo: React.FC<StepTwoProps> = ({ email, password, setPassword, passwordError, handleSignIn }) => {
     return (
         <div className="w-full flex flex-col justify-start gap-y-2">
             <div className="text-md text-gray-700">
                 Signing in as <strong>{email}</strong>
             </div>
 
-            <label className="text-black text-md font-medium" htmlFor="password">Password</label>
             <input
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
-                className="w-full bg-[#E4E4E5] text-gray-500 border-2 border-gray-500 rounded-lg px-2 py-1 focus:outline-blue-500"
+                className={`w-full bg-[#E4E4E5] text-gray-500 border-2 rounded-lg px-2 py-1 focus:outline-none ${passwordError ? 'border-red-500' : 'border-[#0ea5e9]'}`}
                 type="password"
                 id="password"
                 name="password"
             />
+
+            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
 
             <button
                 onClick={handleSignIn}
@@ -88,8 +92,14 @@ const Login = () => {
     const [password, setPassword] = useState<string>('');
     const [step, setStep] = useState<number>(1);
     const [emailError, setEmailError] = useState<string>(''); 
+    const [passwordError, setPasswordError] = useState<string>('');
 
     const router = useRouter();
+
+    const handleBack = () => {
+        setPassword('')
+        setStep(1)
+    }
 
     const handleSignIn = async () => {
         const datas = {
@@ -99,8 +109,10 @@ const Login = () => {
         try {
             const res = await loginUser(datas);
             console.log('res', res);
-            if (res) {
+            if (res.success) {
                 router.push('/');
+            } else {
+                setPasswordError(res.error)
             }
         } catch (e) {                
             console.log('error', e);
@@ -109,31 +121,38 @@ const Login = () => {
     return (
         <Suspense fallback={<LoginLoading />}>
             <div
-                className="w-full h-screen flex flex-col items-center justify-start px-4 py-2 text-black"
+                className="w-full h-screen flex flex-col items-center justify-start px-4 py-2 text-black gap-y-3"
             >
-                <div className={`w-full md:w-[50%] bg-[#cbd5e1] flex flex-col justify-start mt-[100px] p-8 border-2 ${emailError ? 'border-red-500' : 'border-[#0ea5e9]'} rounded-lg`}>
-                    <h1 className={`text-xl font-medium mb-1 ${emailError ? 'text-red-500' : 'text-[#0ea5e9]'}`}>Sign In</h1>
+                <div className={`w-full md:w-[50%] bg-[#cbd5e1] flex flex-col justify-start mt-[100px] p-8 border-2 ${emailError || passwordError ? 'border-red-500' : 'border-[#0ea5e9]'} rounded-lg`}>
+                    <h1 className={`text-xl font-medium mb-1 ${emailError || passwordError ? 'text-red-500' : 'text-[#0ea5e9]'}`}>Sign In</h1>
                     <span className="text-md font-normal text-gray-500 mb-4">Please enter your {step === 1 ? 'email' : 'password'}</span>
 
-                {step === 1 && (
-                    <StepOne 
-                        email={email} 
-                        setEmail={setEmail} 
-                        emailError={emailError}
-                        setEmailError={setEmailError}
-                        nextStep={() => setStep(2)} 
-                    />
-                )}
+                    {step === 1 && (
+                        <StepOne 
+                            email={email} 
+                            setEmail={setEmail} 
+                            emailError={emailError}
+                            setEmailError={setEmailError}
+                            nextStep={() => setStep(2)} 
+                        />
+                    )}
 
-                {step === 2 && (
-                    <StepTwo 
-                        email={email} 
-                        password={password} 
-                        setPassword={setPassword} 
-                        handleSignIn={handleSignIn} 
-                    />
-                )}
+                    {step === 2 && (
+                        <StepTwo 
+                            email={email} 
+                            password={password} 
+                            setPassword={setPassword} 
+                            passwordError={passwordError}
+                            handleSignIn={handleSignIn} 
+                        />
+                    )}
                 </div>
+                {step === 2 && 
+                    <button onClick={handleBack} className="flex items-center py-1 px-2 rounded-lg text-white bg-[#22d3ee]">                    
+                        <Image src={back} alt="back" />
+                        <p>Back to Email ?</p>
+                    </button>
+                }
 
             </div>
         </Suspense>
