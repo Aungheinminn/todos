@@ -18,6 +18,10 @@ export const GET = async (req: NextRequest) => {
         const db = client.db('remarker_next');
         const user = await db.collection('users').findOne({ email: email});
 
+        // if(!user) {
+        //     console.log('a')
+        // }
+
         if(user){
             const comparePassword = await decryptPassword(password, user.password);
             const tokenData = {
@@ -47,8 +51,12 @@ export const GET = async (req: NextRequest) => {
                 })
 
                 return response;
+            } else {
+                return NextResponse.json({ success: false, error: 'Incorrect Password' }, { status: 404 });
+
             }
         }
+
     } catch (e) {
         console.error(e);
         return NextResponse.json({ success: false, error: 'Internal Server Error' }, { status: 500 });
