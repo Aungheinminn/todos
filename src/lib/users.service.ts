@@ -32,6 +32,21 @@ export const loginUser = async (datas: CredentialModel) => {
     }
 };
 
+export const logoutUser = async () => {
+    try {
+
+        const res = await fetch('http://localhost:3000/api/users/signOut', {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        return res.json();
+    } catch (e) {
+        console.error(e);
+    }
+}
 
 export const getUsers = async () => {
     try{

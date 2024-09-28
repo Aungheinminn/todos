@@ -40,6 +40,7 @@ export const GET = async (req: NextRequest) => {
                 
                 response.cookies.set('token', token, {
                     httpOnly: true,
+                    expires: new Date(Date.now() + 3600000),
                 })
                 response.cookies.set('user', JSON.stringify({
                     id: user._id,
