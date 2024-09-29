@@ -5,6 +5,11 @@ import ItemsLoading from "./loading"
 import ItemCardComponent from "@/components/ItemCardComponent/ItemCardComponent"
 import { Button } from "@/components/ui/button"
 import Search from "@/components/Search/Search"
+import { getRoutinesByPlanId } from "@/lib/routines.service"
+import { useQuery } from "react-query"
+import { getPlanById, getPlans, getPlansByUser } from "@/lib/plan.service"
+import { useCurrentUserStore } from "@/lib/userStore"
+import { getCurrentUser } from "@/lib/users.service"
 
 type ItemsHeaderProps = {
     search: string;
@@ -35,6 +40,29 @@ const ItemsBody = () => {
 
 const Items = () => {
     const [searchText, setSearchText] = useState<string>('')
+
+    const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
+    
+    useQuery('currentUser', getCurrentUser, {
+        onSuccess: (data) => {
+            updateCurrentUser(data.data.currentUser)
+            console.log('data', data)
+        }
+    })
+
+
+    const { data: plan, isLoading: isPlanLoading } = useQuery({
+        queryKey: ['plan'],
+        queryFn: () => getPlansByUser(currentUser?._id ?? ''),
+        enabled: !!currentUser
+    })
+
+
+    const { data: routines, isLoading: isRoutinesLoading } = useQuery({
+        queryKey: ['routines', plan?._id],
+        queryFn: () => getRoutinesByPlanId(plan?._id),
+        enabled: !!plan
+    })
 
     const handleChange = (key: string) => {
         setSearchText(key)

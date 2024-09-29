@@ -12,7 +12,7 @@ export const middleware = async (req: NextRequest) => {
         console.log('No token found in cookies');
         return new NextResponse('Unauthorized', { status: 401 });
     }
-
+    console.log('hi ur authorized', req.nextUrl.pathname)
     try {
         const secretKey = new TextEncoder().encode(env.JWT_SECRET ?? '');
         if (!secretKey) {
