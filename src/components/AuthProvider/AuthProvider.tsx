@@ -22,7 +22,7 @@ const queryClient = new QueryClient()
 const AuthProvider:React.FC<AuthProviderProps> = ({ token, children }) => {
     const pathname = usePathname()
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
-    const nonAuthorizedRoutes = ["/login", "/signUp"];
+    const nonAuthorizedRoutes = ["/login", "/signUp", "/unauthorized"];
     const isNonAuthorizedRoute = !nonAuthorizedRoutes.includes(pathname);
  
     useEffect(() => {
