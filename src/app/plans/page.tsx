@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
 import { PlanType } from "@/lib/types/plan.type"
 
+
 type PlansHeaderProps = {
     search: string;
     onChange: (searchKey: string) => void;
