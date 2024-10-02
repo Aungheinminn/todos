@@ -110,7 +110,7 @@ const Login = () => {
             const res = await loginUser(datas);
             console.log('res', res);
             if (res.success) {
-                router.push('/');
+                router.push('/home');
             } else {
                 setPasswordError(res.error)
             }

@@ -12,6 +12,7 @@ import DeletePopup from "@/components/DeletePopup/DeletePopup";
 import EditPopupComponent from "@/components/EditPopup/EditPopup";
 import CreatePopupComponent from "@/components/CreatePopup/CreatePopup";
 import { useState, useEffect } from 'react';
+import Loading from '../Loading/Loading';
 
 type AuthProviderProps = {
     token: string;
@@ -21,18 +22,23 @@ const queryClient = new QueryClient()
 
 const AuthProvider:React.FC<AuthProviderProps> = ({ token, children }) => {
     const pathname = usePathname()
+    const [isLoading, setIsLoading] = useState<boolean>(true)
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
     const nonAuthorizedRoutes = ["/login", "/signUp", "/unauthorized"];
     const isNonAuthorizedRoute = !nonAuthorizedRoutes.includes(pathname);
- 
-    useEffect(() => {
-        if(token) {
-            setIsAuthorized(true)
-        }
-    }, [pathname])
+    console.log('isauth', isAuthorized, token)
 
-    if(!isAuthorized && isNonAuthorizedRoute){
-        return redirect('/unauthorized')
+    useEffect(() => {
+        setIsAuthorized(!!token);
+        setIsLoading(false);
+    }, [token, pathname]);
+
+    if (pathname !== '/unauthorized' && isLoading) {
+        return <Loading />;
+    }
+
+    if (!isAuthorized && isNonAuthorizedRoute) {
+        redirect('/unauthorized');
     }
     console.log('token', token, pathname)
 
