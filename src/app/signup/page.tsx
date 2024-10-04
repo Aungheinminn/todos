@@ -3,9 +3,9 @@ import Loading from "@/components/Loading/Loading";
 import { createUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
-import SignUpLoading from "./loading";
+import SignupLoading from "./loading";
 
-const SignUp = () => {
+const Signup = () => {
     const [username, setUsername] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -28,7 +28,7 @@ const SignUp = () => {
     };
 
     return (
-        <Suspense fallback={<SignUpLoading />}>
+        <Suspense fallback={<SignupLoading />}>
             <div className="w-full flex flex-col items-center justify-center px-4 py-2 gap-y-4">
                 <div className="w-full flex flex-col justify-start">
                     <h1 className="text-xl font-medium text-[#22d3ee] mb-2">Sign Up</h1>
@@ -89,4 +89,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default Signup;

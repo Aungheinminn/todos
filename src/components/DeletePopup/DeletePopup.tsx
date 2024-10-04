@@ -1,3 +1,4 @@
+"use client"
 import { useDeletePopupStore } from "@/lib/popupStore"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "../ui/alert-dialog"
 

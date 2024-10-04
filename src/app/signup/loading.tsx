@@ -1,8 +1,8 @@
 "use client"
 import Loading from "@/components/Loading/Loading"
 
-const SignUpLoading = () => {
+const SignupLoading = () => {
     return <Loading />
 }
 
-export default SignUpLoading
+export default SignupLoading

@@ -1,3 +1,4 @@
+"use client"
 import { usePopupStore } from "@/lib/popupStore"
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from "../ui/dialog"
 import { Button } from "../ui/button"
