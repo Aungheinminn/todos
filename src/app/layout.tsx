@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import AuthProvider from "@/components/AuthProvider/AuthProvider";
-import { cookies } from 'next/headers'
-
+import DetailPopup from "@/components/DetailPopup/DetailPopup";
+import CreatePopupComponent from "@/components/CreatePopup/CreatePopup";
+import DeletePopup from "@/components/DeletePopup/DeletePopup";
+import EditPopupComponent from "@/components/EditPopup/EditPopup";
+import ReactQueryProvider from "@/components/ReactQueryProvider/ReactQueryProvider";
 
 
 export default function RootLayout({
@@ -12,14 +14,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const token = cookies().get('token')
-  console.log('token', token)
   return (
     <html lang="en">
       <body className="w-full text-white min-h-screen" suppressHydrationWarning={false}>
-          <AuthProvider token={token ? token.value : ''}>
+          <ReactQueryProvider >
             {children}       
-          </AuthProvider>
+          </ReactQueryProvider>
+          <DetailPopup />
+          <CreatePopupComponent />
+          <DeletePopup />
+          <EditPopupComponent />
       </body>
     </html>
   );

@@ -8,10 +8,15 @@ export const middleware = async (req: NextRequest) => {
     const token = req.cookies.get("token");
     console.log('token', token)
 
-    if (!token) {
+    if (!token?.value) {
         console.log('No token found in cookies');
-        return new NextResponse('Unauthorized', { status: 401 });
+        // return NextResponse.redirect('/login'); 
+        const modifiedUrl = req.url.replace('/api/protected/', '/');
+
+        // return NextResponse.redirect(new URL('/api/users/signOut', modifiedUrl));
+        return NextResponse.redirect(new URL('/unauthorized', req.url))
     }
+
     console.log('hi ur authorized', req.nextUrl.pathname)
     try {
         const secretKey = new TextEncoder().encode(env.JWT_SECRET ?? '');
@@ -35,5 +40,8 @@ export const middleware = async (req: NextRequest) => {
 }
 
 export const config = {
-    matcher: ['/api/protected/:path*']
+    matcher: [     
+        '/((?!api|login|signup|unauthorized|_next/static|_next/image|favicon.ico).*)',
+        '/api/protected/:path*'
+    ]
 }
