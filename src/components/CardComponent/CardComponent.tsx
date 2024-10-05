@@ -41,11 +41,11 @@ const PopoverComponent = ({ plan, onEdit, onDelete }: {
     }
     return (
         <Popover>
-            <PopoverTrigger>
-                <button className="group p-[2px] border-2 border-[#78717C] hover:border-[#E7E5E6] rounded-md">
+            <PopoverTrigger className="group p-[2px] border-2 border-[#78717C] hover:border-[#E7E5E6] rounded-md">
+                {/* <button className="group p-[2px] border-2 border-[#78717C] hover:border-[#E7E5E6] rounded-md"> */}
                     <Image className="block group-hover:hidden" src={more} alt="more" />
                     <Image className="hidden group-hover:block" src={hoverMore} alt="hover more" />
-                </button>
+                {/* </button> */}
             </PopoverTrigger>
             <PopoverContent className="p-1 flex flex-col gap-y-1">
                 <div onClick={handleEdit} className="cursor-pointer flex justify-start items-center gap-x-3 w-full hover:bg-[#E7E5E4] rounded-md p-2">

@@ -8,7 +8,7 @@ export const GET = async (req: NextRequest, { params }: {
 }) => {
     
     if(!params) {
-        return NextResponse.json({ error: "User ID is required" }, { status: 400 });
+        return NextResponse.json({ error: "Plan ID is required" }, { status: 400 });
     }
     const { plan_id } = params    
     
@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest, { params }: {
         const plans = await db.collection('routines').find({ plan_id: plan_id }).toArray();
         
         if(!plans) {
-            return NextResponse.json({ message: "No routines found" }, { status: 404 });
+            return NextResponse.json({ message: "No routines are found" }, { status: 404 });
         }
 
         return NextResponse.json({ message: "Routines are successfully fetched", data: plans }, { status: 200 });

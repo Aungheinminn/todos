@@ -32,3 +32,19 @@ export const getRoutinesByPlanId = async (plan_id: string) => {
         console.error(e);
     }
 }
+
+export const getRoutinesByUserId = async (user_id: string) => {
+    try {
+        const response = await fetch(`http://localhost:3000/api/protected/routines/user/${user_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                "credentials": "include"
+            }
+        })
+        const res = await response.json();
+        return res.data;    
+    } catch (e) {
+        console.error(e);
+    }
+}
