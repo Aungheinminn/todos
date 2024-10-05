@@ -5,16 +5,22 @@ import ItemsLoading from "./loading"
 import ItemCardComponent from "@/components/ItemCardComponent/ItemCardComponent"
 import { Button } from "@/components/ui/button"
 import Search from "@/components/Search/Search"
-import { getRoutinesByPlanId } from "@/lib/routines.service"
+import { getRoutinesByPlanId, getRoutinesByUserId } from "@/lib/routines.service"
 import { useQuery } from "react-query"
 import { getPlanById, getPlans, getPlansByUser } from "@/lib/plan.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import { getCurrentUser } from "@/lib/users.service"
+import Loading from "@/components/Loading/Loading"
+import { RoutineType } from "@/lib/types/routine.type"
 
 type ItemsHeaderProps = {
     search: string;
     onChange: (search: string) => void;
     handleAddItem: (item: any) => void;
+}
+
+type ItemsBodyProps = {
+    routines: RoutineType[];
 }
 
 type ItemsBody = {
@@ -30,10 +36,11 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ search, onChange, handleAddIte
     )
 }
 
-const ItemsBody = () => {
+const ItemsBody:React.FC<ItemsBodyProps> = ({ routines }) => {
     return (
-        <div className="w-full grid grid-cols-1 px-1">
-            <ItemCardComponent name="Sample namenamenamenamenamenamenamenamenamenamenamenamenamename" description="Sample descdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdesc" />
+        <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2">
+            { routines.map(routine => <ItemCardComponent key={routine._id} name={routine.name} description={routine.description} />)}
+            {/* <ItemCardComponent name="Sample namenamenamenamenamenamenamenamenamenamenamenamenamename" description="Sample descdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdesc" /> */}
         </div>
     )
 }
@@ -51,17 +58,17 @@ const Items = () => {
     })
 
 
-    const { data: plan, isLoading: isPlanLoading } = useQuery({
-        queryKey: ['plan'],
+    const { data: plans, isLoading: isPlansLoading } = useQuery({
+        queryKey: ['plans'],
         queryFn: () => getPlansByUser(currentUser?._id ?? ''),
         enabled: !!currentUser
     })
 
 
     const { data: routines, isLoading: isRoutinesLoading } = useQuery({
-        queryKey: ['routines', plan?._id],
-        queryFn: () => getRoutinesByPlanId(plan?._id),
-        enabled: !!plan
+        queryKey: ['routines'],
+        queryFn: () => getRoutinesByUserId(currentUser?._id ?? ''),
+        enabled: !!plans && !!currentUser
     })
 
     const handleChange = (key: string) => {
@@ -72,11 +79,15 @@ const Items = () => {
 
     }
 
+    if(!currentUser || isPlansLoading || isRoutinesLoading){
+        return <Loading />
+    }
+
     return (
         <Suspense fallback={<ItemsLoading />}>
-            <div className="pt-[50px] w-full">
+            <div className="pt-[55px] w-full">
                 <ItemsHeader search={searchText} onChange={handleChange} handleAddItem={handleAddItem} />
-                <ItemsBody />                
+                <ItemsBody routines={routines} />                
             </div>
 
         </Suspense>

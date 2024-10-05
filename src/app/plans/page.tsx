@@ -186,13 +186,13 @@ const Plans = () => {
 
     console.log('currentUser', currentUser)
 
-    if(!currentUser || !plans || isPlansLoading) {
+    if(!currentUser || isPlansLoading) {
         return <Loading />
     }
 
     return (
         <Suspense fallback={<PlansLoading />}>
-            <div className="w-full flex flex-col gap-y-3 pt-[50px]">
+            <div className="w-full flex flex-col gap-y-3 pt-[55px]">
                 <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
                 <PlansBody plans={plans} onEdit={handleEditPlan} onDelete={handleDeletePlan} />
             </div>
