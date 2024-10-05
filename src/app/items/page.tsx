@@ -12,8 +12,12 @@ import { useCurrentUserStore } from "@/lib/userStore"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
 import { RoutineType } from "@/lib/types/routine.type"
+import { useItemMutationHook } from "./itemMutationProvider"
+import { useCreatePopupStore } from "@/lib/popupStore"
+import { PlanType } from "@/lib/types/plan.type"
 
 type ItemsHeaderProps = {
+    plans: PlanType[];
     search: string;
     onChange: (search: string) => void;
     handleAddItem: (item: any) => void;
@@ -27,11 +31,21 @@ type ItemsBody = {
 
 }
 
-const ItemsHeader:React.FC<ItemsHeaderProps> = ({ search, onChange, handleAddItem}) => {
+const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handleAddItem}) => {
+    const { openPopup, popupData } = useCreatePopupStore()
+    const handleAdd = () => {
+        popupData.name = ''
+        popupData.type = 'createRoutine'
+        popupData.dropdownItems = plans
+        popupData.process = handleAddItem
+
+        openPopup();
+    }
+
     return (
         <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
             <Search search={search} onChange={onChange}  type="normal" />             
-            <Button className="bg-[#0ea5e9]" onClick={handleAddItem}>Add a plan</Button>
+            <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
         </div>
     )
 }
@@ -49,6 +63,8 @@ const Items = () => {
     const [searchText, setSearchText] = useState<string>('')
 
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
+
+    const { createMutation, deleteMutation } = useItemMutationHook()
     
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {
@@ -75,8 +91,16 @@ const Items = () => {
         setSearchText(key)
     }
 
-    const handleAddItem = () => {
-
+    const handleAddItem = async (data: RoutineType) => {
+        const item = {
+            ...data,
+            user_id: currentUser?._id ?? ''
+        }
+        try {
+            createMutation.mutate(item)
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     if(!currentUser || isPlansLoading || isRoutinesLoading){
@@ -86,7 +110,7 @@ const Items = () => {
     return (
         <Suspense fallback={<ItemsLoading />}>
             <div className="pt-[55px] w-full">
-                <ItemsHeader search={searchText} onChange={handleChange} handleAddItem={handleAddItem} />
+                <ItemsHeader plans={plans} search={searchText} onChange={handleChange} handleAddItem={handleAddItem} />
                 <ItemsBody routines={routines} />                
             </div>
 

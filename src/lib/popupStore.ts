@@ -17,8 +17,9 @@ interface CreatePopupStore {
     closePopup: () => void
     popupData: {
         name: string;        
-        description?: string
+        description?: string;
         type: string;
+        dropdownItems?: PlanType[];
         process: (data: any) => void;
     }
 }
@@ -66,6 +67,7 @@ export const useCreatePopupStore = create<CreatePopupStore>((set) => ({
         name: '',        
         description: '',
         type: '',
+        dropdownItems: [],
         process: () => {},
     }
 }))
