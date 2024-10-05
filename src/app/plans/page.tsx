@@ -8,12 +8,13 @@ import { getCurrentUser } from "@/lib/users.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
 import { Suspense, useState } from "react"
-import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import PlansLoading from "./loading"
 import { useCreatePopupStore } from "@/lib/popupStore"
 import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
 import { PlanType } from "@/lib/types/plan.type"
+import { usePlanMutationsHook } from "./planMutationProvider"
 
 
 type PlansHeaderProps = {
@@ -31,66 +32,6 @@ type PlansBodyProps = {
     onDelete: (id: string) => void;
 }
 
-const useMutationsHook = () => {
-    const queryClient = useQueryClient()
-
-     const createMutation = useMutation({
-        mutationFn: postPlans,
-        onMutate: async (data: PlanType) => {
-            await queryClient.cancelQueries('plans')
-
-            const previousPlans = queryClient.getQueryData('plans')
-
-            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
-
-            return { previousPlans }
-        },
-        onError: (error, variables, context: any) => {
-            queryClient.setQueryData('plans', context.previousPlans)
-        },
-        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
-    })
-
-    const deleteMutation = useMutation({
-        mutationFn: deletePlan,
-        onMutate: async (data: string) => {
-            await queryClient.cancelQueries('plans')
-
-            const previousPlans = queryClient.getQueryData('plans')
-
-            queryClient.setQueryData('plans', (old: any) => old ? old.filter((o: any) => o._id === data) : [])
-
-            return { previousPlans }
-        },
-        onError: (error, variables, context: any) => {
-            queryClient.setQueryData('plans', context.previousPlans)
-        },
-        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
-    })
-
-    const editMutation = useMutation({
-        mutationFn: editPlanById,
-        onMutate: async ({ id, data }) => {
-            await queryClient.cancelQueries('plans')
-
-            const previousPlans = queryClient.getQueryData('plans')
-
-            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
-
-            return { previousPlans }
-        },
-        onError: (error, variables, context: any) => {
-            queryClient.setQueryData('plans', context.previousPlans)
-        },
-        onSettled: () => queryClient.invalidateQueries({ queryKey: 'plans' })
-    })
-
-    return {
-        createMutation,
-        deleteMutation,
-        editMutation
-    }
-}
 
 const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) => {
     const { openPopup, popupData } = useCreatePopupStore(state => state)
@@ -127,7 +68,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({ plans, onEdit, onDelete }) => {
 
 const Plans = () => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
-    const { createMutation, deleteMutation, editMutation } = useMutationsHook()
+    const { createMutation, deleteMutation, editMutation } = usePlanMutationsHook()
 
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {

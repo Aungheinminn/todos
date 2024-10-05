@@ -7,36 +7,32 @@
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import React, { useState } from "react"
-import { useRouter } from 'next/navigation'
+import React, { SetStateAction, useState } from "react"
+import { PlanType } from "@/lib/types/plan.type";
 
 
 
 type SelectComponentProps = {
-    defaultValue: string;
+    selected: string;
+    setSelected: React.Dispatch<SetStateAction<string>>;
+    dropdownItems: PlanType[];
 }
 
-const SelectComponent: React.FC<SelectComponentProps> = ({ defaultValue }) => {    
-    const router = useRouter()
-    const [selectedOption, setSelectedOption] = useState(defaultValue)
+const SelectComponent: React.FC<SelectComponentProps> = ({ selected, setSelected, dropdownItems }) => {    
 
     return (
         <Select 
-            value={selectedOption}
+            value={selected}
             onValueChange={(value) => {
-                setSelectedOption(value)
-                router.push(`/plans/${value}`)
+                setSelected(value)
             }}
         >
-            <SelectTrigger className="w-[180px] border-2 border-gray-800 text-black">
-                <SelectValue />
+            <SelectTrigger className="w-full border-2 border-gray-800 text-black">
+                <SelectValue placeholder="Select a plan" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectItem value="activePlans">Active Plans</SelectItem>
-                    <SelectItem value="routines">Routines</SelectItem>                    
-                    <SelectItem value="workouts">Workouts</SelectItem>
-                    <SelectItem value="activitySnippets">Activity Snippets</SelectItem>
+                    { dropdownItems.map(item => <SelectItem className="cursor-pointer hover:bg-[#fae8ff]" key={item._id} value={item._id ?? ''} >{item.name}</SelectItem>)}
                 </SelectGroup>
             </SelectContent>
         </Select>
