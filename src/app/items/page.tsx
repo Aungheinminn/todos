@@ -15,6 +15,7 @@ import { RoutineType } from "@/lib/types/routine.type"
 import { useItemMutationHook } from "./itemMutationProvider"
 import { useCreatePopupStore } from "@/lib/popupStore"
 import { PlanType } from "@/lib/types/plan.type"
+import CarouselComponent from "@/components/CarouselComponent/CarouselComponent"
 
 type ItemsHeaderProps = {
     plans: PlanType[];
@@ -43,10 +44,14 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
     }
 
     return (
-        <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
-            <Search search={search} onChange={onChange}  type="normal" />             
-            <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
+        <div className="w-full">
+            <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
+                <Search search={search} onChange={onChange}  type="normal" />             
+                <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
+            </div> 
+            <CarouselComponent items={[]}  />          
         </div>
+
     )
 }
 
