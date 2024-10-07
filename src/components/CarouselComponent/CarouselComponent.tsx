@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 const items = [
   'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
@@ -14,54 +14,37 @@ const CarouselComponent = () => {
   const startX = useRef(0);
   const scrollLeft = useRef(0);
 
-  // Handle mouse down event to start dragging
-  const onMouseDown = (e) => {
+  const onMouseDown = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
     isDragging.current = true;
 
-    // Capture the starting mouse position and current scroll position
-    startX.current = e.pageX - containerRef.current.offsetLeft;
+    containerRef.current.style.scrollSnapType = "none";
+
+    startX.current = e.pageX ;
     scrollLeft.current = containerRef.current.scrollLeft;
+
+    containerRef.current.style.cursor = "grabbing";
+    containerRef.current.style.scrollBehavior = "auto";
   };
 
-  // Handle mouse move to calculate scroll based on drag
-  const onMouseMove = (e) => {
-    if (!isDragging.current || !containerRef.current) return;
+  const onMouseMove = (e: React.MouseEvent) => {
+    if(!isDragging.current) return
 
-    // Calculate how far the mouse has moved
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX.current) * 1.5; // Speed multiplier for faster scroll
-
-    // Use requestAnimationFrame to ensure smooth updates
     requestAnimationFrame(() => {
-      containerRef.current.scrollLeft = scrollLeft.current - walk;
+      if(!containerRef.current) return
+      containerRef.current.scrollLeft = scrollLeft.current - (e.pageX - startX.current)
     });
   };
 
-  // Stop dragging when mouse is released
   const onMouseUp = () => {
     isDragging.current = false;
-  };
 
-  // Attach event listeners to the container, not the window
-  useEffect(() => {
-    const container = containerRef.current;
-
-    if (container) {
-      container.addEventListener('mousedown', onMouseDown);
-      container.addEventListener('mousemove', onMouseMove);
-      container.addEventListener('mouseup', onMouseUp);
-      container.addEventListener('mouseleave', onMouseUp); // Also handle leaving the container
-
-      // Cleanup listeners on unmount
-      return () => {
-        container.removeEventListener('mousedown', onMouseDown);
-        container.removeEventListener('mousemove', onMouseMove);
-        container.removeEventListener('mouseup', onMouseUp);
-        container.removeEventListener('mouseleave', onMouseUp);
-      };
+    if (containerRef.current) {
+      containerRef.current.style.scrollSnapType = "x mandatory";
+      containerRef.current.style.cursor = "grab";
+      containerRef.current.style.scrollBehavior = "smooth";
     }
-  }, []);
+  };
 
   // Buttons for manual navigation
   const handlePrev = () => {
@@ -86,10 +69,13 @@ const CarouselComponent = () => {
       </button>
       <div
         ref={containerRef}
-        className="w-full flex items-center justify-start bg-blue-500 gap-x-2 px-[40px] overflow-x-hidden scroll-smooth"
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        className="w-full h-[100px] grid grid-flow-col bg-blue-500 gap-x-2 px-[40px] overflow-x-auto cursor-grab no-scrollbar"
       >
         {items.map((item, index) => (
-          <div className="w-full bg-green-500 select-none" key={index}>
+          <div className="w-full bg-green-500 select-none snap-start" key={index}>
             <p className="w-[100px]">{item}</p>
           </div>
         ))}
