@@ -82,7 +82,23 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities } : {
+      addUtilities: any
+    }) {
+      addUtilities({
+        '.no-scrollbar': {
+          '-webkit-overflow-scrolling': 'touch',
+          'scrollbar-width': 'none', /* Firefox */
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          '-ms-overflow-style': 'none', 
+        },
+      });
+    },
+  ],
 } satisfies Config
 
 export default config
