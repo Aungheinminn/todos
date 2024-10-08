@@ -231,7 +231,7 @@ const Plan = ({ params }: {
 
     return (
         <Suspense fallback={<PlanLoading />}>
-            <div className="w-full pt-[50px]">
+            <div className="w-full pt-[60px]">
                 <PlanHeader plan={plan} isPlanLoading={isPlanLoading} />
                 <PlanOverview plan={plan} />
                 <PlanItems routines={routines} onCreate={handleCreateRoutine} />

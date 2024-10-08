@@ -12,7 +12,7 @@ export const usePlanMutationsHook = () => {
 
             const previousPlans = queryClient.getQueryData('plans')
 
-            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
+            queryClient.setQueryData('plans', (old: any) => old ? [...old, data] : [])
 
             return { previousPlans }
         },
@@ -46,7 +46,7 @@ export const usePlanMutationsHook = () => {
 
             const previousPlans = queryClient.getQueryData('plans')
 
-            queryClient.setQueryData('plans', (old: any) => old ? [data, ...old] : [])
+            queryClient.setQueryData('plans', (old: any) => old ? [...old, data] : [])
 
             return { previousPlans }
         },

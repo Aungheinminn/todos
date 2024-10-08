@@ -16,6 +16,8 @@ import { useItemMutationHook } from "./itemMutationProvider"
 import { useCreatePopupStore } from "@/lib/popupStore"
 import { PlanType } from "@/lib/types/plan.type"
 import CarouselComponent from "@/components/CarouselComponent/CarouselComponent"
+import MutateLoading from "@/components/MutateLoading/MutateLoading"
+import NotFound from "@/components/NotFound/NotFound"
 
 type ItemsHeaderProps = {
     plans: PlanType[];
@@ -25,11 +27,8 @@ type ItemsHeaderProps = {
 }
 
 type ItemsBodyProps = {
+    isCreateMutating: boolean;
     routines: RoutineType[];
-}
-
-type ItemsBody = {
-
 }
 
 const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handleAddItem}) => {
@@ -49,17 +48,29 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
                 <Search search={search} onChange={onChange}  type="normal" />             
                 <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
             </div> 
-            <CarouselComponent items={[]}  />          
+            <CarouselComponent items={plans}  />          
         </div>
 
     )
 }
 
-const ItemsBody:React.FC<ItemsBodyProps> = ({ routines }) => {
+const ItemsBody:React.FC<ItemsBodyProps> = ({ isCreateMutating, routines }) => {
+    if(routines && routines.length === 0) {
+        return <NotFound context="No Routine is found!" />
+    }
+
+    if(isCreateMutating){
+        return <MutateLoading loadingItemHeight="100px" />
+    }
     return (
-        <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2">
-            { routines.map(routine => <ItemCardComponent key={routine._id} name={routine.name} description={routine.description} />)}
-            {/* <ItemCardComponent name="Sample namenamenamenamenamenamenamenamenamenamenamenamenamename" description="Sample descdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdescdesc" /> */}
+        <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
+            { routines.map(routine => 
+                <ItemCardComponent 
+                    key={routine._id} 
+                    name={routine.name} 
+                    description={routine.description} 
+                />
+            )}
         </div>
     )
 }
@@ -111,12 +122,12 @@ const Items = () => {
     if(!currentUser || isPlansLoading || isRoutinesLoading){
         return <Loading />
     }
-
+    
     return (
         <Suspense fallback={<ItemsLoading />}>
             <div className="pt-[55px] w-full">
                 <ItemsHeader plans={plans} search={searchText} onChange={handleChange} handleAddItem={handleAddItem} />
-                <ItemsBody routines={routines} />                
+                <ItemsBody isCreateMutating={createMutation.isLoading} routines={routines} />                
             </div>
 
         </Suspense>

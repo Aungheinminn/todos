@@ -38,7 +38,7 @@ const Home = () => {
 
     return (
         <Suspense fallback={<HomeLoading />}>
-            <div className="w-full pt-[50px] text-black flex items-center flex-col justify-center">
+            <div className="w-full pt-[55px] text-black flex items-center flex-col justify-center">
                 <div className="mt-1" />
                 <div className="w-full px-2">
                     <Badge title="Heads up!" desc="You can add components to your app using the cli." />
