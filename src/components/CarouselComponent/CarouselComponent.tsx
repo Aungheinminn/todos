@@ -4,14 +4,17 @@ import Image from "next/image";
 import React, { useRef } from "react";
 import right from "@/assets/right.svg";
 import left from "@/assets/left.svg";
+import { PlanType } from "@/lib/types/plan.type";
 
-const items = [
-  'ssfsfsdfsd', 'ssasdfsdafasdfsdfasfasfdsafsadffs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
-  'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
-  'ssfs', 'ssfs', 'ssfs', 'ssfs',
-];
+// const items = [
+//   'ssfsfsdfsd', 'ssasdfsdafasdfsdfasfasfdsafsadffs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
+//   'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
+//   'ssfs', 'ssfs', 'ssfs', 'ssfs',
+// ];
 
-const CarouselComponent = () => {
+const CarouselComponent = ({ items }: {
+  items: PlanType[]
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -62,8 +65,12 @@ const CarouselComponent = () => {
     }
   };
 
+  if(items.length === 0) {
+    return <div className="w-full text-center">no items</div>
+  }
+
   return (
-    <div className="w-full flex justify-between items-center gap-x-1 px-1">
+    <div className="w-full flex justify-between items-center gap-x-1 p-1 pb-2">
       <button onClick={handlePrev} className="w-[30px] h-[28px] flex justify-center items-center bg-[#C0C0C0] rounded-full p-1">
         <Image src={left} className="ml-1" alt="left" />
       </button>
@@ -76,8 +83,8 @@ const CarouselComponent = () => {
         className="w-full flex justify-start items-center gap-x-2 overflow-x-auto cursor-grab no-scrollbar rounded-lg"
       >
         {items.map((item, index) => (
-          <div onClick={() => console.log(`${item}`)} className="transition duration-500 max-w-[100px] flex justify-center items-center leading-1 bg-gray-500 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2" key={index}>
-            <p className="w-full h-full text-center truncate">{item}</p>
+          <div onClick={() => console.log(`${item}`)} className="transition duration-500 max-w-[100px] flex justify-center items-center leading-1 bg-gray-500 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer" key={index}>
+            <p className="w-full h-full text-center truncate">{item.name}</p>
           </div>
         ))}
       </div>    

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
 import { PlanType } from "@/lib/types/plan.type"
 import { usePlanMutationsHook } from "./planMutationProvider"
+import MutateLoading from "@/components/MutateLoading/MutateLoading"
 
 
 type PlansHeaderProps = {
@@ -24,6 +25,9 @@ type PlansHeaderProps = {
 }
 
 type PlansBodyProps = {
+    isCreateMutating: boolean;
+    isEditMutating: boolean;
+    isDeleteMutating: boolean;
     plans: PlanType[];
     onEdit: ({ id, data}: {
         id: string,
@@ -51,9 +55,20 @@ const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) =
     )
 }
 
-const PlansBody:React.FC<PlansBodyProps> = ({ plans, onEdit, onDelete }) => {
+const PlansBody:React.FC<PlansBodyProps> = ({ 
+    isCreateMutating,
+    isEditMutating,
+    isDeleteMutating,
+    plans,
+    onEdit, 
+    onDelete 
+}) => {
     if(plans && plans.length === 0) {
         return <NotFound context="No Plan is found!" />
+    }
+
+    if(isCreateMutating || isEditMutating || isDeleteMutating){
+        return <MutateLoading loadingItemHeight="139px" />
     }
     return (
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
@@ -135,7 +150,13 @@ const Plans = () => {
         <Suspense fallback={<PlansLoading />}>
             <div className="w-full flex flex-col gap-y-3 pt-[55px]">
                 <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
-                <PlansBody plans={plans} onEdit={handleEditPlan} onDelete={handleDeletePlan} />
+                <PlansBody 
+                    isCreateMutating={createMutation.isLoading} 
+                    isEditMutating={editMutation.isLoading} 
+                    isDeleteMutating={deleteMutation.isLoading} 
+                    plans={plans} onEdit={handleEditPlan} 
+                    onDelete={handleDeletePlan} 
+                />
             </div>
         </Suspense>
     )
