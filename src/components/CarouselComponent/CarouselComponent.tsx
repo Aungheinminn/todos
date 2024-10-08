@@ -1,9 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import React, { useRef } from "react";
+import right from "@/assets/right.svg";
+import left from "@/assets/left.svg";
 
 const items = [
-  'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
+  'ssfsfsdfsd', 'ssasdfsdafasdfsdfasfasfdsafsadffs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
   'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs', 'ssfs',
   'ssfs', 'ssfs', 'ssfs', 'ssfs',
 ];
@@ -60,26 +63,27 @@ const CarouselComponent = () => {
   };
 
   return (
-    <div className="w-full relative bg-blue-500">
-      <button onClick={handlePrev} className="absolute z-10 left-0 bg-red-500">
-        back
+    <div className="w-full flex justify-between items-center gap-x-1 px-1">
+      <button onClick={handlePrev} className="w-[30px] h-[28px] flex justify-center items-center bg-[#C0C0C0] rounded-full p-1">
+        <Image src={left} className="ml-1" alt="left" />
       </button>
-      <button onClick={handleNext} className="absolute z-10 right-0 bg-red-500">
-        next
-      </button>
+ 
       <div
         ref={containerRef}
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
-        className="w-full h-[100px] grid grid-flow-col bg-blue-500 gap-x-2 px-[40px] overflow-x-auto cursor-grab no-scrollbar"
+        className="w-full flex justify-start items-center gap-x-2 overflow-x-auto cursor-grab no-scrollbar rounded-lg"
       >
         {items.map((item, index) => (
-          <div className="w-full bg-green-500 select-none snap-start" key={index}>
-            <p className="w-[100px]">{item}</p>
+          <div onClick={() => console.log(`${item}`)} className="transition duration-500 max-w-[100px] flex justify-center items-center leading-1 bg-gray-500 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2" key={index}>
+            <p className="w-full h-full text-center truncate">{item}</p>
           </div>
         ))}
-      </div>
+      </div>    
+      <button onClick={handleNext} className="w-[30px] h-[28px] flex justify-center items-center bg-[#C0C0C0] rounded-full p-1">
+        <Image src={right} className="mr-1" alt="right" />
+      </button> 
     </div>
   );
 };
