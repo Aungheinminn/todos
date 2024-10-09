@@ -13,7 +13,7 @@ export const GET = async (req:NextRequest, { params }: {
     try {
         const client = await clientPromise;
         const db = client.db('remarker_next');
-        const routines = await db.collection('routines').find({ user_id: user_id}).toArray();
+        const routines = await db.collection('routines').find({ user_id: user_id}).sort({ _id: -1 }).toArray();
 
         if(!routines){
             return NextResponse.json({ message: "No routines are found" }, { status: 404 });

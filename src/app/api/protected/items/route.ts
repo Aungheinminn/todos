@@ -36,7 +36,7 @@ export const GET = async () => {
     try {
         const client = await clientPromise;
         const db = client.db('remarker_next');
-        const items = await db.collection('items').find().toArray();
+        const items = await db.collection('items').toArray();
 
         return NextResponse.json({ items }, { status: 200 });
     } catch (e) {
