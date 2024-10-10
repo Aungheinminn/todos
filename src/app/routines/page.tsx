@@ -1,43 +1,45 @@
 "use client"
 
 import { Suspense, useState } from "react"
-import ItemsLoading from "./loading"
 import ItemCardComponent from "@/components/ItemCardComponent/ItemCardComponent"
 import { Button } from "@/components/ui/button"
 import Search from "@/components/Search/Search"
-import { getRoutinesByPlanId, getRoutinesByUserId } from "@/lib/routines.service"
+import { getRoutinesByUserId } from "@/lib/routines.service"
 import { useQuery } from "react-query"
 import { getPlanById, getPlans, getPlansByUser } from "@/lib/plan.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
 import { RoutineType } from "@/lib/types/routine.type"
-import { useItemMutationHook } from "./itemMutationProvider"
+import { useRoutineMutationHook } from "./routineMutationProvider"
 import { useCreatePopupStore } from "@/lib/popupStore"
 import { PlanType } from "@/lib/types/plan.type"
 import CarouselComponent from "@/components/CarouselComponent/CarouselComponent"
 import MutateLoading from "@/components/MutateLoading/MutateLoading"
 import NotFound from "@/components/NotFound/NotFound"
+import RoutineLoading from "./loading"
 
 type ItemsHeaderProps = {
     plans: PlanType[];
     search: string;
     onChange: (search: string) => void;
-    handleAddItem: (item: any) => void;
+    handleAddRoutine: (item: any) => void;
 }
 
 type ItemsBodyProps = {
     isCreateMutating: boolean;
+    isDeleteMutating: boolean;
+    handleDelete: (data: string) => void;
     routines: RoutineType[];
 }
 
-const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handleAddItem}) => {
+const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handleAddRoutine}) => {
     const { openPopup, popupData } = useCreatePopupStore()
     const handleAdd = () => {
         popupData.name = ''
         popupData.type = 'createRoutine'
         popupData.dropdownItems = plans
-        popupData.process = handleAddItem
+        popupData.process = handleAddRoutine
 
         openPopup();
     }
@@ -54,21 +56,26 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
     )
 }
 
-const ItemsBody:React.FC<ItemsBodyProps> = ({ isCreateMutating, routines }) => {
+const ItemsBody:React.FC<ItemsBodyProps> = ({ 
+    isCreateMutating, 
+    isDeleteMutating,
+    handleDelete,
+    routines 
+}) => {    
     if(routines && routines.length === 0) {
         return <NotFound context="No Routine is found!" />
     }
 
-    if(isCreateMutating){
-        return <MutateLoading loadingItemHeight="100px" />
+    if(isCreateMutating || isDeleteMutating){
+        return <MutateLoading loadingItemHeight="100px" marginTop="16px" />
     }
     return (
         <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
             { routines.map(routine => 
                 <ItemCardComponent 
                     key={routine._id} 
-                    name={routine.name} 
-                    description={routine.description} 
+                    routine={routine}
+                    handleDelete={handleDelete}
                 />
             )}
         </div>
@@ -80,7 +87,7 @@ const Items = () => {
 
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
 
-    const { createMutation, deleteMutation } = useItemMutationHook()
+    const { createMutation, deleteMutation } = useRoutineMutationHook()
     
     useQuery('currentUser', getCurrentUser, {
         onSuccess: (data) => {
@@ -107,7 +114,7 @@ const Items = () => {
         setSearchText(key)
     }
 
-    const handleAddItem = async (data: RoutineType) => {
+    const handleAddRoutine = async (data: RoutineType) => {
         const item = {
             ...data,
             user_id: currentUser?._id ?? ''
@@ -119,15 +126,23 @@ const Items = () => {
         }
     }
 
+    const handleDeleteRoutine = async (data: string) => {
+        try{
+            deleteMutation.mutate(data)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     if(!currentUser || isPlansLoading || isRoutinesLoading){
         return <Loading />
     }
     
     return (
-        <Suspense fallback={<ItemsLoading />}>
+        <Suspense fallback={<RoutineLoading />}>
             <div className="pt-[55px] w-full">
-                <ItemsHeader plans={plans} search={searchText} onChange={handleChange} handleAddItem={handleAddItem} />
-                <ItemsBody isCreateMutating={createMutation.isLoading} routines={routines} />                
+                <ItemsHeader plans={plans} search={searchText} onChange={handleChange} handleAddRoutine={handleAddRoutine} />
+                <ItemsBody isCreateMutating={createMutation.isLoading} isDeleteMutating={deleteMutation.isLoading} handleDelete={handleDeleteRoutine} routines={routines} />                
             </div>
 
         </Suspense>

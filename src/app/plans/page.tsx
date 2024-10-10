@@ -68,7 +68,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({
     }
 
     if(isCreateMutating || isEditMutating || isDeleteMutating){
-        return <MutateLoading loadingItemHeight="139px" />
+        return <MutateLoading loadingItemHeight="139px" marginTop="4px" />
     }
     return (
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">

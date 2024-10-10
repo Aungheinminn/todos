@@ -21,13 +21,13 @@ const Bottombar = () => {
 
     return (
         <div className="w-full flex justify-between items-center bg-gray-800 lg:hidden px-2 h-[50px]">
-            <Link href="/" onClick={() => handleChange('home')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
+            <Link href="/home" onClick={() => handleChange('home')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
                 <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "home" ? activeInterface : "" }`}>
                     <Image className="" src={whiteHouse} alt="home"  width={20} height={20} />
                 </div>
             </Link>
-            <Link href="/items" onClick={() => handleChange('item')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
-                <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "item" ? activeInterface : "" }`}>
+            <Link href="/routines" onClick={() => handleChange('routines')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
+                <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "routines" ? activeInterface : "" }`}>
                     <Image className="" src={item} alt="home"  width={20} height={20} />
                 </div>
             </Link>
