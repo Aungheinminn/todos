@@ -2,7 +2,7 @@ import { createRoutine, deleteRoutine } from "@/lib/routines.service"
 import { RoutineType } from "@/lib/types/routine.type"
 import { useMutation, useQueryClient } from "react-query"
 
-export const useItemMutationHook = () => {
+export const useRoutineMutationHook = () => {
     const queryClient = useQueryClient()
 
     const createMutation = useMutation({

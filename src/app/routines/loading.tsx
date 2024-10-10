@@ -1,8 +1,8 @@
 "use client"
 import Loading from "@/components/Loading/Loading"
 
-const ItemsLoading = () => {
+const RoutineLoading = () => {
     return <Loading />
 }
 
-export default ItemsLoading
+export default RoutineLoading

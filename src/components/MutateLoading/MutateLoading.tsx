@@ -1,10 +1,16 @@
 import { Skeleton } from "../ui/skeleton"
 
-const MutateLoading = ({ loadingItemHeight }: {
-    loadingItemHeight: string
+const MutateLoading = ({ loadingItemHeight, marginTop }: {
+    loadingItemHeight: string;
+    marginTop: string
 }) => {
     return (
-        <div className="w-full h-full grid grid-cols-1 gap-y-2 px-1">
+        <div 
+            style={{
+                marginTop: marginTop
+            }} 
+            className="w-full h-full grid grid-cols-1 gap-y-2 px-1"
+        >
             <Skeleton style={{
                 height: loadingItemHeight
             }} className={`w-full bg-[#C0C0C0]`} />
