@@ -12,6 +12,7 @@ type SearchProps = {
 
 const Search:React.FC<SearchProps> = ({ search, onChange, type, onAnimate }) => {
     const [animate, setAnimate] = useState<boolean>(false);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.value)
     }
