@@ -15,8 +15,8 @@ const Bottombar = () => {
     const [active, setActive] = useState(path ? modifiedPath : 'home')
     const activeInterface = "bg-[#0ea5e9] rounded-lg"
 
-    const handleChange = (value: string) => {
-        setActive(value)
+    const handleChange = (current: string) => {
+        setActive(current)
     }
 
     return (
