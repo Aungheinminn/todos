@@ -13,13 +13,13 @@ const MutateLoading = ({ loadingItemHeight, marginTop }: {
         >
             <Skeleton style={{
                 height: loadingItemHeight
-            }} className={`w-full bg-[#C0C0C0]`} />
+            }} className={`w-full bg-[#CBD5E1]`} />
             <Skeleton style={{
                 height: loadingItemHeight
-            }} className={`w-full bg-[#C0C0C0]`} />
+            }} className={`w-full bg-[#CBD5E1]`} />
             <Skeleton style={{
                 height: loadingItemHeight
-            }} className={`w-full bg-[#C0C0C0]`} />
+            }} className={`w-full bg-[#CBD5E1]`} />
         </div>
     )
 }
