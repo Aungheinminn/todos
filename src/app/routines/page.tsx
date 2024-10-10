@@ -27,6 +27,7 @@ type ItemsHeaderProps = {
 }
 
 type ItemsBodyProps = {
+    isRoutinesLoading: boolean;
     isCreateMutating: boolean;
     isDeleteMutating: boolean;
     handleDelete: (data: string) => void;
@@ -47,7 +48,7 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
     return (
         <div className="w-full">
             <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
-                <Search search={search} onChange={onChange}  type="normal" />             
+                <Search search={search} onChange={onChange} type="normal" />             
                 <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
             </div> 
             <CarouselComponent items={plans}  />          
@@ -56,7 +57,8 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
     )
 }
 
-const ItemsBody:React.FC<ItemsBodyProps> = ({ 
+const ItemsBody:React.FC<ItemsBodyProps> = ({
+    isRoutinesLoading, 
     isCreateMutating, 
     isDeleteMutating,
     handleDelete,
@@ -66,7 +68,7 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
         return <NotFound context="No Routine is found!" />
     }
 
-    if(isCreateMutating || isDeleteMutating){
+    if(isRoutinesLoading || isCreateMutating || isDeleteMutating){
         return <MutateLoading loadingItemHeight="100px" marginTop="16px" />
     }
     return (
@@ -83,8 +85,6 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
 }
 
 const Items = () => {
-    const [searchText, setSearchText] = useState<string>('')
-
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
 
     const { createMutation, deleteMutation } = useRoutineMutationHook()
@@ -96,6 +96,9 @@ const Items = () => {
         }
     })
 
+    const [searchText, setSearchText] = useState<string>('')
+
+    console.log(searchText)
 
     const { data: plans, isLoading: isPlansLoading } = useQuery({
         queryKey: ['plans'],
@@ -105,9 +108,9 @@ const Items = () => {
 
 
     const { data: routines, isLoading: isRoutinesLoading } = useQuery({
-        queryKey: ['routines'],
+        queryKey: ['routines', searchText],
         queryFn: () => getRoutinesByUserId(currentUser?._id ?? ''),
-        enabled: !!plans && !!currentUser
+        enabled: !!plans && !!currentUser?._id
     })
 
     const handleChange = (key: string) => {
@@ -134,15 +137,26 @@ const Items = () => {
         }
     }
 
-    if(!currentUser || isPlansLoading || isRoutinesLoading){
+    if(!currentUser || isPlansLoading){
         return <Loading />
     }
     
     return (
         <Suspense fallback={<RoutineLoading />}>
             <div className="pt-[55px] w-full">
-                <ItemsHeader plans={plans} search={searchText} onChange={handleChange} handleAddRoutine={handleAddRoutine} />
-                <ItemsBody isCreateMutating={createMutation.isLoading} isDeleteMutating={deleteMutation.isLoading} handleDelete={handleDeleteRoutine} routines={routines} />                
+                <ItemsHeader 
+                    plans={plans} 
+                    search={searchText} 
+                    onChange={handleChange} 
+                    handleAddRoutine={handleAddRoutine} 
+                />
+                <ItemsBody 
+                    isRoutinesLoading={isRoutinesLoading}
+                    isCreateMutating={createMutation.isLoading} 
+                    isDeleteMutating={deleteMutation.isLoading} 
+                    handleDelete={handleDeleteRoutine} 
+                    routines={routines} 
+                />                
             </div>
 
         </Suspense>

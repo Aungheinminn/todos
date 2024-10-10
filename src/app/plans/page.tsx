@@ -25,6 +25,7 @@ type PlansHeaderProps = {
 }
 
 type PlansBodyProps = {
+    isPlansLoading: boolean;
     isCreateMutating: boolean;
     isEditMutating: boolean;
     isDeleteMutating: boolean;
@@ -49,13 +50,14 @@ const PlansHeader:React.FC<PlansHeaderProps> = ({ search, onChange, onCreate}) =
 
     return (
             <div className="w-full flex justify-between items-center gap-x-2 px-1 my-2">
-                <Search search={search} onChange={onChange}  type="normal" />             
+                <Search search={search} onChange={onChange} type="normal" />             
                 <Button className="bg-[#0ea5e9]" onClick={handleAddPlan}>Add a plan</Button>
             </div>
     )
 }
 
 const PlansBody:React.FC<PlansBodyProps> = ({ 
+    isPlansLoading,
     isCreateMutating,
     isEditMutating,
     isDeleteMutating,
@@ -67,7 +69,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({
         return <NotFound context="No Plan is found!" />
     }
 
-    if(isCreateMutating || isEditMutating || isDeleteMutating){
+    if(isPlansLoading || isCreateMutating || isEditMutating || isDeleteMutating){
         return <MutateLoading loadingItemHeight="139px" marginTop="4px" />
     }
     return (
@@ -93,9 +95,8 @@ const Plans = () => {
 
     const [searchText, setSearchText] = useState<string>('')
 
-    
     const { data: plans, isLoading: isPlansLoading } = useQuery({
-        queryKey: ['plans', currentUser?._id],
+        queryKey: ['plans', currentUser?._id, searchText],
         queryFn: () => getPlansByUser(currentUser?._id ?? ''),
         enabled: !!currentUser?._id
     })
@@ -142,7 +143,7 @@ const Plans = () => {
 
     console.log('currentUser', currentUser)
 
-    if(!currentUser || isPlansLoading) {
+    if(!currentUser) {
         return <Loading />
     }
 
@@ -151,6 +152,7 @@ const Plans = () => {
             <div className="w-full flex flex-col gap-y-3 pt-[55px]">
                 <PlansHeader search={searchText} onChange={handleChange} onCreate={handleCreatePlan} />
                 <PlansBody 
+                    isPlansLoading={isPlansLoading}
                     isCreateMutating={createMutation.isLoading} 
                     isEditMutating={editMutation.isLoading} 
                     isDeleteMutating={deleteMutation.isLoading} 
