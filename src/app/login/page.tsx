@@ -40,6 +40,13 @@ const StepOne: React.FC<StepOneProps> = ({ email, setEmail, emailError, setEmail
         <div className="w-full flex flex-col justify-start gap-y-2">
             <input
                 onChange={handleEmailChange}
+                onKeyDown={(e) => {
+                    if (emailError === '' && email) {
+                        if (e.key === 'Enter') {
+                          nextStep();
+                        }
+                    }
+                }} 
                 value={email}
                 className={`w-full bg-[#E4E4E5] text-gray-500 border-2  rounded-lg px-2 py-1 focus:outline-none ${emailError ? 'border-red-500' : 'border-[#0ea5e9]'}`}
                 type="email"
@@ -68,6 +75,11 @@ const StepTwo: React.FC<StepTwoProps> = ({ email, password, setPassword, passwor
 
             <input
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => {
+                    if(e.key === 'Enter'){
+                        handleSignIn()
+                    }                        
+                }} 
                 value={password}
                 className={`w-full bg-[#E4E4E5] text-gray-500 border-2 rounded-lg px-2 py-1 focus:outline-none ${passwordError ? 'border-red-500' : 'border-[#0ea5e9]'}`}
                 type="password"

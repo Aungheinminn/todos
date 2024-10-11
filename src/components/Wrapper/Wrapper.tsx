@@ -1,7 +1,6 @@
 'use client'
 import { useState } from "react";
 import { MobileNavbar, WebNavbar } from "../Navbar/Navbar";
-import TopicsCommand from "../TopicsCommand/TopicCommand";
 import Bottombar from "../Bottombar/Bottombar";
 import { redirect, usePathname } from "next/navigation";
 import { UserType } from "@/lib/types/user.type";
@@ -36,7 +35,6 @@ const Wrapper:React.FC<WrapperProps> = ({ children }) => {
                 <MobileNavbar onToggle={handleToggle} currentUser={currentUser} />
                 <WebNavbar />
             </div>
-            <TopicsCommand toggle={show} onToggle={handleToggle} />
             {children}
             <div className="z-10 fixed w-full bottom-[-1px]">
                 <Bottombar />
