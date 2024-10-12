@@ -10,12 +10,12 @@ import { getCurrentUser } from "@/lib/users.service";
 
 type WrapperProps = {
     children: React.ReactNode;
+    router: string;
 }
-const Wrapper:React.FC<WrapperProps> = ({ children }) => { 
+const Wrapper:React.FC<WrapperProps> = ({ children, router }) => { 
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
 
-    console.log('cur', currentUser)
-    const router = usePathname();
+    console.log('cur', currentUser, typeof router)
     const noWrapperRoutes = ["/login", "/signUp", "/unauthorized"];
     const isWrapperRequired = !noWrapperRoutes.includes(router);
     const [show, setShow] = useState<boolean>(false);

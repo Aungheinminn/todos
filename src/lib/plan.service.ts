@@ -46,10 +46,10 @@ export const getPlanById = async (id: string) => {
     }
 } 
 
-export const getPlansByUser = async (user_id: string) => {
+export const getPlansByUser = async (user_id: string, searchKey: string) => {
     console.log(user_id, 'user_id');
     try {
-        const response = await fetch(`http://localhost:3000/api/protected/plans/user/${user_id}`, {
+        const response = await fetch(`http://localhost:3000/api/protected/plans/user/${user_id}?search=${searchKey}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

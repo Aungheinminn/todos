@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import Search from "@/components/Search/Search"
 import { getRoutinesByUserId } from "@/lib/routines.service"
 import { useQuery } from "react-query"
-import { getPlanById, getPlans, getPlansByUser } from "@/lib/plan.service"
+import { getPlansByUser } from "@/lib/plan.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
@@ -73,7 +73,7 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
     }
     return (
         <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
-            { routines.map(routine => 
+            {routines && routines.map(routine => 
                 <ItemCardComponent 
                     key={routine._id} 
                     routine={routine}
@@ -102,14 +102,14 @@ const Items = () => {
 
     const { data: plans, isLoading: isPlansLoading } = useQuery({
         queryKey: ['plans'],
-        queryFn: () => getPlansByUser(currentUser?._id ?? ''),
+        queryFn: () => getPlansByUser(currentUser?._id ?? '', ''),
         enabled: !!currentUser
     })
 
 
     const { data: routines, isLoading: isRoutinesLoading } = useQuery({
         queryKey: ['routines', searchText],
-        queryFn: () => getRoutinesByUserId(currentUser?._id ?? ''),
+        queryFn: () => getRoutinesByUserId(currentUser?._id ?? '', searchText),
         enabled: !!plans && !!currentUser?._id
     })
 

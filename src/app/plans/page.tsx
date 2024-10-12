@@ -74,7 +74,7 @@ const PlansBody:React.FC<PlansBodyProps> = ({
     }
     return (
         <div className="grid grid-cols-1 gap-2 mb-[55px] px-1 overflow-auto">
-            {plans.map((plan, index) => (
+            {plans && plans.map((plan, index) => (
                 <Link href={`/plans/${plan._id}`} key={index}>
                     <CardComponent key={index} onEdit={onEdit} plan={plan} onDelete={onDelete} />
                 </Link>
@@ -97,7 +97,7 @@ const Plans = () => {
 
     const { data: plans, isLoading: isPlansLoading } = useQuery({
         queryKey: ['plans', currentUser?._id, searchText],
-        queryFn: () => getPlansByUser(currentUser?._id ?? ''),
+        queryFn: () => getPlansByUser(currentUser?._id ?? '', searchText),
         enabled: !!currentUser?._id
     })
 
