@@ -47,6 +47,7 @@ const StepOne: React.FC<StepOneProps> = ({ email, setEmail, emailError, setEmail
                         }
                     }
                 }} 
+                autoFocus
                 value={email}
                 className={`w-full bg-[#E4E4E5] text-gray-500 border-2  rounded-lg px-2 py-1 focus:outline-none ${emailError ? 'border-red-500' : 'border-[#0ea5e9]'}`}
                 type="email"
@@ -80,6 +81,7 @@ const StepTwo: React.FC<StepTwoProps> = ({ email, password, setPassword, passwor
                         handleSignIn()
                     }                        
                 }} 
+                autoFocus
                 value={password}
                 className={`w-full bg-[#E4E4E5] text-gray-500 border-2 rounded-lg px-2 py-1 focus:outline-none ${passwordError ? 'border-red-500' : 'border-[#0ea5e9]'}`}
                 type="password"
