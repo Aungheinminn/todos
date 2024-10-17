@@ -33,9 +33,9 @@ export const getRoutinesByPlanId = async (plan_id: string) => {
     }
 }
 
-export const getRoutinesByUserId = async (user_id: string, searchKey?: string) => {
+export const getRoutinesByUserId = async (user_id: string, currentPlan: string, searchKey?: string ) => {
     try {
-        const response = await fetch(`http://localhost:3000/api/protected/routines/user/${user_id}?search=${searchKey}`, {
+        const response = await fetch(`http://localhost:3000/api/protected/routines/user/${user_id}?current=${currentPlan}&search=${searchKey}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

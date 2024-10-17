@@ -1,6 +1,6 @@
 "use client"
 
-import { Suspense, useState } from "react"
+import React, { SetStateAction, Suspense, useState } from "react"
 import ItemCardComponent from "@/components/ItemCardComponent/ItemCardComponent"
 import { Button } from "@/components/ui/button"
 import Search from "@/components/Search/Search"
@@ -20,6 +20,8 @@ import NotFound from "@/components/NotFound/NotFound"
 import RoutineLoading from "./loading"
 
 type ItemsHeaderProps = {
+    currentPlan: string;
+    setCurrentPlan: React.Dispatch<SetStateAction<string>>;
     plans: PlanType[];
     search: string;
     onChange: (search: string) => void;
@@ -34,7 +36,7 @@ type ItemsBodyProps = {
     routines: RoutineType[];
 }
 
-const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handleAddRoutine}) => {
+const ItemsHeader:React.FC<ItemsHeaderProps> = ({ currentPlan, setCurrentPlan, plans, search, onChange, handleAddRoutine}) => {
     const { openPopup, popupData } = useCreatePopupStore()
     const handleAdd = () => {
         popupData.name = ''
@@ -51,7 +53,7 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ plans, search, onChange, handl
                 <Search search={search} onChange={onChange} type="normal" />             
                 <Button className="bg-[#0ea5e9]" onClick={handleAdd}>Add a Routine</Button>
             </div> 
-            <CarouselComponent items={plans}  />          
+            <CarouselComponent currentPlan={currentPlan} setCurrentPlan={setCurrentPlan} items={plans}  />          
         </div>
 
     )
@@ -69,10 +71,10 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
     }
 
     if(isRoutinesLoading || isCreateMutating || isDeleteMutating){
-        return <MutateLoading loadingItemHeight="100px" marginTop="16px" />
+        return <MutateLoading loadingItemHeight="100px" marginTop="8px" />
     }
     return (
-        <div className="w-full mt-4 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
+        <div className="w-full mt-2 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
             {routines && routines.map(routine => 
                 <ItemCardComponent 
                     key={routine._id} 
@@ -98,6 +100,8 @@ const Items = () => {
 
     const [searchText, setSearchText] = useState<string>('')
 
+    const [currentPlan, setCurrentPlan] = useState<string>('all')
+
     console.log(searchText)
 
     const { data: plans, isLoading: isPlansLoading } = useQuery({
@@ -108,8 +112,8 @@ const Items = () => {
 
 
     const { data: routines, isLoading: isRoutinesLoading } = useQuery({
-        queryKey: ['routines', searchText],
-        queryFn: () => getRoutinesByUserId(currentUser?._id ?? '', searchText),
+        queryKey: ['routines', currentPlan, searchText],
+        queryFn: () => getRoutinesByUserId(currentUser?._id ?? '', currentPlan, searchText),
         enabled: !!plans && !!currentUser?._id
     })
 
@@ -145,6 +149,8 @@ const Items = () => {
         <Suspense fallback={<RoutineLoading />}>
             <div className="pt-[55px] w-full">
                 <ItemsHeader 
+                    currentPlan={currentPlan}
+                    setCurrentPlan={setCurrentPlan}
                     plans={plans} 
                     search={searchText} 
                     onChange={handleChange} 

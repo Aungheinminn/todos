@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { SetStateAction, useRef } from "react";
 import right from "@/assets/right.svg";
 import left from "@/assets/left.svg";
 import { PlanType } from "@/lib/types/plan.type";
@@ -12,7 +12,9 @@ import { PlanType } from "@/lib/types/plan.type";
 //   'ssfs', 'ssfs', 'ssfs', 'ssfs',
 // ];
 
-const CarouselComponent = ({ items }: {
+const CarouselComponent = ({ currentPlan, setCurrentPlan, items }: {
+  currentPlan: string;
+  setCurrentPlan: React.Dispatch<SetStateAction<string>>;
   items: PlanType[]
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,8 +84,11 @@ const CarouselComponent = ({ items }: {
         onMouseUp={onMouseUp}
         className="w-full flex justify-start items-center gap-x-2 overflow-x-auto cursor-grab no-scrollbar rounded-lg"
       >
-        {items.map((item, index) => (
-          <div onClick={() => console.log(`${item}`)} className="transition duration-500 max-w-[100px] flex justify-center items-center leading-1 bg-gray-500 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer" key={index}>
+        <div onClick={() => setCurrentPlan('all')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === 'all' ? "bg-gray-800" : "bg-gray-500"}`}>
+          <p className="w-full h-full text-center truncate">All</p>
+        </div>
+        {items && items.map((item, index) => (
+          <div onClick={() => setCurrentPlan(item._id ?? '')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1  hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === item._id ? "bg-gray-800" : "bg-gray-500"}`} key={index}>
             <p className="w-full h-full text-center truncate">{item.name}</p>
           </div>
         ))}
