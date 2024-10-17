@@ -88,7 +88,7 @@ const CarouselComponent = ({ currentPlan, setCurrentPlan, items }: {
           <p className="w-full h-full text-center truncate">All</p>
         </div>
         {items && items.map((item, index) => (
-          <div onClick={() => setCurrentPlan(item._id ?? '')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1  hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === item._id ? "bg-gray-800" : "bg-gray-500"}`} key={index}>
+          <div onClick={() => setCurrentPlan(item._id ?? '')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === item._id ? "bg-gray-800" : "bg-gray-500"}`} key={index}>
             <p className="w-full h-full text-center truncate">{item.name}</p>
           </div>
         ))}
