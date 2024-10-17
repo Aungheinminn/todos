@@ -11,12 +11,15 @@ export const GET = async (req:NextRequest, { params }: {
     }
     const { user_id } = params;
     const { searchParams } = new URL(req.url)
+    const currentPlan = searchParams.get('current')    
     const searchKey = searchParams.get('search')
+
     try {
         const client = await clientPromise;
         const db = client.db('remarker_next');
         const routines = await db.collection('routines').find({ 
             user_id: user_id,
+            ...(currentPlan !== 'all' && { plan_id: { $regex: currentPlan, $options: 'i'}}),
             ...(searchKey && { name: { $regex: searchKey, $options: 'i'}})
         }).sort({ _id: -1 }).toArray();
 

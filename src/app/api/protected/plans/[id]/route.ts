@@ -76,6 +76,13 @@ export const DELETE = async (req: NextRequest, { params }: {
     try {
         const client = await clientPromise;
         const db = client.db('remarker_next');
+
+        const areRoutinesExist = await db.collection('routines').find({ plan_id: id}).toArray();
+
+        if(areRoutinesExist.length !== 0){
+            console.log('routines', areRoutinesExist)
+            return NextResponse.json({ message: 'Delete routines first!'}, { status: 404})
+        }
         const plan = await db.collection('plans').findOneAndDelete({ _id: new ObjectId(id) });
 
         if(!plan) {
