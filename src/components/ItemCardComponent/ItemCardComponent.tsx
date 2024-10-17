@@ -2,13 +2,15 @@ import Image from "next/image";
 import dash from "@/assets/dash.svg";
 import { RoutineType } from "@/lib/types/routine.type";
 import { useDeletePopupStore } from "@/lib/popupStore";
+import { PlanType } from "@/lib/types/plan.type";
 
 type ItemCardComponentProps = {
+    plan?: PlanType;
     routine: RoutineType;
     handleDelete: (data: string) => void;
 }
 
-const ItemCardComponent:React.FC<ItemCardComponentProps> = ({ routine, handleDelete }) => {
+const ItemCardComponent:React.FC<ItemCardComponentProps> = ({ plan, routine, handleDelete }) => {
     const { openPopup, popupData } = useDeletePopupStore(state => state)
 
     const handleDeleteRoutine = () => {
@@ -23,6 +25,9 @@ const ItemCardComponent:React.FC<ItemCardComponentProps> = ({ routine, handleDel
             <button onClick={handleDeleteRoutine} className="absolute w-5 h-5 flex items-center justify-center top-1 right-2 border-2 border-red-500 hover:border-[#be123c] rounded-md">
                 <Image className="rotate-90" src={dash} alt="remove dash" />
             </button>
+            <div className="absolute flex justify-start items-center bottom-1 left-2 bg-[#0ea5e9] px-2 rounded-lg max-w-[100px]">
+                <p className="w-full truncate">{plan?.name}</p>
+            </div>
         </div>
     )
 }

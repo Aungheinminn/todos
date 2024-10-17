@@ -29,6 +29,7 @@ type ItemsHeaderProps = {
 }
 
 type ItemsBodyProps = {
+    plans: PlanType[];
     isRoutinesLoading: boolean;
     isCreateMutating: boolean;
     isDeleteMutating: boolean;
@@ -60,6 +61,7 @@ const ItemsHeader:React.FC<ItemsHeaderProps> = ({ currentPlan, setCurrentPlan, p
 }
 
 const ItemsBody:React.FC<ItemsBodyProps> = ({
+    plans,
     isRoutinesLoading, 
     isCreateMutating, 
     isDeleteMutating,
@@ -77,6 +79,7 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
         <div className="w-full mt-2 grid grid-cols-1 px-1 gap-y-2 mb-[55px]">
             {routines && routines.map(routine => 
                 <ItemCardComponent 
+                    plan={plans.find((p: PlanType) => p._id === routine.plan_id)}
                     key={routine._id} 
                     routine={routine}
                     handleDelete={handleDelete}
@@ -157,6 +160,7 @@ const Items = () => {
                     handleAddRoutine={handleAddRoutine} 
                 />
                 <ItemsBody 
+                    plans={plans}
                     isRoutinesLoading={isRoutinesLoading}
                     isCreateMutating={createMutation.isLoading} 
                     isDeleteMutating={deleteMutation.isLoading} 
