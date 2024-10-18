@@ -54,6 +54,16 @@ const CarouselComponent = ({ currentPlan, setCurrentPlan, items }: {
     }
   };
 
+  const onMouseLeave = () => {
+    isDragging.current = false;
+
+        if (containerRef.current) {
+      containerRef.current.style.scrollSnapType = "x mandatory";
+      containerRef.current.style.cursor = "grab";
+      containerRef.current.style.scrollBehavior = "smooth";
+    }
+  }
+
   // Buttons for manual navigation
   const handlePrev = () => {
     if (containerRef.current) {
@@ -82,13 +92,14 @@ const CarouselComponent = ({ currentPlan, setCurrentPlan, items }: {
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
         className="w-full flex justify-start items-center gap-x-2 overflow-x-auto cursor-grab no-scrollbar rounded-lg"
       >
         <div onClick={() => setCurrentPlan('all')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === 'all' ? "bg-gray-800" : "bg-gray-500"}`}>
           <p className="w-full h-full text-center truncate">All</p>
         </div>
         {items && items.map((item, index) => (
-          <div onClick={() => setCurrentPlan(item._id ?? '')} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === item._id ? "bg-gray-800" : "bg-gray-500"}`} key={index}>
+          <div onClick={() => !isDragging.current ? setCurrentPlan(item._id ?? '') : null} className={`transition duration-500 max-w-[100px] flex justify-center items-center leading-1 hover:bg-gray-800 select-none snap-start rounded-lg p-1 px-2 cursor-pointer ${currentPlan === item._id ? "bg-gray-800" : "bg-gray-500"}`} key={index}>
             <p className="w-full h-full text-center truncate">{item.name}</p>
           </div>
         ))}
