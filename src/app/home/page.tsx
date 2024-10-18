@@ -1,5 +1,5 @@
 "use client"
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { createItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
@@ -7,7 +7,6 @@ import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import Badge from "@/components/Badge/Badge";
 import 'react-day-picker/dist/style.css'
-import { dayStyle, headStyle, navStyle, headCellStyle, monthStyle, cellStyle, tableStyle } from "@/local_consts/daypicker.styles"
 import HomeLoading from "./loading";
 
 const Home = () => {
@@ -35,7 +34,6 @@ const Home = () => {
     //     //No need yet
     // }
 
-
     return (
         <Suspense fallback={<HomeLoading />}>
             <div className="w-full pt-[55px] text-black flex items-center flex-col justify-center">
@@ -43,18 +41,20 @@ const Home = () => {
                 <div className="w-full px-2">
                     <Badge title="Heads up!" desc="You can add components to your app using the cli." />
                 </div>
-                <div className="w-[95%] flex items-center justify-center my-4 rounded-lg border-2 border-[#34aeeb] bg-[#2C3E50]">
+                <div className="w-full"> 
                     <DayPicker
-                        styles={{
-                            day: dayStyle,
-                            caption: headStyle,
-                            nav: navStyle,
-                            head_cell: headCellStyle,
-                            // month: monthStyle,
-                            // cell: cellStyle,
-                            // table: tableStyle,
+                        classNames={{
+                            month: `bg-[#2c3e50] w-full px-3 py-2 border-2 border-[#34aeeb] rounded-md`,
+                            table: `w-full mt-2`,
+                            caption_label: `text-[#34aeeb] font-bold `,
+                            nav: `flex justify-between items-center gap-x-2 text-[#34aeeb]`,
+                            head_cell: `w-[50px] text-[#34aeeb] font-bold`,
+                            button: ``,
+                            button_reset: ``,
+                            day: `h-[30px] text-[#34aeeb] hover:bg-[#34aeeb] hover:text-white rounded-full px-2`
+                        
                         }}
-                        mode="multiple"
+                         mode="multiple"
                         selected={selectedDates}
                     />
                 </div>
