@@ -8,6 +8,8 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import Badge from "@/components/Badge/Badge";
 import 'react-day-picker/dist/style.css'
 import HomeLoading from "./loading";
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 
 const Home = () => {
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
@@ -43,6 +45,7 @@ const Home = () => {
                 </div>
                 <div className="w-full"> 
                     <DayPicker
+                        onSelect={() =>console.log('asf')}
                         classNames={{
                             month: `bg-[#2c3e50] w-full px-3 py-2 border-2 border-[#34aeeb] rounded-md`,
                             table: `w-full mt-2`,
@@ -58,6 +61,23 @@ const Home = () => {
                         selected={selectedDates}
                     />
                 </div>
+                <Drawer>
+                    <DrawerTrigger className="bg-[#2c3e50] py-2 px-3 border-2 border-[#0ea5e9] text-white rounded-md">Add today activity</DrawerTrigger>
+                    <DrawerContent className="bg-gray-800">
+                        <DrawerHeader>
+                            <DrawerTitle>Select a plan</DrawerTitle>
+                            
+                        </DrawerHeader>
+                        <DrawerFooter className="flex flex-row justify-center items-center">
+                            <DrawerClose>
+                                <Button variant="outline" className="text-gray-800">Submit</Button>
+                            </DrawerClose>
+                            <DrawerClose>
+                                <Button variant="outline" className="text-gray-800">Cancel</Button>
+                            </DrawerClose>
+                        </DrawerFooter>
+                    </DrawerContent>
+                </Drawer>
             </div>
         </Suspense>
     )

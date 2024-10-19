@@ -31,7 +31,7 @@ const Bottombar = () => {
                     <Image className="" src={item} alt="home"  width={20} height={20} />
                 </div>
             </Link>
-            {/* <div onClick={() => handleChange('create')} className="cursor-pointer w-[50px] relative group flex flex-col items-center bg-[#0ea5e9] rounded-full">
+            {/* <div onClick={() => {}} className="cursor-pointer w-[40px] relative group flex flex-col items-center bg-[#58ed18] rounded-full">
                 <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center `}>
                     <Image className="" src={whiteCreate} alt="create"  width={20} height={20} />
                 </div>
