@@ -18,6 +18,7 @@ import CarouselComponent from "@/components/CarouselComponent/CarouselComponent"
 import MutateLoading from "@/components/MutateLoading/MutateLoading"
 import NotFound from "@/components/NotFound/NotFound"
 import RoutineLoading from "./loading"
+import { useToast } from "@/hooks/use-toast"
 
 type ItemsHeaderProps = {
     currentPlan: string;
@@ -89,9 +90,9 @@ const ItemsBody:React.FC<ItemsBodyProps> = ({
     )
 }
 
-const Items = () => {
+const Items = () => {    
+    const { toast } = useToast();
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state=> state)
-
     const { createMutation, deleteMutation } = useRoutineMutationHook()
     
     useQuery('currentUser', getCurrentUser, {
@@ -131,6 +132,13 @@ const Items = () => {
         }
         try {
             createMutation.mutate(item)
+            console.log('is rou suc', createMutation.isSuccess)
+            if(!!createMutation.isSuccess) {
+                toast({
+                    description: 'Routine has been successfully created',
+                    className: 'bg-green-500 border-0'
+                })
+            }
         } catch (e) {
             console.error(e)
         }
@@ -139,6 +147,12 @@ const Items = () => {
     const handleDeleteRoutine = async (data: string) => {
         try{
             deleteMutation.mutate(data)
+            if(!!deleteMutation.isSuccess) {
+                toast({
+                    description: 'Routine has been successfully deleted',
+                    className: 'bg-red-500 border-0'
+                })
+            }
         } catch (e) {
             console.error(e)
         }
