@@ -3,7 +3,7 @@ import CardComponent from "@/components/CardComponent/CardComponent"
 import Loading from "@/components/Loading/Loading"
 import PopupComponent from "@/components/CreatePopup/CreatePopup"
 import Search from "@/components/Search/Search"
-import { deletePlan, editPlanById, getPlansByUser, postPlans } from "@/lib/plan.service"
+import { getPlansByUser } from "@/lib/plan.service"
 import { getCurrentUser } from "@/lib/users.service"
 import { useCurrentUserStore } from "@/lib/userStore"
 import Link from "next/link"
@@ -85,7 +85,6 @@ const PlansBody:React.FC<PlansBodyProps> = ({
 }
 
 const Plans = () => {
-    const { toast } = useToast()
     const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
     const { createMutation, deleteMutation, editMutation } = usePlanMutationsHook()
 
@@ -118,13 +117,6 @@ const Plans = () => {
 
         try {
             createMutation.mutate(planData);
-            console.log('is suc',createMutation.status)
-            if(!!createMutation.isSuccess) {
-                toast({
-                    description: 'Plan has been successfully created',
-                    className: 'bg-green-500 border-0'
-                })
-            }
         } catch (error) {
             console.error('Error creating plan:', error);
         }
@@ -133,12 +125,6 @@ const Plans = () => {
     const handleDeletePlan = async (id: string) => {
         try {
             deleteMutation.mutate(id)
-            if(!!deleteMutation.isSuccess) {
-                toast({
-                    description: 'Plan has been successfully deleted',
-                    className: 'bg-red-500 border-0'
-                })
-            }
         } catch (error) {
             console.error('Error deleting plan', error)
         }
@@ -150,12 +136,6 @@ const Plans = () => {
     }) => {
         try {
             editMutation.mutate({ id, data })
-            if(!!editMutation.isSuccess) {
-                toast({
-                    description: 'Plan has been successfully edited',
-                    className: 'bg-[#fdba74] border-0'
-                })
-            }
         }  catch (error) {
             console.error('Error editing plan', error)
         }

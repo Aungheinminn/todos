@@ -6,8 +6,6 @@ import CreatePopupComponent from "@/components/CreatePopup/CreatePopup";
 import DeletePopup from "@/components/DeletePopup/DeletePopup";
 import EditPopupComponent from "@/components/EditPopup/EditPopup";
 import ReactQueryProvider from "@/components/ReactQueryProvider/ReactQueryProvider";
-import { Toaster } from "@/components/ui/toaster";
-
 
 export default function RootLayout({
   children,
@@ -25,7 +23,6 @@ export default function RootLayout({
           <CreatePopupComponent />
           <DeletePopup />
           <EditPopupComponent />
-          <Toaster />
       </body>
     </html>
   );
