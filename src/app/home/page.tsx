@@ -66,7 +66,6 @@ const Home = () => {
                     <DrawerContent className="bg-gray-800">
                         <DrawerHeader>
                             <DrawerTitle>Select a plan</DrawerTitle>
-                            
                         </DrawerHeader>
                         <DrawerFooter className="flex flex-row justify-center items-center">
                             <DrawerClose>
