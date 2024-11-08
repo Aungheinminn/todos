@@ -2,18 +2,15 @@
 import { useState } from "react";
 import { MobileNavbar, WebNavbar } from "../Navbar/Navbar";
 import Bottombar from "../Bottombar/Bottombar";
-import { redirect, usePathname } from "next/navigation";
-import { UserType } from "@/lib/types/user.type";
-import { useQuery } from "react-query";
+import { redirect } from "next/navigation";
 import { useCurrentUserStore } from "@/lib/userStore";
-import { getCurrentUser } from "@/lib/users.service";
 
 type WrapperProps = {
     children: React.ReactNode;
     router: string;
 }
 const Wrapper:React.FC<WrapperProps> = ({ children, router }) => { 
-    const { currentUser, updateCurrentUser } = useCurrentUserStore(state => state)
+    const { currentUser } = useCurrentUserStore(state => state)
 
     console.log('cur', currentUser, typeof router)
     const noWrapperRoutes = ["/login", "/signUp", "/unauthorized"];
