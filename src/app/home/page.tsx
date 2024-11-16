@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { createItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
@@ -10,7 +10,6 @@ import "react-day-picker/dist/style.css";
 import HomeLoading from "./loading";
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
   DrawerFooter,
@@ -19,6 +18,8 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import DrawserPlansChooser from "@/components/DrawerPlansChooser/DrawserPlansChooser";
+import useOutsideClick from "@/hooks/useOutsideClick";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -56,17 +57,7 @@ const Home = () => {
   //     //No need yet
   // }
 
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent) => {
-      if (drawerRef.current && !drawerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleOutsideClick);
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [drawerRef]);
+  useOutsideClick(drawerRef, handleCloseDrawer);
 
   return (
     <Suspense fallback={<HomeLoading />}>
@@ -105,7 +96,8 @@ const Home = () => {
           </DrawerTrigger>
           <DrawerContent ref={drawerRef} className="bg-gray-800">
             <DrawerHeader>
-              <DrawerTitle>Select a plan</DrawerTitle>
+              <DrawerTitle></DrawerTitle>
+              <DrawserPlansChooser />
             </DrawerHeader>
             <DrawerDescription> </DrawerDescription>
             <DrawerFooter className="flex flex-row justify-center items-center">
