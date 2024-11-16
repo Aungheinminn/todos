@@ -1,13 +1,13 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
-	],
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -19,12 +19,13 @@ const config = {
     },
     extend: {
       transitionProperty: {
-        'width': 'width',
-        'display': 'display'
+        width: "width",
+        height: "height",
+        display: "display",
       },
-      boxShadow:{
-        'rightEffect': '-1px -10px 0px 0px #FFFFFF',
-        'leftEffect': '1px -10px 0px 0px #FFFFFF',
+      boxShadow: {
+        rightEffect: "-1px -10px 0px 0px #FFFFFF",
+        leftEffect: "1px -10px 0px 0px #FFFFFF",
       },
       colors: {
         border: "hsl(var(--border))",
@@ -84,21 +85,20 @@ const config = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    function ({ addUtilities } : {
-      addUtilities: any
-    }) {
+    function ({ addUtilities }: { addUtilities: any }) {
       addUtilities({
-        '.no-scrollbar': {
-          '-webkit-overflow-scrolling': 'touch',
-          'scrollbar-width': 'none', /* Firefox */
-          '&::-webkit-scrollbar': {
-            display: 'none',
+        ".no-scrollbar": {
+          "-webkit-overflow-scrolling": "touch",
+          "scrollbar-width": "none" /* Firefox */,
+          "&::-webkit-scrollbar": {
+            display: "none",
           },
-          '-ms-overflow-style': 'none', 
+          "-ms-overflow-style": "none",
         },
       });
     },
   ],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;
+
