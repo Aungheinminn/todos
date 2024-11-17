@@ -20,16 +20,30 @@ import {
 import { Button } from "@/components/ui/button";
 import DrawserPlansChooser from "@/components/DrawerPlansChooser/DrawserPlansChooser";
 import useOutsideClick from "@/hooks/useOutsideClick";
+import { getPlansByUser } from "@/lib/plan.service";
+import {
+  getRoutinesByPlanId,
+  getRoutinesByUserId,
+} from "@/lib/routines.service";
+import DrawerStatus from "@/components/DrawerStatus/DrawerStatus";
+import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRoutinesChooser";
+import { PlanType } from "@/lib/types/plan.type";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
-  const [selectedDates, setSelectedDates] = useState<any[]>([]);
-  const drawerRef = useRef<HTMLDivElement>(null);
-
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
+  const [planFetchStatus, setPlanFetchStatus] = useState<boolean>(false);
+  const [plansSearchKey, setPlansSearchKey] = useState<string>("");
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>({
+    _id: "",
+    name: "",
+    description: "",
+    user_id: "",
+    createdAt: "",
+  });
   useQuery("currentUser", getCurrentUser, {
     onSuccess: (data) => {
       updateCurrentUser(data.data.currentUser);
@@ -37,11 +51,54 @@ const Home = () => {
   });
   console.log("current", currentUser);
 
+  const { data: plans, isLoading: isPlansLoading } = useQuery({
+    queryKey: ["plans", currentUser?._id, plansSearchKey],
+    queryFn: () => getPlansByUser(currentUser?._id ?? "", plansSearchKey),
+    enabled: !!currentUser?._id && planFetchStatus,
+  });
+
+  const { data: routines, isLoading: isRoutinesLoading } = useQuery({
+    queryKey: ["routines", selectedPlan],
+    queryFn: () => getRoutinesByPlanId(selectedPlan._id ?? ""),
+    enabled: !!selectedPlan,
+  });
+
+  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const drawerRef = useRef<HTMLDivElement>(null);
+
+  const handleOpenDrawer = () => {
+    setPlanFetchStatus(true);
+    setOpen(true);
+  };
+
   const handleCloseDrawer = () => {
     setStep(1);
     setOpen(false);
   };
 
+  const handlePlansSearch = (key: string) => {
+    console.log(key);
+    setPlansSearchKey(key);
+  };
+
+  const handleSelectedPlan = (plan: PlanType) => {
+    console.log(plan, "aaa");
+    setSelectedPlan(plan);
+    setStep(2);
+  };
+
+  const handleOpenInventory = () => {};
+
+  const handleBack = () => {
+    setSelectedPlan({
+      _id: "",
+      name: "",
+      description: "",
+      user_id: "",
+      createdAt: "",
+    });
+    setStep(1);
+  };
   // const handleAddDate = async () => {
   //     const newDate = new Date() as any
   //     console.log(newDate, typeof newDate)
@@ -89,17 +146,31 @@ const Home = () => {
 
         <Drawer open={open}>
           <DrawerTrigger
-            onClick={() => setOpen(true)}
+            onClick={handleOpenDrawer}
             className="bg-[#2c3e50] py-2 px-3 border-2 border-[#0ea5e9] text-white rounded-md"
           >
             Add today activity
           </DrawerTrigger>
           <DrawerContent ref={drawerRef} className="bg-gray-800">
-            <DrawerHeader>
+            <DrawerHeader className="flex flex-col gap-y-2">
               <DrawerTitle></DrawerTitle>
-              <DrawserPlansChooser />
+              <DrawerStatus
+                step={step}
+                selectedPlan={selectedPlan}
+                handleOpenInventory={handleOpenInventory}
+                handleBack={handleBack}
+              />
+              {step === 1 && (
+                <DrawserPlansChooser
+                  plans={plans}
+                  searchKey={plansSearchKey}
+                  handleSearch={handlePlansSearch}
+                  handleSelectedPlan={handleSelectedPlan}
+                />
+              )}
+              {step === 2 && <DrawerRoutinesChooser />}
             </DrawerHeader>
-            <DrawerDescription> </DrawerDescription>
+            <DrawerDescription></DrawerDescription>
             <DrawerFooter className="flex flex-row justify-center items-center">
               <Button variant="outline" className="text-gray-800">
                 Submit
