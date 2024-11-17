@@ -15,29 +15,34 @@ const DrawerStatus = ({
   handleBack: () => void;
 }) => {
   return (
-    <div className="w-full flex justify-start items-center gap-x-2">
-      <Button className="rounded-md">
-        Choose {step === 1 ? "a Plan" : "Routines"}
-      </Button>
-      <Button
-        onClick={handleOpenInventory}
-        className="flex justify-center items-center"
-      >
-        <Image src={backpack} alt="backpack" />
-      </Button>
-      {step === 2 && (
-        <Button className="flex justify-center items-center">
-          {selectedPlan.name}
+    <div className="w-full flex flex-col items-start gap-y-2">
+      <div className="w-full flex justify-start items-center gap-x-2">
+        <Button className="rounded-md">
+          {step === 1 ? "Plans" : "Routines"}
         </Button>
-      )}
-      {step === 2 && (
+
+        {step === 2 && (
+          <p className="min-w-[100px]  bg-[#0F172A] p-2 line-clamp-1 rounded-md">
+            {selectedPlan.name}
+          </p>
+        )}
+      </div>
+      <div className="w-full flex justify-start items-center gap-x-2">
+        {step === 2 && (
+          <Button
+            onClick={handleBac}
+            className="flex justify-center items-center"
+          >
+            <Image className="w-8 h-8" src={back} alt="back" />
+          </Button>
+        )}
         <Button
-          onClick={handleBack}
+          onClick={handleOpenInventory}
           className="flex justify-center items-center"
         >
-          <Image src={back} alt="back" />
+          <Image src={backpack} alt="backpack" />
         </Button>
-      )}
+      </div>
     </div>
   );
 };

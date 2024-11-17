@@ -21,13 +21,11 @@ import { Button } from "@/components/ui/button";
 import DrawserPlansChooser from "@/components/DrawerPlansChooser/DrawserPlansChooser";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { getPlansByUser } from "@/lib/plan.service";
-import {
-  getRoutinesByPlanId,
-  getRoutinesByUserId,
-} from "@/lib/routines.service";
+import { getRoutinesByPlanId } from "@/lib/routines.service";
 import DrawerStatus from "@/components/DrawerStatus/DrawerStatus";
 import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRoutinesChooser";
 import { PlanType } from "@/lib/types/plan.type";
+import { RoutineType } from "@/lib/types/routine.type";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -36,6 +34,7 @@ const Home = () => {
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [planFetchStatus, setPlanFetchStatus] = useState<boolean>(false);
+  const [routineFetchStatus, setRoutineFetchStatus] = useState<boolean>(false);
   const [plansSearchKey, setPlansSearchKey] = useState<string>("");
   const [selectedPlan, setSelectedPlan] = useState<PlanType>({
     _id: "",
@@ -44,6 +43,8 @@ const Home = () => {
     user_id: "",
     createdAt: "",
   });
+  const [routinesSearchKey, setRoutinesSearchKey] = useState<string>("");
+  const [selectedRoutines, setSelectedRoutines] = useState<RoutineType[]>([]);
   useQuery("currentUser", getCurrentUser, {
     onSuccess: (data) => {
       updateCurrentUser(data.data.currentUser);
@@ -58,9 +59,9 @@ const Home = () => {
   });
 
   const { data: routines, isLoading: isRoutinesLoading } = useQuery({
-    queryKey: ["routines", selectedPlan],
-    queryFn: () => getRoutinesByPlanId(selectedPlan._id ?? ""),
-    enabled: !!selectedPlan,
+    queryKey: ["routines", selectedPlan, routinesSearchKey],
+    queryFn: () => getRoutinesByPlanId(selectedPlan._id ?? "", routinesSearchKey),
+    enabled: !!selectedPlan && routineFetchStatus,
   });
 
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
@@ -84,7 +85,17 @@ const Home = () => {
   const handleSelectedPlan = (plan: PlanType) => {
     console.log(plan, "aaa");
     setSelectedPlan(plan);
+    setRoutineFetchStatus(true);
     setStep(2);
+  };
+
+  const handleRoutinesSearch = (key: string) => {
+    console.log(key);
+    setRoutinesSearchKey(key);
+  };
+
+  const handleSelectedRoutines = (routine: RoutineType) => {
+    setSelectedRoutines((prev) => [...prev, routine]);
   };
 
   const handleOpenInventory = () => {};
@@ -168,7 +179,15 @@ const Home = () => {
                   handleSelectedPlan={handleSelectedPlan}
                 />
               )}
-              {step === 2 && <DrawerRoutinesChooser />}
+              {step === 2 && (
+                <DrawerRoutinesChooser
+                  routines={routines}
+                  selectedRoutines={selectedRoutines}
+                  searchKey={routinesSearchKey}
+                  handleSearch={handleRoutinesSearch}
+                  handleSelectedRoutines={handleSelectedRoutines}
+                />
+              )}
             </DrawerHeader>
             <DrawerDescription></DrawerDescription>
             <DrawerFooter className="flex flex-row justify-center items-center">

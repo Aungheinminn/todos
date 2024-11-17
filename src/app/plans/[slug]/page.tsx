@@ -192,7 +192,7 @@ const Plan = ({ params }: {
 
     const { data: routines, isLoading: isRoutinesLoading } = useQuery({
         queryKey: ['routines', plan?._id],
-        queryFn: () => getRoutinesByPlanId(plan?._id),
+        queryFn: () => getRoutinesByPlanId(plan?._id, ""),
         enabled: !!plan
     })
 
