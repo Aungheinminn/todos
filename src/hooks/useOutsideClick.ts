@@ -6,7 +6,13 @@ const useOutsideClick = (
 ) => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as HTMLElement;
+      const shouldPreventMinimize = target.closest("[data-prevent-minimize]");
+      if (
+        ref.current &&
+        !ref.current.contains(e.target as Node) &&
+        !shouldPreventMinimize
+      ) {
         callback();
       }
     };
