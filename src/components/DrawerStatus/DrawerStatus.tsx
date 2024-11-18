@@ -17,12 +17,15 @@ const DrawerStatus = ({
   return (
     <div className="w-full flex flex-col items-start gap-y-2">
       <div className="w-full flex justify-start items-center gap-x-2">
-        <Button className="rounded-md">
+        <Button data-prevent-minimize className="rounded-md">
           {step === 1 ? "Plans" : "Routines"}
         </Button>
 
         {step === 2 && (
-          <p className="min-w-[100px]  bg-[#0F172A] p-2 line-clamp-1 rounded-md">
+          <p
+            data-prevent-minimize
+            className="min-w-[100px] bg-[#0F172A] p-2 line-clamp-1 rounded-md"
+          >
             {selectedPlan.name}
           </p>
         )}
@@ -30,13 +33,15 @@ const DrawerStatus = ({
       <div className="w-full flex justify-start items-center gap-x-2">
         {step === 2 && (
           <Button
-            onClick={handleBac}
+            data-prevent-minimize
+            onClick={handleBack}
             className="flex justify-center items-center"
           >
             <Image className="w-8 h-8" src={back} alt="back" />
           </Button>
         )}
         <Button
+          data-prevent-minimize
           onClick={handleOpenInventory}
           className="flex justify-center items-center"
         >

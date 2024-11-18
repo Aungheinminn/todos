@@ -26,6 +26,7 @@ import DrawerStatus from "@/components/DrawerStatus/DrawerStatus";
 import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRoutinesChooser";
 import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
+import DrawerInventory from "@/components/DrawerInventory/DrawerInventory";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -33,6 +34,9 @@ const Home = () => {
   );
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
+  const [planFocusStatus, setPlanFocusStatus] = useState<boolean>(false);
+  const [routineFocusStatus, setRoutineFocusStatus] = useState<boolean>(false);
+  const [inventoryStatus, setInventoryStatus] = useState<boolean>(false);
   const [planFetchStatus, setPlanFetchStatus] = useState<boolean>(false);
   const [routineFetchStatus, setRoutineFetchStatus] = useState<boolean>(false);
   const [plansSearchKey, setPlansSearchKey] = useState<string>("");
@@ -52,15 +56,16 @@ const Home = () => {
   });
   console.log("current", currentUser);
 
-  const { data: plans, isLoading: isPlansLoading } = useQuery({
+  const { data: plans } = useQuery({
     queryKey: ["plans", currentUser?._id, plansSearchKey],
     queryFn: () => getPlansByUser(currentUser?._id ?? "", plansSearchKey),
     enabled: !!currentUser?._id && planFetchStatus,
   });
 
-  const { data: routines, isLoading: isRoutinesLoading } = useQuery({
+  const { data: routines } = useQuery({
     queryKey: ["routines", selectedPlan, routinesSearchKey],
-    queryFn: () => getRoutinesByPlanId(selectedPlan._id ?? "", routinesSearchKey),
+    queryFn: () =>
+      getRoutinesByPlanId(selectedPlan._id ?? "", routinesSearchKey),
     enabled: !!selectedPlan && routineFetchStatus,
   });
 
@@ -78,29 +83,33 @@ const Home = () => {
   };
 
   const handlePlansSearch = (key: string) => {
-    console.log(key);
     setPlansSearchKey(key);
   };
 
   const handleSelectedPlan = (plan: PlanType) => {
-    console.log(plan, "aaa");
     setSelectedPlan(plan);
     setRoutineFetchStatus(true);
     setStep(2);
   };
 
   const handleRoutinesSearch = (key: string) => {
-    console.log(key);
     setRoutinesSearchKey(key);
   };
 
   const handleSelectedRoutines = (routine: RoutineType) => {
+    if (selectedRoutines.includes(routine)) {
+      setSelectedRoutines((prev) => prev.filter((r) => r._id !== routine._id));
+    }
     setSelectedRoutines((prev) => [...prev, routine]);
   };
+  console.log("selected routines", selectedRoutines);
 
-  const handleOpenInventory = () => {};
+  const handleOpenInventory = () => {
+    setInventoryStatus(!inventoryStatus);
+  };
 
   const handleBack = () => {
+    setRoutineFetchStatus(false);
     setSelectedPlan({
       _id: "",
       name: "",
@@ -108,6 +117,7 @@ const Home = () => {
       user_id: "",
       createdAt: "",
     });
+    setSelectedRoutines([]);
     setStep(1);
   };
   // const handleAddDate = async () => {
@@ -171,22 +181,36 @@ const Home = () => {
                 handleOpenInventory={handleOpenInventory}
                 handleBack={handleBack}
               />
-              {step === 1 && (
-                <DrawserPlansChooser
-                  plans={plans}
-                  searchKey={plansSearchKey}
-                  handleSearch={handlePlansSearch}
-                  handleSelectedPlan={handleSelectedPlan}
+              {inventoryStatus ? (
+                <DrawerInventory
+                  plan={selectedPlan}
+                  routines={selectedRoutines}
+                  handleOpenInventory={handleOpenInventory}
                 />
-              )}
-              {step === 2 && (
-                <DrawerRoutinesChooser
-                  routines={routines}
-                  selectedRoutines={selectedRoutines}
-                  searchKey={routinesSearchKey}
-                  handleSearch={handleRoutinesSearch}
-                  handleSelectedRoutines={handleSelectedRoutines}
-                />
+              ) : (
+                <div>
+                  {step === 1 && (
+                    <DrawserPlansChooser
+                      plans={plans}
+                      searchKey={plansSearchKey}
+		      focus={planFocusStatus}
+		      setFocus={setPlanFocusStatus}
+                      handleSearch={handlePlansSearch}
+                      handleSelectedPlan={handleSelectedPlan}
+                    />
+                  )}
+                  {step === 2 && (
+                    <DrawerRoutinesChooser
+                      routines={routines}
+                      selectedRoutines={selectedRoutines}
+		      focus={routineFocusStatus}
+		      setFocus={setRoutineFocusStatus}
+                      searchKey={routinesSearchKey}
+                      handleSearch={handleRoutinesSearch}
+                      handleSelectedRoutines={handleSelectedRoutines}
+                    />
+                  )}
+                </div>
               )}
             </DrawerHeader>
             <DrawerDescription></DrawerDescription>
@@ -195,11 +219,13 @@ const Home = () => {
                 Submit
               </Button>
               <Button
-                onClick={handleCloseDrawer}
+                onClick={() =>
+                  step === 2 ? handleBack() : handleCloseDrawer()
+                }
                 variant="outline"
                 className="text-gray-800"
               >
-                Cancel
+                {step === 2 ? "Back" : "Close"}
               </Button>
             </DrawerFooter>
           </DrawerContent>

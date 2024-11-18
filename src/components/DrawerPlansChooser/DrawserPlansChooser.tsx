@@ -2,21 +2,24 @@
 
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { PlanType } from "@/lib/types/plan.type";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 const DrawserPlansChooser = ({
   plans,
   searchKey,
+  focus,
+  setFocus,
   handleSearch,
   handleSelectedPlan,
 }: {
   plans: PlanType[];
   searchKey: string;
+  focus: boolean;
+  setFocus: (focus: boolean) => void;
   handleSearch: (key: string) => void;
   handleSelectedPlan: (plan: PlanType) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [focus, setFocus] = useState<boolean>(false);
 
   useOutsideClick(ref, () => setFocus(false));
   return (

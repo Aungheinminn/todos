@@ -1,21 +1,24 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { RoutineType } from "@/lib/types/routine.type";
 const DrawerRoutinesChooser = ({
   routines,
   selectedRoutines,
+  focus,
+  setFocus,
   searchKey,
   handleSearch,
   handleSelectedRoutines,
 }: {
   routines: RoutineType[];
-  searchKey: string;
   selectedRoutines: RoutineType[];
+  focus: boolean;
+  setFocus: (focus: boolean) => void;
+  searchKey: string;
   handleSearch: (key: string) => void;
   handleSelectedRoutines: (routine: any) => void;
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [focus, setFocus] = useState<boolean>(false);
 
   useOutsideClick(ref, () => setFocus(false));
   return (
@@ -44,7 +47,7 @@ const DrawerRoutinesChooser = ({
             <button
               onClick={() => handleSelectedRoutines(routine)}
               key={index}
-              className=" transition-all w-full py-1 border border-[#0ea5e9] rounded-md hover:bg-[#0ea5e9]"
+              className={`transition-all w-full py-1 border border-[#0ea5e9] rounded-md hover:border-white ${selectedRoutines.includes(routine) ? "bg-[#0ea5e9]" : ""}`}
             >
               {routine.name}
             </button>
