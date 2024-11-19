@@ -120,17 +120,26 @@ const Home = () => {
     setSelectedRoutines([]);
     setStep(1);
   };
-  // const handleAddDate = async () => {
-  //     const newDate = new Date() as any
-  //     console.log(newDate, typeof newDate)
-  //     const data = {
-  //         date: newDate,
-  //         userId: currentUser?._id
-  //     }
-  //     setSelectedDates([...selectedDates, newDate])
-  //     await createItems(data)
-  //     console.log('new date', newDate)
-  // }
+  const handleAddDate = async () => {
+    if (!selectedPlan || selectedRoutines.length === 0) return;
+    const newDate = new Date();
+    console.log(newDate, typeof newDate);
+    const data = {
+      plan: selectedPlan._id || "",
+      routines: selectedRoutines.map((r) => r._id || ""),
+      user_id: currentUser?._id || "",
+      date: newDate.toISOString(),
+    };
+    await createItems(data);
+    setSelectedPlan({
+			_id: "",
+			name: "",
+			description: "",
+			user_id: "",
+			createdAt: "",
+		})
+    setSelectedRoutines([]);
+  };
   // const handleRemoveDate = () => {
   //     //No need yet
   // }
@@ -193,8 +202,8 @@ const Home = () => {
                     <DrawserPlansChooser
                       plans={plans}
                       searchKey={plansSearchKey}
-		      focus={planFocusStatus}
-		      setFocus={setPlanFocusStatus}
+                      focus={planFocusStatus}
+                      setFocus={setPlanFocusStatus}
                       handleSearch={handlePlansSearch}
                       handleSelectedPlan={handleSelectedPlan}
                     />
@@ -203,8 +212,8 @@ const Home = () => {
                     <DrawerRoutinesChooser
                       routines={routines}
                       selectedRoutines={selectedRoutines}
-		      focus={routineFocusStatus}
-		      setFocus={setRoutineFocusStatus}
+                      focus={routineFocusStatus}
+                      setFocus={setRoutineFocusStatus}
                       searchKey={routinesSearchKey}
                       handleSearch={handleRoutinesSearch}
                       handleSelectedRoutines={handleSelectedRoutines}
@@ -215,7 +224,11 @@ const Home = () => {
             </DrawerHeader>
             <DrawerDescription></DrawerDescription>
             <DrawerFooter className="flex flex-row justify-center items-center">
-              <Button variant="outline" className="text-gray-800">
+              <Button
+                onClick={handleAddDate}
+                variant="outline"
+                className="text-gray-800"
+              >
                 Submit
               </Button>
               <Button
