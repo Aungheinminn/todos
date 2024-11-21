@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { createItems } from "@/lib/items.service";
+import { createItems, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
@@ -55,6 +55,14 @@ const Home = () => {
     },
   });
   console.log("current", currentUser);
+
+  const { data: items } = useQuery({
+    queryKey: ["items", currentUser?._id],
+    queryFn: () => getItems(currentUser?._id ?? ""),
+    enabled: !!currentUser?._id,
+  });
+
+  console.log("items", items);
 
   const { data: plans } = useQuery({
     queryKey: ["plans", currentUser?._id, plansSearchKey],
@@ -132,12 +140,12 @@ const Home = () => {
     };
     await createItems(data);
     setSelectedPlan({
-			_id: "",
-			name: "",
-			description: "",
-			user_id: "",
-			createdAt: "",
-		})
+      _id: "",
+      name: "",
+      description: "",
+      user_id: "",
+      createdAt: "",
+    });
     setSelectedRoutines([]);
   };
   // const handleRemoveDate = () => {
