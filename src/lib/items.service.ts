@@ -16,10 +16,10 @@ export const createItems = async (datas: ItemType) => {
   }
 };
 
-export const deleteItems = async (id: string) => {
+export const getItems = async (id: string) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/protected/items/${id}`, {
-      method: "DELETE",
+    const res = await fetch(`http://localhost:3000/api/protected/items/user/${id}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         credentials: "include",
@@ -31,8 +31,16 @@ export const deleteItems = async (id: string) => {
   }
 };
 
-export const getItems = async () => {
+export const deleteItems = async (id: string) => {
   try {
+    const res = await fetch(`http://localhost:3000/api/protected/items/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        credentials: "include",
+      },
+    });
+    return res;
   } catch (e) {
     console.log(e);
   }
