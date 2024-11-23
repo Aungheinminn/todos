@@ -1,3 +1,4 @@
+import { useCurrentUserStore } from "@/lib/userStore";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import logout from "@/assets/signout_black.svg";
@@ -10,8 +11,13 @@ import {
 import { logoutUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { UserType } from "@/lib/types/user.type";
 
 const UserAvatar = () => {
+  const { currentUser, updateCurrentUser } = useCurrentUserStore(
+    (state) => state,
+  );
+  console.log("currentUser", currentUser);
   const router = useRouter();
   const handleLogout = async () => {
     try {
@@ -27,13 +33,17 @@ const UserAvatar = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="cursor-pointer" asChild>
-        <Avatar className="w-8 h-8">
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          <AvatarFallback>UI</AvatarFallback>
+        <Avatar className="w-8 h-8 flex items-center justify-center bg-white">
+          <AvatarFallback className="text-black">
+            {currentUser?.username.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[150px] bg-gray-800 mr-1 p-2 border-2 border-white">
-        <Link href="/account" className="w-full flex items-center gap-x-1 hover:bg-[#0ea5e9] rounded-md p-1 px-2">
+        <Link
+          href="/account"
+          className="w-full flex items-center gap-x-1 hover:bg-[#0ea5e9] rounded-md p-1 px-2"
+        >
           <Image src={person} alt="account" />
           <p className="text-white font-medium">Account</p>
         </Link>
@@ -50,4 +60,3 @@ const UserAvatar = () => {
 };
 
 export default UserAvatar;
-
