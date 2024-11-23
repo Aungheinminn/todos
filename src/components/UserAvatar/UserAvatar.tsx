@@ -11,10 +11,9 @@ import {
 import { logoutUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { UserType } from "@/lib/types/user.type";
 
 const UserAvatar = () => {
-  const { currentUser, updateCurrentUser } = useCurrentUserStore(
+  const { currentUser } = useCurrentUserStore(
     (state) => state,
   );
   console.log("currentUser", currentUser);

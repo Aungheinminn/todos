@@ -28,6 +28,7 @@ import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
 import DrawerInventory from "@/components/DrawerInventory/DrawerInventory";
 import { ItemMutationProvider } from "./itemMutationProvider";
+import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -191,78 +192,34 @@ const Home = () => {
             selected={selectedDates}
           />
         </div>
-
-        <Drawer open={open}>
-          <DrawerTrigger
-            onClick={handleOpenDrawer}
-            className="bg-[#2c3e50] py-2 px-3 border-2 border-[#0ea5e9] text-white rounded-md"
-          >
-            Add today activity
-          </DrawerTrigger>
-          <DrawerContent ref={drawerRef} className="bg-gray-800">
-            <DrawerHeader className="flex flex-col gap-y-2">
-              <DrawerTitle></DrawerTitle>
-              <DrawerStatus
-                step={step}
-                selectedPlan={selectedPlan}
-                handleOpenInventory={handleOpenInventory}
-                handleBack={handleBack}
-              />
-              {inventoryStatus ? (
-                <DrawerInventory
-                  plan={selectedPlan}
-                  routines={selectedRoutines}
-                  handleOpenInventory={handleOpenInventory}
-                />
-              ) : (
-                <div>
-                  {step === 1 && (
-                    <DrawserPlansChooser
-                      plans={plans}
-                      searchKey={plansSearchKey}
-                      focus={planFocusStatus}
-                      setFocus={setPlanFocusStatus}
-                      handleSearch={handlePlansSearch}
-                      handleSelectedPlan={handleSelectedPlan}
-                    />
-                  )}
-                  {step === 2 && (
-                    <DrawerRoutinesChooser
-                      routines={routines}
-                      selectedRoutines={selectedRoutines}
-                      focus={routineFocusStatus}
-                      setFocus={setRoutineFocusStatus}
-                      searchKey={routinesSearchKey}
-                      handleSearch={handleRoutinesSearch}
-                      handleSelectedRoutines={handleSelectedRoutines}
-                    />
-                  )}
-                </div>
-              )}
-            </DrawerHeader>
-            <DrawerDescription></DrawerDescription>
-            <DrawerFooter className="flex flex-row justify-center items-center">
-              <Button
-                onClick={handleAddDate}
-                variant="outline"
-                className="text-gray-800"
-              >
-                Submit
-              </Button>
-              <Button
-                onClick={() =>
-                  step === 2 ? handleBack() : handleCloseDrawer()
-                }
-                variant="outline"
-                className="text-gray-800"
-              >
-                {step === 2 ? "Back" : "Close"}
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+        <DrawerComponent
+          open={open}
+          handleOpenDrawer={handleOpenDrawer}
+          drawerRef={drawerRef}
+          step={step}
+          selectedPlan={selectedPlan}
+          selectedRoutines={selectedRoutines}
+          handleOpenInventory={handleOpenInventory}
+          handleBack={handleBack}
+          inventoryStatus={inventoryStatus}
+          plans={plans}
+          plansSearchKey={plansSearchKey}
+          planFocusStatus={planFocusStatus}
+          setPlanFocusStatus={setPlanFocusStatus}
+          handlePlansSearch={handlePlansSearch}
+          handleSelectedPlan={handleSelectedPlan}
+          routines={routines}
+          routinesSearchKey={routinesSearchKey}
+          routineFocusStatus={routineFocusStatus}
+          setRoutineFocusStatus={setRoutineFocusStatus}
+          handleRoutinesSearch={handleRoutinesSearch}
+          handleSelectedRoutines={handleSelectedRoutines}
+          handleAddDate={handleAddDate}
+          handleCloseDrawer={handleCloseDrawer}
+        />
       </div>
     </Suspense>
   );
 };
 export default Home;
+

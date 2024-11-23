@@ -34,7 +34,7 @@ export const POST = async (
 
     if (existingItem) {
       return NextResponse.json(
-        { error: "Item already posted today" },
+        { error: "Item is already posted today" },
         { status: 400 },
       );
     }
