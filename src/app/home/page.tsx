@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, cache, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { createItems, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
@@ -27,6 +27,7 @@ import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRout
 import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
 import DrawerInventory from "@/components/DrawerInventory/DrawerInventory";
+import { ItemMutationProvider } from "./itemMutationProvider";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -80,7 +81,10 @@ const Home = () => {
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
   const drawerRef = useRef<HTMLDivElement>(null);
 
+  const { createMutation } = ItemMutationProvider();
+
   const handleOpenDrawer = () => {
+    // setStep(1);
     setPlanFetchStatus(true);
     setOpen(true);
   };
@@ -138,19 +142,25 @@ const Home = () => {
       user_id: currentUser?._id || "",
       date: newDate.toISOString(),
     };
-    await createItems(data);
-    setSelectedPlan({
-      _id: "",
-      name: "",
-      description: "",
-      user_id: "",
-      createdAt: "",
-    });
-    setSelectedRoutines([]);
+    try {
+      createMutation.mutate({ datas: data, user_id: currentUser?._id || "" });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setPlanFetchStatus(false);
+      setRoutineFetchStatus(false);
+      setStep(1);
+      setSelectedPlan({
+        _id: "",
+        name: "",
+        description: "",
+        user_id: "",
+        createdAt: "",
+      });
+      setSelectedRoutines([]);
+      setOpen(false);
+    }
   };
-  // const handleRemoveDate = () => {
-  //     //No need yet
-  // }
 
   useOutsideClick(drawerRef, handleCloseDrawer);
 
