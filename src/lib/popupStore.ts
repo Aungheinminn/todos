@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { PlanType } from "./types/plan.type";
+import { RoutineType } from "./types/routine.type";
 
 interface DetailPopupStore {
   isOpen: boolean;
@@ -54,8 +55,8 @@ interface ItemDetailsPopupStore {
   closePopup: () => void;
   popupData: {
     date: string;
-    plan: string;
-    routines: string[];
+    plan: PlanType;
+    routines: RoutineType[];
     user_id: string;
   };
 }
@@ -107,15 +108,17 @@ export const useDeletePopupStore = create<DeletePopupStore>((set) => ({
   },
 }));
 
-export const useItemDetailsPopupStore = create<ItemDetailsPopupStore>((set) => ({
-  isOpen: false,
-  openPopup: () => set({ isOpen: true }),
-  closePopup: () => set({ isOpen: false }),
-  popupData: {
-    date: "",
-    plan: "",
-    routines: [],
-    user_id: "",
-  },
-}));
+export const useItemDetailsPopupStore = create<ItemDetailsPopupStore>(
+  (set) => ({
+    isOpen: false,
+    openPopup: () => set({ isOpen: true }),
+    closePopup: () => set({ isOpen: false }),
+    popupData: {
+      date: "",
+      plan: "",
+      routines: [],
+      user_id: "",
+    },
+  }),
+);
 
