@@ -1,40 +1,28 @@
 "use client";
-import { Suspense, cache, useRef, useState } from "react";
+import { Suspense, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { createItems, getItemDetails, getItems } from "@/lib/items.service";
+import { getItemDetails, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import Badge from "@/components/Badge/Badge";
 import "react-day-picker/dist/style.css";
 import HomeLoading from "./loading";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
-import DrawserPlansChooser from "@/components/DrawerPlansChooser/DrawserPlansChooser";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { getPlansByUser } from "@/lib/plan.service";
 import { getRoutinesByPlanId } from "@/lib/routines.service";
-import DrawerStatus from "@/components/DrawerStatus/DrawerStatus";
-import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRoutinesChooser";
 import { ItemType } from "@/lib/types/item.type";
 import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
-import DrawerInventory from "@/components/DrawerInventory/DrawerInventory";
 import { ItemMutationProvider } from "./itemMutationProvider";
 import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
+import { useItemDetailsPopupStore } from "@/lib/popupStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
+  const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
   const [planFocusStatus, setPlanFocusStatus] = useState<boolean>(false);
@@ -91,6 +79,11 @@ const Home = () => {
     try {
       const res = await getItemDetails(currentUser?._id ?? "", newDate);
       console.log(res);
+      popupData.date = res.date;
+      popupData.plan = res.plan;
+      popupData.routines = res.routines;
+      popupData.user_id = res.user_id;
+      openPopup();
     } catch (e) {
       console.log(e);
     }

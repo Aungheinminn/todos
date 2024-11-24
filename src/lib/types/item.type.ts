@@ -4,4 +4,4 @@ export type ItemType = {
   routines: string[];
   user_id: string;
   date: string;
-};
+}
