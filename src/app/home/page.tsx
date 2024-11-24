@@ -75,15 +75,15 @@ const Home = () => {
 
   const handleGetCurrentItem = async (date: Date) => {
     const newDate = new Date(date).toISOString();
-    console.log(newDate, typeof newDate);
     try {
       const res = await getItemDetails(currentUser?._id ?? "", newDate);
-      console.log(res);
-      popupData.date = res.date;
-      popupData.plan = res.plan;
-      popupData.routines = res.routines;
-      popupData.user_id = res.user_id;
-      openPopup();
+      if (res) {
+        popupData.date = res.date;
+        popupData.plan = res.plan;
+        popupData.routines = res.routines;
+        popupData.user_id = res.user_id;
+        openPopup();
+      }
     } catch (e) {
       console.log(e);
     }
