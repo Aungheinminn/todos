@@ -9,7 +9,7 @@ export const POST = async (
     params: {
       user_id: string;
     };
-  },
+  }
 ) => {
   if (!params) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });

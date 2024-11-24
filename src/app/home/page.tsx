@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, cache, useRef, useState } from "react";
 import { DayPicker } from "react-day-picker";
-import { createItems, getItems } from "@/lib/items.service";
+import { createItems, getItemDetails, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
 import { useCurrentUserStore } from "@/lib/userStore";
@@ -24,6 +24,7 @@ import { getPlansByUser } from "@/lib/plan.service";
 import { getRoutinesByPlanId } from "@/lib/routines.service";
 import DrawerStatus from "@/components/DrawerStatus/DrawerStatus";
 import DrawerRoutinesChooser from "@/components/DrawerRoutinesChooser/DrawerRoutinesChooser";
+import { ItemType } from "@/lib/types/item.type";
 import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
 import DrawerInventory from "@/components/DrawerInventory/DrawerInventory";
@@ -79,10 +80,21 @@ const Home = () => {
     enabled: !!selectedPlan && routineFetchStatus,
   });
 
-  const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  // const [selectedDates, setSelectedDates] = useState<any[]>([new Date()]);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   const { createMutation } = ItemMutationProvider();
+
+  const handleGetCurrentItem = async (date: Date) => {
+    const newDate = new Date(date).toISOString();
+    console.log(newDate, typeof newDate);
+    try {
+      const res = await getItemDetails(currentUser?._id ?? "", newDate);
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleOpenDrawer = () => {
     // setStep(1);
@@ -177,7 +189,7 @@ const Home = () => {
         </div>
         <div className="w-full">
           <DayPicker
-            onSelect={() => console.log("asf")}
+            onDayClick={(date) => handleGetCurrentItem(date as unknown as Date)}
             classNames={{
               month: `bg-[#2c3e50] w-full px-3 py-2 border-2 border-[#34aeeb] rounded-md`,
               table: `w-full mt-2`,
@@ -189,7 +201,9 @@ const Home = () => {
               day: `h-[30px] text-[#34aeeb] hover:bg-[#34aeeb] hover:text-white rounded-full px-2`,
             }}
             mode="multiple"
-            selected={selectedDates}
+            selected={
+              items && items.map((item: ItemType) => new Date(item.date))
+            }
           />
         </div>
         <DrawerComponent
@@ -222,4 +236,3 @@ const Home = () => {
   );
 };
 export default Home;
-
