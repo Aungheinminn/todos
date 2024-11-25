@@ -44,10 +44,16 @@ export const GET = async (
     }
     const plan = await db
       .collection("plans")
-      .findOne({ _id:  ObjectId.createFromHexString(item.plan) });
+      .findOne({ _id: ObjectId.createFromHexString(item.plan) });
     const routines = await db
       .collection("routines")
-      .find({ _id: { $in: item.routines.map((r: string) => ObjectId.createFromHexString(r)) } })
+      .find({
+        _id: {
+          $in: item.routines.map((r: string) =>
+            ObjectId.createFromHexString(r),
+          ),
+        },
+      })
       .toArray();
     item.plan = plan;
     item.routines = routines;

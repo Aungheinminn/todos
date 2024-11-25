@@ -24,7 +24,7 @@ export default function RootLayout({
         <CreatePopupComponent />
         <DeletePopup />
         <EditPopupComponent />
-	<ItemDetailsPopup />
+        <ItemDetailsPopup />
       </body>
     </html>
   );
