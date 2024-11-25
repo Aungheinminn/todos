@@ -1,23 +1,62 @@
-"use client"
-import Card from "@/components/Card/Card";
+"use client";
+import { useQuery } from "react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUserStore } from "@/lib/userStore";
+import { getCurrentUser } from "@/lib/users.service";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import UserProfile from "@/assets/user_profile.svg";
+import AccountSettings from "@/assets/account_settings.svg";
+import Link from "next/link";
 
 const Settings = () => {
-    const { currentUser } = useCurrentUserStore(state => state)
-    const onFollow = () => {
-        console.log('blah')
-    }
-    return (
-        <div className="text-black w-full flex flex-col gap-y-2">
-            <Skeleton className="w-full h-[150px] bg-gray-500 rounded-none" />
-            <p className="text-2xl font-bold">{currentUser?.username}</p>
-            <p className="text-lg font-normal">{currentUser?.email}</p>
+  const { currentUser, updateCurrentUser } = useCurrentUserStore(
+    (state) => state,
+  );
 
-            <h1>Streak</h1>
-            {/* <Card onFollow={onFollow} /> */}
-            
-        </div>
-    );
-}
-export default Settings
+  useQuery("currentUser", getCurrentUser, {
+    onSuccess: (data) => {
+      updateCurrentUser(data.data.currentUser);
+    },
+  });
+  return (
+    <div className="text-black w-full flex flex-col justify-start items-start gap-y-2">
+      <div className="w-full text-start p-3 px-2 bg-gray-800">
+        <h3 className="text-white">Settings</h3>
+      </div>
+      <div className="w-full grid grid-cols-2 px-1 gap-1">
+        <Link
+          href="/settings/account"
+          className="flex h-[100px] flex-col justify-start items-start bg-gray-600 hover:bg-gray-700 rounded-md gap-y-1 text-white p-4 px-2"
+        >
+          <Image src={AccountSettings} alt="account setting" />
+          <p>Account Settings</p>
+        </Link>
+
+        <Link
+          href="/settings/profile"
+          className="flex h-[100px] flex-col justify-start items-start bg-gray-600 hover:bg-gray-700 rounded-md gap-y-1 text-white p-4 px-2"
+        >
+          <Image src={UserProfile} alt="user profile" />
+          <p>User Profile</p>
+        </Link>
+        <Link
+          href=""
+          className="flex h-[100px] flex-col justify-start items-start bg-gray-600 hover:bg-gray-700 rounded-md gap-y-1 text-white p-4 px-2"
+        >
+          <Image src={UserProfile} alt="user profile" />
+          <p>User Profile</p>
+        </Link>
+        <Link
+          href=""
+          className="flex h-[100px] flex-col justify-start items-start bg-gray-600 hover:bg-gray-700 rounded-md gap-y-1 text-white p-4 px-2"
+        >
+          <Image src={UserProfile} alt="user profile" />
+          <p>User Profile</p>
+        </Link>
+      </div>
+    </div>
+  );
+};
+export default Settings;
+

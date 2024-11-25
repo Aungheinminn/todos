@@ -16,7 +16,7 @@ const Wrapper:React.FC<WrapperProps> = ({ children, router }) => {
     const noWrapperRoutes = ["/login", "/signUp", "/unauthorized"];
     const isWrapperRequired = !noWrapperRoutes.includes(router);
     const [show, setShow] = useState<boolean>(false);
-    const noNavbarPages = ["/settings"]
+    const noNavbarPages = ["/settings", "/settings/account", "/settings/profile"]
     
     const handleToggle = () => {
         setShow(!show);

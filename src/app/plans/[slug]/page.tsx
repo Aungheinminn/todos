@@ -1,25 +1,19 @@
 "use client"
-import TooltipComponent from "@/components/Tooltip/Tooltip"
-import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
 import Image from "next/image"
 import Link from "next/link"
-import { Suspense, useState } from "react"
+import { Suspense } from "react"
 import back from "@/assets/arrow_left_black.svg"
-import add from "@/assets/add_white.svg"
 import cookieIcon from "@/assets/cookie.svg"
-import PopupComponent from "@/components/CreatePopup/CreatePopup"
 import { useCurrentUserStore } from "@/lib/userStore"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { getPlanById, getPlansByUser } from "@/lib/plan.service"
 import { createRoutine, getRoutinesByPlanId } from "@/lib/routines.service"
 import { RoutineType } from "@/lib/types/routine.type"
-import { PlanType } from "@/lib/types/plan.type"
 import { getCurrentUser } from "@/lib/users.service"
 import Loading from "@/components/Loading/Loading"
 import PlanLoading from "./loading"
 import { useCreatePopupStore, usePopupStore } from "@/lib/popupStore"
-import { Button } from "@/components/ui/button"
 import NotFound from "@/components/NotFound/NotFound"
 
 type PlanHeaderProps = {
@@ -99,20 +93,12 @@ const PlanOverview:React.FC<PlanOverviewProps> = ({ plan }) => {
     )
 }
 
-const PlanItems:React.FC<PlanItemsProps> = ({ routines, onCreate }) => {
+const PlanItems:React.FC<PlanItemsProps> = ({ routines }) => {
     const { openPopup, popupData } = usePopupStore()
-    const { openPopup: actionOpenPopup, popupData: actionPopupData } = useCreatePopupStore(state=>state)
     const handleOpenDetailPopup = (routine: RoutineType) => {
         popupData.title = 'Routine Details'
         popupData.name = routine.name
         openPopup()
-    }
-    const handleActionPopup = () => {
-        actionPopupData.name = ''
-        actionPopupData.description = ''
-        actionPopupData.type = 'createRoutine'
-        actionPopupData.process = onCreate
-        actionOpenPopup()
     }
     return (
         <div className="w-full flex flex-col gap-y-2 p-1 mb-4">
@@ -136,32 +122,6 @@ const PlanItems:React.FC<PlanItemsProps> = ({ routines, onCreate }) => {
         </div>
     )
 }
-
-// const PlanDailyActivityItems:React.FC<PlanDailyActivityItemsProps> = ({ plan }) => {
-//     const colors = ['#f87171', '#bef264', '#86efac', '#0ea5e9', '#22d3ee', '#8b5cf6', '#f43f5e', '#f472b6', '#701a75', '#083344']
-
-//     const randomColor = () => {
-//         return colors[Math.floor(Math.random() * colors.length)]
-//     }
-//     return (
-//         <div className="w-full flex flex-col p-1 gap-y-2 p-1">
-//             <p className="text-lg font-medium text-[#0ea5e9]">{plan.name}'s daily activity items</p>
-//             <div className="flex flex-wrap gap-1">
-//                 { Array.from({ length: 10}).map((_, index) => (
-//                     <Badge key={index} style={{
-//                         backgroundColor: randomColor()
-//                     }} className="cursor-pointer h-[30px] line-clamp-1 flex justify-self-stretch items-center justify-center text-md rounded-3xl">
-//                         <TooltipComponent text={`text - ${ index }`} />
-//                     </Badge>
-//                 ))}
-//                 <Badge className="cursor-pointer m-[2px] h-[30px] flex justify-between items-center gap-x-1 text-sm rounded-3xl bg-[#0eade9]">
-//                     <Image src={add} alt="add" className="w-5 h-5" />
-//                     <p className="mr-1">Add</p>
-//                 </Badge>
-//             </div>
-//         </div>
-//     )
-// }
 
 const Plan = ({ params }: {
     params: { slug: string}
@@ -230,10 +190,11 @@ const Plan = ({ params }: {
     }
 
     return (
+
+                // <PlanOverview plan={plan} />
         <Suspense fallback={<PlanLoading />}>
             <div className="w-full pt-[60px]">
                 <PlanHeader plan={plan} isPlanLoading={isPlanLoading} />
-                <PlanOverview plan={plan} />
                 <PlanItems routines={routines} onCreate={handleCreateRoutine} />
             </div>
         </Suspense>
