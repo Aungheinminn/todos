@@ -143,7 +143,7 @@ const Plan = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
 
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
-    (state) => state,
+    (state) => state
   );
 
   useQuery("currentUser", getCurrentUser, {
