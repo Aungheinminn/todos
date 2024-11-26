@@ -20,7 +20,7 @@ import { useItemDetailsPopupStore } from "@/lib/popupStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
-    (state) => state,
+    (state) => state
   );
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);

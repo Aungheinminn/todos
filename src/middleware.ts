@@ -40,7 +40,7 @@ export const middleware = async (req: NextRequest) => {
 
 export const config = {
   matcher: [
-    "/((?!api|login|signup|unauthorized|_next/static|_next/image|favicon.ico).*)",
+    "/((?!api|login|signup|unauthorized|redirect|_next/static|_next/image|favicon.ico).*)",
     "/api/protected/:path*",
   ],
 };

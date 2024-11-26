@@ -1,13 +1,17 @@
 "use client";
-
+import { useQuery } from "react-query";
 import Image from "next/image";
 import Link from "next/link";
 import back from "@/assets/arrow_left_black.svg";
 import { Button } from "@/components/ui/button";
+import AccountSwitcher from "@/components/AccountSwitcher/AccountSwitcher";
+import { useCurrentUserStore } from "@/lib/userStore";
+import { getCurrentUser } from "@/lib/users.service";
+import { UserType } from "@/lib/types/user.type";
 
 const AccountHeader = () => {
   return (
-    <div className="w-full flex justify-start items-center gap-x-2 px-2 py-3 bg-gray-900">
+    <div className="w-full flex justify-start items-center gap-x-2 px-2 py-3 bg-gray-800">
       <Link
         href="/settings"
         className="flex justify-center items-center gap-x-2"
@@ -29,9 +33,21 @@ const AccountFooter = () => {
 };
 
 const Account = () => {
+  const { currentUser, updateCurrentUser } = useCurrentUserStore(
+    (state) => state,
+  );
+
+  useQuery("currentUser", getCurrentUser, {
+    onSuccess: (data) => {
+      updateCurrentUser(data.data.currentUser);
+    },
+  });
+
+  console.log("currentUser", currentUser);
   return (
     <div className="w-full">
       <AccountHeader />
+      <AccountSwitcher currentUser={currentUser} addedUsers={[]} />
       <AccountFooter />
     </div>
   );

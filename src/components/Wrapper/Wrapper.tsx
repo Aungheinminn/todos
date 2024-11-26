@@ -13,10 +13,15 @@ const Wrapper: React.FC<WrapperProps> = ({ children, router }) => {
   const { currentUser } = useCurrentUserStore((state) => state);
 
   console.log("cur", currentUser, typeof router);
-  const noWrapperRoutes = ["/login", "/signUp", "/unauthorized"];
+  const noWrapperRoutes = ["/login", "/signUp", "/unauthorized", "/redirect"];
   const isWrapperRequired = !noWrapperRoutes.includes(router);
   const [show, setShow] = useState<boolean>(false);
-  const noNavbarPages = ["/settings", "/settings/account", "/settings/profile"];
+  const noNavbarPages = [
+    "/settings",
+    "/redirect",
+    "/settings/account",
+    "/settings/profile",
+  ];
 
   const handleToggle = () => {
     setShow(!show);

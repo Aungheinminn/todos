@@ -13,9 +13,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const UserAvatar = () => {
-  const { currentUser } = useCurrentUserStore(
-    (state) => state,
-  );
+  const { currentUser } = useCurrentUserStore((state) => state);
   console.log("currentUser", currentUser);
   const router = useRouter();
   const handleLogout = async () => {
