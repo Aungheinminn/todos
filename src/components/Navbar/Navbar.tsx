@@ -25,4 +25,3 @@ export const WebNavbar = () => {
     </div>
   );
 };
-
