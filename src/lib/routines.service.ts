@@ -13,7 +13,7 @@ export const createRoutine = async (routine: RoutineType) => {
         body: JSON.stringify(routine),
       },
     );
-    const res = await resp sgonse.json();
+    const res = await response.json();
     return res.data;
   } catch (e) {
     console.error(e);

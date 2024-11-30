@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useRef, useState } from "react";
+import { Suspense, useRef, useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import { getItemDetails, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
@@ -20,7 +20,7 @@ import { useItemDetailsPopupStore } from "@/lib/popupStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
-    (state) => state
+    (state) => state,
   );
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);

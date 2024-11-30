@@ -17,6 +17,7 @@ const Wrapper: React.FC<WrapperProps> = ({ children, router }) => {
   const isWrapperRequired = !noWrapperRoutes.includes(router);
   const [show, setShow] = useState<boolean>(false);
   const noNavbarPages = [
+    "/notifications",
     "/settings",
     "/redirect",
     "/settings/account",

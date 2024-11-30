@@ -1,8 +1,7 @@
 "use client"
 import whiteHouse from '../../assets/white_home.svg'
-import whiteCreate from '../../assets/white_create.svg'
-import whiteSettings from '../../assets/white_setting.svg'
 import whiteRoutines from '../../assets/white_routines.svg'
+import notifications from "@/assets/notification.svg"
 import item from '../../assets/white_item.svg'
 import Image from "next/image";
 import { useState } from 'react';
@@ -41,9 +40,9 @@ const Bottombar = () => {
                     <Image className="" src={whiteRoutines} alt="routines"  width={20} height={20} />
                 </div>
             </Link>  
-            <Link href="/settings" onClick={() => handleChange('settings')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
-                <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "settings" ? activeInterface : "" }`}>
-                    <Image className="" src={whiteSettings} alt="settings"  width={20} height={20} />
+            <Link href="/notifications" onClick={() => handleChange('notifications')} className="cursor-pointer w-[80px] relative group flex flex-col items-center">
+                <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "notifications" ? activeInterface : "" }`}>
+                    <Image className="" src={notifications} alt="notifications"  width={20} height={20} />
                 </div>
             </Link>
      
