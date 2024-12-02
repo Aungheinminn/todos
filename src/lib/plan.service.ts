@@ -109,4 +109,3 @@ export const deletePlan = async (id: string) => {
     console.error(e);
   }
 };
-

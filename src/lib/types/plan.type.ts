@@ -6,4 +6,3 @@ export type PlanType = {
   user_id: string;
   createdAt?: string;
 };
-

@@ -42,7 +42,6 @@ export const GET = async (
       return NextResponse.json({ message: "No plans found" }, { status: 404 });
     }
 
-    io.emit("plans", "hi");
     return NextResponse.json(
       { message: "Plans are successfully fetched", data: plans },
       { status: 200 },

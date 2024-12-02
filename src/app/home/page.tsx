@@ -1,4 +1,5 @@
-"use client";
+"use client"
+import { io } from "socket.io-client";
 import { Suspense, useRef, useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import { getItemDetails, getItems } from "@/lib/items.service";
@@ -168,6 +169,13 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    const socket = io();
+
+    if (currentUser?._id) {
+      socket.emit("join", currentUser._id);
+    }
+  });
   useOutsideClick(drawerRef, handleCloseDrawer);
 
   return (

@@ -3,26 +3,31 @@ import { LinkedUserSchema } from "@/lib/models/LinkedUser.model";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/dist/server/web/spec-extension/request";
 import { NextResponse } from "next/server";
+import { global } from "styled-jsx/css";
 
 export const POST = async (
   req: NextRequest,
-  params: {
+  {
+    params,
+  }: {
     params: {
       current_user_id: string;
     };
   },
 ) => {
+  if (!params) {
+    return NextResponse.json({ error: "User Id is required" }, { status: 500 });
+  }
+  const { current_user_id } = params;
   const body = await req.json();
-  const linkedUserData = LinkedUserSchema.parse(body);
-  const data = {
-    ...linkedUserData,
-    created_at: new Date().toISOString(),
-  };
+  // const linkedUserData = LinkedUserSchema.parse(body);
+  const linkedUserData = body;
+  console.log("linkedUserData", linkedUserData);
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const user = await db.collection("users").findOne({
-      _id: ObjectId.createFromHexString(linkedUserData.linked_user_id),
+      email: linkedUserData.email,
     });
 
     if (!user) {
@@ -33,13 +38,31 @@ export const POST = async (
         { status: 404 },
       );
     }
-    const linekdUser = await db.collection("linkedUsers").insertOne(data);
+
+    const data = {
+      user_id: current_user_id,
+      linked_user_id: user._id,
+      created_at: new Date().toISOString(),
+    };
+    const linkedUser = await db.collection("linkedUsers").insertOne(data);
+    console.log("linkedUser", linkedUser);
 
     const res = await db
-      .collection("addedUsers")
-      .findOne({ _id: linekdUser.insertedId });
+      .collection("linkedUsers")
+      .findOne({ _id: linkedUser.insertedId });
 
+    console.log("res", res, res?.linked_user_id.toString());
     if (res) {
+      const io = (global as any).io;
+      io.to(linkedUserData.linked_user_id).emit("notification", {
+        content: {
+          message: "You have been requested to add a user",
+          type: "success",
+        },
+        from: current_user_id,
+        to: res.linked_user_id.toString(),
+      });
+
       return NextResponse.json(
         {
           message: "User successfully added",

@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { postLinkedUser } from "@/lib/linkedUsers.service";
 
 type AccountSwitcherProps = {
   currentUser: UserType | null;
@@ -105,8 +106,12 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
 }) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const handleAddUser = () => {
-    console.log("hey", email, password);
+  const handleAddUser = async () => {
+    const res = await postLinkedUser(
+      { email: email, password: password },
+      currentUser?._id ?? "",
+    );
+    console.log("blah", email, password);
     setEmail("");
     setPassword("");
   };

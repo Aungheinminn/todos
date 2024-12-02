@@ -1,7 +1,10 @@
-export const postLinkedUser = async (data: {
-	user_id: string;
-	linked_user_id: string;
-}, id: string) => {
+export const postLinkedUser = async (
+  data: {
+    email: string;
+    password: string;
+  },
+  id: string,
+) => {
   try {
     const res = await fetch(
       `http://localhost:3000/api/protected/users/${id}/linkedUsers`,
@@ -25,10 +28,10 @@ export const getLinkedUsers = async (id: string) => {
     const res = await fetch(
       `http://localhost:3000/api/protected/users/${id}/linkedUsers`,
       {
-	method: "GET",
-	headers: {
-	  "Content-Type": "application/json",
-	},
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
     );
     const response = await res.json();
@@ -37,4 +40,3 @@ export const getLinkedUsers = async (id: string) => {
     console.error(error);
   }
 };
-
