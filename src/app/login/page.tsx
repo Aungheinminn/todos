@@ -138,7 +138,6 @@ const Login = () => {
         router.push("/home");
       } else {
         setPasswordError(res.error);
-	
       }
     } catch (e) {
       console.log("error", e);

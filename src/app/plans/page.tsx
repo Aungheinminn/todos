@@ -16,7 +16,6 @@ import NotFound from "@/components/NotFound/NotFound";
 import { PlanType } from "@/lib/types/plan.type";
 import { usePlanMutationsHook } from "./planMutationProvider";
 import MutateLoading from "@/components/MutateLoading/MutateLoading";
-import { io } from "socket.io-client";
 
 type PlansHeaderProps = {
   search: string;
@@ -97,19 +96,6 @@ const PlansBody: React.FC<PlansBodyProps> = ({
 };
 
 const Plans = () => {
-  useEffect(() => {
-    const socket = io();
-    socket.on("connect", () => {
-      console.log("socket is connected");
-    });
-
-    socket.on("plans", (data) => {
-      console.log(data, "data");
-    });
-    socket.on("disconnect", () => {
-      console.log("disconnected");
-    });
-  }, []);
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );

@@ -24,6 +24,13 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
+    socket.onAny((event, ...args) => {
+      console.log(event, args);
+    });
+
+    socket.on("join", (userId) => {
+      socket.join(userId);
+    });
 
     socket.on("disconnect", () => {
       console.log("Client disconnected:", socket.id);
