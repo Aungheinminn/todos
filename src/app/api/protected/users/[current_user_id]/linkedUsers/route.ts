@@ -65,6 +65,7 @@ export const POST = async (
 
       return NextResponse.json(
         {
+	  success: true,
           message: "User successfully added",
           data: res,
         },
@@ -73,6 +74,7 @@ export const POST = async (
     } else {
       return NextResponse.json(
         {
+	  success: false,
           message: "User not found",
         },
         { status: 404 },
@@ -81,7 +83,7 @@ export const POST = async (
   } catch (e) {
     console.error(e);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { success: false, message: "Internal Server Error" },
       { status: 500 },
     );
   }
