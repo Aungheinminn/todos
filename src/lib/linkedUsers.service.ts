@@ -16,8 +16,8 @@ export const postLinkedUser = async (
         body: JSON.stringify(data),
       },
     );
-    const response = await res.json();
-    return response.data;
+    // const response = await res.json();
+    return res.json();
   } catch (error) {
     console.error(error);
   }

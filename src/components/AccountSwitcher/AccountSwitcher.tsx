@@ -58,10 +58,10 @@ const AddUserUi: React.FC<AddUserProps> = ({
           <AlertDialogTitle>Add an account</AlertDialogTitle>
           <AlertDialogDescription className="flex flex-col gap-y-2">
             <div className="w-full flex flex-col gap-y-1">
-              <p className="text-white">Email</p>
+              <span className="text-white">Email</span>
               <input
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full focus:outline-none text-white bg-transparent border border-white rounded-md px-2 py-1"
+                className="w-full text-black focus:outline-none bg-white border border-white rounded-md px-2 py-1"
                 value={email}
                 type="email"
                 name="email"
@@ -69,10 +69,10 @@ const AddUserUi: React.FC<AddUserProps> = ({
               />
             </div>
             <div className="w-full flex flex-col gap-y-1">
-              <p className="text-white">Password</p>
+              <span className="text-white">Password</span>
               <input
                 onChange={(e) => setPasswod(e.target.value)}
-                className="w-full focus:outline-none text-white bg-transparent border border-white rounded-md px-2 py-1"
+                className="w-full text-black focus:outline-none bg-white border border-white rounded-md px-2 py-1"
                 value={password}
                 type={showPassword ? "text" : "password"}
                 name="password"
@@ -107,13 +107,21 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const handleAddUser = async () => {
-    const res = await postLinkedUser(
-      { email: email, password: password },
-      currentUser?._id ?? "",
-    );
-    console.log("blah", email, password);
-    setEmail("");
-    setPassword("");
+    try {
+      const res = await postLinkedUser(
+        { email: email, password: password },
+        currentUser?._id ?? "",
+      );
+      if (!res.success) {
+        console.log(res.message);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      console.log("blah", email, password);
+      setEmail("");
+      setPassword("");
+    }
   };
   if (currentUser === null) return <></>;
   return (
