@@ -29,7 +29,7 @@ app.prepare().then(() => {
     });
 
     socket.on("join", (userId) => {
-      console.log("userId", userId);
+      console.log("joined", "userId", userId);
       socket.join(userId);
     });
 

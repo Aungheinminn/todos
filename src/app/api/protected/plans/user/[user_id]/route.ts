@@ -21,7 +21,6 @@ export const GET = async (
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
-  const io = (global as any).io;
   const { user_id } = params;
   const { searchParams } = new URL(req.url);
   const searchKey = searchParams.get("search");

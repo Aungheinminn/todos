@@ -3,9 +3,10 @@ import { getCurrentUser } from "@/lib/users.service";
 import { useQuery } from "react-query";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
+import { Socket } from "@/lib/singleton/socketService";
 
 const Notifications = () => {
+  const socketIo = Socket.getInstance();
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
@@ -17,27 +18,9 @@ const Notifications = () => {
   });
 
   useEffect(() => {
-    const socket = io();
-
-    socket.on("connect", () => {
-      console.log("socket is connected");
-    });
-
-    socket.on("hey", (data) => {
-      console.log(data);
-    });
-
-    socket.on("notification", ({ content, to }) => {
-      if (currentUser?._id === to) {
-        console.log("content", content);
-        alert(content);
-      } else {
-        console.log("not for me");
-      }
-    });
-    socket.on("disconnect", () => {
-      console.log("disconnected");
-    });
+    socketIo.connect("notification");
+    socketIo.join(currentUser?._id || "");
+    socketIo.getNotifications();
   }, [currentUser]);
   return (
     <div>

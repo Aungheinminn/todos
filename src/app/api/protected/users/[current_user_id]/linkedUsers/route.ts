@@ -54,7 +54,7 @@ export const POST = async (
     console.log("res", res, res?.linked_user_id.toString());
     if (res) {
       const io = (global as any).io;
-      io.to(linkedUserData.linked_user_id).emit("notification", {
+      io.to(res.linked_user_id.toString()).emit("notification", {
         content: {
           message: "You have been requested to add a user",
           type: "success",
@@ -62,10 +62,9 @@ export const POST = async (
         from: current_user_id,
         to: res.linked_user_id.toString(),
       });
-
       return NextResponse.json(
         {
-	  success: true,
+          success: true,
           message: "User successfully added",
           data: res,
         },
@@ -74,7 +73,7 @@ export const POST = async (
     } else {
       return NextResponse.json(
         {
-	  success: false,
+          success: false,
           message: "User not found",
         },
         { status: 404 },
