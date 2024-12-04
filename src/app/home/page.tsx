@@ -1,5 +1,4 @@
-"use client"
-import { io } from "socket.io-client";
+"use client";
 import { Suspense, useRef, useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import { getItemDetails, getItems } from "@/lib/items.service";
@@ -18,11 +17,20 @@ import { RoutineType } from "@/lib/types/routine.type";
 import { ItemMutationProvider } from "./itemMutationProvider";
 import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
 import { useItemDetailsPopupStore } from "@/lib/popupStore";
+import { Socket } from "@/lib/singleton/socketService";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
+
+  const socketIo = Socket.getInstance();
+  useEffect(() => {
+    socketIo.connect("home");
+    socketIo.join(currentUser?._id || "");
+    socketIo.getNotifications();
+  }, [currentUser]);
+
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);
   const [step, setStep] = useState<number>(1);
@@ -168,14 +176,6 @@ const Home = () => {
       setOpen(false);
     }
   };
-
-  useEffect(() => {
-    const socket = io();
-
-    if (currentUser?._id) {
-      socket.emit("join", currentUser._id);
-    }
-  });
   useOutsideClick(drawerRef, handleCloseDrawer);
 
   return (
