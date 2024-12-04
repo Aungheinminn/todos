@@ -56,7 +56,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
       <AlertDialogContent className="bg-gray-700">
         <AlertDialogHeader>
           <AlertDialogTitle>Add an account</AlertDialogTitle>
-          <AlertDialogDescription className="flex flex-col gap-y-2">
+          <div className="flex flex-col gap-y-2">
             <div className="w-full flex flex-col gap-y-1">
               <span className="text-white">Email</span>
               <input
@@ -85,7 +85,8 @@ const AddUserUi: React.FC<AddUserProps> = ({
             >
               {showPassword ? "Hide password" : "Show password"}
             </p>
-          </AlertDialogDescription>
+          </div>
+					<AlertDialogDescription></AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="w-full flex justify-center items-center">
           <AlertDialogCancel className="w-1/2 text-black">
