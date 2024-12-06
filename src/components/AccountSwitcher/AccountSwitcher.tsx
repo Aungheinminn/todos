@@ -30,34 +30,40 @@ type AccountSwitcherProps = {
 };
 
 type AddUserProps = {
+  open: boolean;
   email: string;
   password: string;
+  errorMessage: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPasswod: React.Dispatch<React.SetStateAction<string>>;
   handleAddUser: () => void;
 };
 
 const AddUserUi: React.FC<AddUserProps> = ({
+  open,
   email,
   password,
+  errorMessage,
+  setOpen,
   setEmail,
   setPasswod,
   handleAddUser,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger onClick={() => setOpen(true)} asChild>
         <div className="w-[150px] cursor-pointer flex items-center gap-x-2">
           <Image className="w-8 h-8" src={addIcon} alt="add icon" />
-          <p>Add an account</p>
+          <p>Link an account</p>
         </div>
       </AlertDialogTrigger>
-      <AlertDialogContent className="bg-gray-700">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Add an account</AlertDialogTitle>
-          <div className="flex flex-col gap-y-2">
-            <div className="w-full flex flex-col gap-y-1">
+      <AlertDialogContent className="w-[90%] md:w-full bg-gray-700 rounded-lg">
+        <AlertDialogHeader className="w-full flex flex-col items-start">
+          <AlertDialogTitle>Link an account</AlertDialogTitle>
+          <div className="w-full flex flex-col  gap-y-2">
+            <div className="w-full flex flex-col items-start gap-y-1">
               <span className="text-white">Email</span>
               <input
                 onChange={(e) => setEmail(e.target.value)}
@@ -68,7 +74,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
                 id="email"
               />
             </div>
-            <div className="w-full flex flex-col gap-y-1">
+            <div className="w-full flex flex-col items-start gap-y-1">
               <span className="text-white">Password</span>
               <input
                 onChange={(e) => setPasswod(e.target.value)}
@@ -81,20 +87,25 @@ const AddUserUi: React.FC<AddUserProps> = ({
             </div>
             <p
               onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer text-sky-500"
+              className="w-full text-start cursor-pointer text-sky-500"
             >
               {showPassword ? "Hide password" : "Show password"}
             </p>
+            <p
+              className="w-full text-start cursor-pointer text-red-500"
+            >
+              {errorMessage}
+            </p>
           </div>
-					<AlertDialogDescription></AlertDialogDescription>
+          <AlertDialogDescription></AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter className="w-full flex justify-center items-center">
-          <AlertDialogCancel className="w-1/2 text-black">
+        <AlertDialogFooter className="w-full flex flex-row justify-center items-center gap-x-2">
+          <AlertDialogCancel className="m-0 p-0 w-1/2 h-9 text-black" onClick={() => setOpen(false)}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={handleAddUser} className="w-1/2">
+          <Button className="m-0 p-0 w-1/2 h-9" onClick={handleAddUser}>
             Continue
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -105,8 +116,10 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
   currentUser,
   addedUsers,
 }) => {
+  const [open, setOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const handleAddUser = async () => {
     try {
       const res = await postLinkedUser(
@@ -114,9 +127,15 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
         currentUser?._id ?? "",
       );
       if (!res.success) {
+        setOpen(true);
         console.log(res.message);
+        setErrorMessage(res.message);
+      } else {
+        setOpen(false);
       }
     } catch (e) {
+      setOpen(true);
+      setErrorMessage("Something went wrong");
       console.log(e);
     } finally {
       console.log("blah", email, password);
@@ -149,8 +168,11 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
               })
             : ""}
           <AddUserUi
+            open={open}
             email={email}
             password={password}
+            errorMessage={errorMessage}
+            setOpen={setOpen}
             setEmail={setEmail}
             setPasswod={setPassword}
             handleAddUser={handleAddUser}
