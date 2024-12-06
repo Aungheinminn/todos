@@ -39,16 +39,49 @@ export const POST = async (
       );
     }
 
+    if(user._id.toString() === current_user_id){
+      return NextResponse.json(
+        {
+          message: "You cannot add yourself",
+        },
+        { status: 404 },
+      );
+    }
+
     const data = {
       user_id: current_user_id,
       linked_user_id: user._id,
+      status: "pending",
       created_at: new Date().toISOString(),
     };
-    const linkedUser = await db.collection("linkedUsers").insertOne(data);
+
+    const findLinkedUser = await db
+      .collection("linked_users")
+      .findOne({ user_id: current_user_id, linked_user_id: user._id });
+
+    if (findLinkedUser) {
+      if (findLinkedUser.status === "accepted") {
+        return NextResponse.json(
+          {
+            message: "You have been linked with this user",
+          },
+          { status: 404 },
+        );
+      } else if (findLinkedUser.status === "pending") {
+        return NextResponse.json(
+          {
+            message: "You have sent a request to this user",
+          },
+          { status: 404 },
+        );
+      }
+    }
+
+    const linkedUser = await db.collection("linked_users").insertOne(data);
     console.log("linkedUser", linkedUser);
 
     const res = await db
-      .collection("linkedUsers")
+      .collection("linked_users")
       .findOne({ _id: linkedUser.insertedId });
 
     console.log("res", res, res?.linked_user_id.toString());
@@ -106,7 +139,7 @@ export const GET = async (
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const addedUsers = await db
-      .collection("linkedUsers")
+      .collection("linked_users")
       .find({ user_id: current_user_id })
       .toArray();
     if (!addedUsers) {
