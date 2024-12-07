@@ -1,4 +1,3 @@
-
 import { io } from "socket.io-client";
 
 export class Socket {
@@ -28,7 +27,7 @@ export class Socket {
   }
 
   getNotifications() {
-    this.socket.on("notification", (data) => {
+    this.socket.on("notifications", (data) => {
       console.log(data);
     });
   }

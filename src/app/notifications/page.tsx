@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
+import { useNotificationStore } from "@/lib/notificationStore";
 
 const Notifications = () => {
   const socketIo = Socket.getInstance();
@@ -21,7 +22,11 @@ const Notifications = () => {
     socketIo.connect("notification");
     socketIo.join(currentUser?._id || "");
     socketIo.getNotifications();
-  }, [currentUser]);
+
+    return () => {
+      socketIo.disconnect();
+    };
+  }, []);
   return (
     <div>
       <div className="w-full text-start p-3 px-2 bg-gray-800">

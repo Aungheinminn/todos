@@ -7,8 +7,10 @@ import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useNotificationStore } from "@/lib/notificationStore";
 
 const Bottombar = () => {
+  const { pendingNotifications } = useNotificationStore((state) => state);
   const path = usePathname();
   const modifiedPath = path.split("/")[1].toString();
   const [active, setActive] = useState(path ? modifiedPath : "home");
@@ -32,8 +34,8 @@ const Bottombar = () => {
             className=""
             src={whiteHouse}
             alt="home"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
           />
         </div>
       </Link>
@@ -45,7 +47,7 @@ const Bottombar = () => {
         <div
           className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "routines" ? activeInterface : ""}`}
         >
-          <Image className="" src={item} alt="home" width={20} height={20} />
+          <Image className="" src={item} alt="home" width={25} height={25} />
         </div>
       </Link>
       {/* <div onClick={() => {}} className="cursor-pointer w-[40px] relative group flex flex-col items-center bg-[#58ed18] rounded-full">
@@ -65,8 +67,8 @@ const Bottombar = () => {
             className=""
             src={whiteRoutines}
             alt="routines"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
           />
         </div>
       </Link>
@@ -76,14 +78,23 @@ const Bottombar = () => {
         className="cursor-pointer w-[80px] relative group flex flex-col items-center"
       >
         <div
-          className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "notifications" ? activeInterface : ""}`}
+          className={`relative transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "notifications" ? activeInterface : ""}`}
         >
+          <div
+            className={`absolute top-0 right-0 w-5 h-5 rounded-full flex justify-center items-center bg-red-500 ${pendingNotifications.length <= 0 && "hidden"}`}
+          >
+            <p className="text-[10px]">
+              {pendingNotifications.length > 9
+                ? "9+"
+                : pendingNotifications.length}
+            </p>
+          </div>
           <Image
             className=""
             src={notifications}
             alt="notifications"
-            width={20}
-            height={20}
+            width={25}
+            height={25}
           />
         </div>
       </Link>
@@ -92,4 +103,3 @@ const Bottombar = () => {
 };
 
 export default Bottombar;
-

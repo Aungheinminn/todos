@@ -18,18 +18,28 @@ import { ItemMutationProvider } from "./itemMutationProvider";
 import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
 import { useItemDetailsPopupStore } from "@/lib/popupStore";
 import { Socket } from "@/lib/singleton/socketService";
+import { getPendingNotifications } from "@/lib/notifications.service";
+import { useNotificationStore } from "@/lib/notificationStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
 
+  const { updatePendingNotifications } =
+    useNotificationStore((state) => state);
+
+
   const socketIo = Socket.getInstance();
   useEffect(() => {
     socketIo.connect("home");
     socketIo.join(currentUser?._id || "");
     socketIo.getNotifications();
-  }, [currentUser]);
+
+    return () => {
+      socketIo.disconnect();
+    };
+  }, []);
 
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);
@@ -55,6 +65,15 @@ const Home = () => {
     },
   });
   console.log("current", currentUser);
+
+  useQuery({
+    queryKey: ["notifications", currentUser?._id],
+    queryFn: () => getPendingNotifications(currentUser?._id ?? ""),
+    onSuccess: (data) => {
+      updatePendingNotifications(data);
+    },
+    enabled: !!currentUser?._id,
+  });
 
   const { data: items } = useQuery({
     queryKey: ["items", currentUser?._id],

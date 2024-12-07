@@ -19,6 +19,7 @@ app.prepare().then(() => {
     },
   });
 
+  console.log("it started");
   // Make io accessible globally
   global.io = io;
 
@@ -28,9 +29,10 @@ app.prepare().then(() => {
       console.log(event, args);
     });
 
-    socket.on("join", (userId) => {
+    socket.on("join",  (userId) => {
       console.log("joined", "userId", userId);
-      socket.join(userId);
+         socket.join(userId);
+
     });
 
     socket.on("disconnect", () => {
