@@ -18,7 +18,7 @@ import { ItemMutationProvider } from "./itemMutationProvider";
 import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
 import { useItemDetailsPopupStore } from "@/lib/popupStore";
 import { Socket } from "@/lib/singleton/socketService";
-import { getPendingNotifications } from "@/lib/notifications.service";
+import { getUnseenNotifications } from "@/lib/notifications.service";
 import { useNotificationStore } from "@/lib/notificationStore";
 
 const Home = () => {
@@ -26,9 +26,7 @@ const Home = () => {
     (state) => state,
   );
 
-  const { updatePendingNotifications } =
-    useNotificationStore((state) => state);
-
+  const { updatePendingNotifications } = useNotificationStore((state) => state);
 
   const socketIo = Socket.getInstance();
   useEffect(() => {
@@ -68,7 +66,7 @@ const Home = () => {
 
   useQuery({
     queryKey: ["notifications", currentUser?._id],
-    queryFn: () => getPendingNotifications(currentUser?._id ?? ""),
+    queryFn: () => getUnseenNotifications(currentUser?._id ?? ""),
     onSuccess: (data) => {
       updatePendingNotifications(data);
     },

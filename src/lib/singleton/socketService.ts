@@ -1,3 +1,4 @@
+import { QueryClient } from "react-query";
 import { io } from "socket.io-client";
 
 export class Socket {
@@ -27,8 +28,9 @@ export class Socket {
   }
 
   getNotifications() {
-    this.socket.on("notifications", (data) => {
+    this.socket.on("notifications", (data: any) => {
       console.log(data);
+      return data;
     });
   }
 
