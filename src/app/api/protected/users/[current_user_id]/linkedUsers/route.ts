@@ -39,7 +39,7 @@ export const POST = async (
       );
     }
 
-    if(user._id.toString() === current_user_id){
+    if (user._id.toString() === current_user_id) {
       return NextResponse.json(
         {
           message: "You cannot add yourself",
@@ -50,14 +50,17 @@ export const POST = async (
 
     const data = {
       user_id: current_user_id,
-      linked_user_id: user._id,
+      linked_user_id: user._id.toString(),
       status: "pending",
       created_at: new Date().toISOString(),
     };
 
-    const findLinkedUser = await db
-      .collection("linked_users")
-      .findOne({ user_id: current_user_id, linked_user_id: user._id });
+    const findLinkedUser = await db.collection("linked_users").findOne({
+      $or: [
+        { user_id: current_user_id, linked_user_id: user._id.toString() },
+        { user_id: user._id.toString(), linked_user_id: current_user_id },
+      ],
+    });
 
     if (findLinkedUser) {
       if (findLinkedUser.status === "accepted") {
@@ -70,7 +73,10 @@ export const POST = async (
       } else if (findLinkedUser.status === "pending") {
         return NextResponse.json(
           {
-            message: "You have sent a request to this user",
+            message:
+              findLinkedUser.user_id === current_user_id
+                ? "You have sent a request to this user"
+                : "You have a request from this user",
           },
           { status: 404 },
         );
@@ -86,15 +92,28 @@ export const POST = async (
 
     console.log("res", res, res?.linked_user_id.toString());
     if (res) {
-      const io = (global as any).io;
-      io.to(res.linked_user_id.toString()).emit("notification", {
-        content: {
-          message: "You have been requested to add a user",
-          type: "success",
-        },
+      const notification = await db.collection("notifications").insertOne({
+        type: "account_linking",
+        user_id: res.linked_user_id.toString(),
         from: current_user_id,
-        to: res.linked_user_id.toString(),
+        status: "pending",
+        content: {
+          message: "You have been requested to link with a user",
+        },
       });
+      if (notification) {
+        const io = (global as any).io;
+        io.to(res.linked_user_id.toString()).emit("notifications", {
+          type: "account_linking",
+          user_id: res.linked_user_id.toString(),
+          from: current_user_id,
+          status: "pending",
+          content: {
+            message: "You have been requested to link with a user",
+            type: "success",
+          },
+        });
+      }
       return NextResponse.json(
         {
           success: true,
