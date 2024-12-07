@@ -20,7 +20,10 @@ export const GET = async (
     const db = client.db("remarker_next");
     const notification = await db
       .collection("notifications")
-      .find({ user_id:user_id, status:"pending" })
+      .find({
+        user_id: user_id,
+        $or: [{ status: "pending" }, { status: "new" }],
+      })
       .toArray();
     if (!notification) {
       return NextResponse.json(
