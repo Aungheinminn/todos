@@ -2,7 +2,7 @@
 import { getCurrentUser } from "@/lib/users.service";
 import { useQuery, useQueryClient } from "react-query";
 import { useCurrentUserStore } from "@/lib/userStore";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
 import { useNotificationStore } from "@/lib/notificationStore";
 import {
@@ -17,7 +17,6 @@ const Notifications = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
-
   const { resetPendingNotifications } = useNotificationStore((state) => state);
 
   useQuery("currentUser", getCurrentUser, {
@@ -35,16 +34,21 @@ const Notifications = () => {
     },
   });
   console.log("notifications", notifications);
-
   useEffect(() => {
     socketIo.connect("notification");
     socketIo.join(currentUser?._id || "");
-    socketIo.getNotifications();
+    socketIo.getNotifications((data: any) => {
+      console.log("getNotifications in noti", data);
+      if(data){
+        queryClient.setQueryData("notifications", (old: any) => [data, ...old]);
+      }
+    });
 
     return () => {
+      socketIo.socket.off("notifications");
       socketIo.disconnect();
     };
-  }, []);
+  }, [currentUser]);
   return (
     <div>
       <div className="w-full text-start p-3 px-2 bg-gray-800">

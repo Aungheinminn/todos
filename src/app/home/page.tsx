@@ -32,12 +32,14 @@ const Home = () => {
   useEffect(() => {
     socketIo.connect("home");
     socketIo.join(currentUser?._id || "");
-    socketIo.getNotifications();
+    socketIo.getNotifications((data) => {
+      console.log("getNotifications in home", data);
+    });
 
     return () => {
       socketIo.disconnect();
     };
-  }, []);
+  }, [currentUser]);
 
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);

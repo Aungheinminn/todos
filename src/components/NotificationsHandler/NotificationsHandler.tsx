@@ -8,11 +8,12 @@ const NoticationsHandler: React.FC<NotificationsHandlerProps> = ({
 }) => {
   return (
     <div>
-      {notifications && notifications.map((noti) => (
-        <div className="text-black" key={noti._id}>
-          {noti.status} {noti.type}
-        </div>
-      ))}
+      {notifications &&
+        notifications.map((noti, index) => (
+          <div className="text-black" key={index}>
+            {noti.status} {noti.type}
+          </div>
+        ))}
     </div>
   );
 };
