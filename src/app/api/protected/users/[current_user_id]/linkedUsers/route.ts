@@ -86,31 +86,33 @@ export const POST = async (
     const linkedUser = await db.collection("linked_users").insertOne(data);
     console.log("linkedUser", linkedUser);
 
+    const currentUser = await db
+      .collection("users").findOne({ _id: new ObjectId(current_user_id) });
+
     const res = await db
       .collection("linked_users")
       .findOne({ _id: linkedUser.insertedId });
 
     console.log("res", res, res?.linked_user_id.toString());
-    if (res) {
+    if (res && currentUser) {
       const notification = await db.collection("notifications").insertOne({
-        type: "account_linking",
+        type: "LINKING_ACCOUNT",
         user_id: res.linked_user_id.toString(),
-        from: current_user_id,
+        from: currentUser.username,
         status: "pending",
         content: {
-          message: "You have been requested to link with a user",
+          message: `${currentUser.username} requested to link with you.`,
         },
       });
       if (notification) {
         const io = (global as any).io;
         io.to(res.linked_user_id.toString()).emit("notifications", {
-          type: "account_linking",
+          type: "LINKING_ACCOUNT",
           user_id: res.linked_user_id.toString(),
-          from: current_user_id,
+          from: currentUser.username,
           status: "pending",
           content: {
-            message: "You have been requested to link with a user",
-            type: "success",
+            message: `${currentUser.username} requested to link with you.`,
           },
         });
       }
