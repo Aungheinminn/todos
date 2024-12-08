@@ -1,4 +1,5 @@
 import { NotificationType } from "@/lib/types/notification.type";
+import NotificationTypeHandler from "../Notifications/NotificationTypeHandler";
 
 type NotificationsHandlerProps = {
   notifications: any[];
@@ -7,12 +8,10 @@ const NoticationsHandler: React.FC<NotificationsHandlerProps> = ({
   notifications,
 }) => {
   return (
-    <div>
+    <div className="w-full grid grid-cols-1 gap-y-2 p-1">
       {notifications &&
         notifications.map((noti, index) => (
-          <div className="text-black" key={index}>
-            {noti.status} {noti.type}
-          </div>
+          <NotificationTypeHandler key={index} notification={noti} />
         ))}
     </div>
   );
