@@ -40,14 +40,6 @@ export const GET = async (
     if (!plans) {
       return NextResponse.json({ message: "No plans found" }, { status: 404 });
     }
-
-      const io = (global as any).io;
-      io.to("6697e714f8af965f05b8c408").emit("notification", {
-        content: {
-          message: "You have been requested to add a user",
-          type: "success",
-        },
-      });
     return NextResponse.json(
       { message: "Plans are successfully fetched", data: plans },
       { status: 200 },

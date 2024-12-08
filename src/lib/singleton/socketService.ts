@@ -1,4 +1,3 @@
-import { QueryClient } from "react-query";
 import { io } from "socket.io-client";
 
 export class Socket {
@@ -24,13 +23,14 @@ export class Socket {
   }
 
   join(channel: string) {
+    console.log("join", channel);
     this.socket.emit("join", channel);
   }
 
-  getNotifications() {
+  getNotifications(callback: (data: any) => void) {
     this.socket.on("notifications", (data: any) => {
-      console.log(data);
-      return data;
+      console.log("Notification received:", data);
+      callback(data);
     });
   }
 
