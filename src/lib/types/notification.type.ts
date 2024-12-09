@@ -3,6 +3,9 @@ export type NotificationType = {
   type: string;
   user_id: string;
   status: string;
-  from: string;
+  from: {
+    email: string;
+    name: string;
+  };
   content: any;
-}
+};

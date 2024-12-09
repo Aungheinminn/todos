@@ -98,7 +98,10 @@ export const POST = async (
       const notification = await db.collection("notifications").insertOne({
         type: "LINKING_ACCOUNT",
         user_id: res.linked_user_id.toString(),
-        from: currentUser.username,
+        from: {
+          email: currentUser.email,
+          name: currentUser.username
+        },
         status: "pending",
         content: {
           message: `${currentUser.username} requested to link with you.`,
