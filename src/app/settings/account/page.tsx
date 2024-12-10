@@ -8,6 +8,7 @@ import AccountSwitcher from "@/components/AccountSwitcher/AccountSwitcher";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { getCurrentUser } from "@/lib/users.service";
 import { UserType } from "@/lib/types/user.type";
+import { getLinkedUsers } from "@/lib/linkedUsers.service";
 
 const AccountHeader = () => {
   return (
@@ -43,11 +44,17 @@ const Account = () => {
     },
   });
 
+  const { data: linkedUsers } = useQuery({
+    queryKey: ["linkedUsers"],
+    queryFn: () => getLinkedUsers(currentUser?._id || ""),
+    enabled: !!currentUser?._id,
+  });
+
   console.log("currentUser", currentUser);
   return (
     <div className="w-full">
       <AccountHeader />
-      <AccountSwitcher currentUser={currentUser} addedUsers={[]} />
+      <AccountSwitcher currentUser={currentUser} addedUsers={linkedUsers} />
       <AccountFooter />
     </div>
   );

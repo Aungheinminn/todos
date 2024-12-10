@@ -13,7 +13,7 @@ const LinkingAccountNotification = ({
     >
       <div className="w-full flex justify-start gap-x-2">
         <div className="flex justify-center items-center text-white bg-gray-600 h-12 w-12 rounded-full">
-          <p>{from.name.slice(0, 2)}</p>
+          <p>{from.name && from.name.slice(0, 2)}</p>
         </div>
         <p className="max-w-[80%] text-black line-clamp-2 overflow-y-hidden">
           {content.message}

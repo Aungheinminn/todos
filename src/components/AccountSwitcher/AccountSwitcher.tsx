@@ -91,16 +91,17 @@ const AddUserUi: React.FC<AddUserProps> = ({
             >
               {showPassword ? "Hide password" : "Show password"}
             </p>
-            <p
-              className="w-full text-start cursor-pointer text-red-500"
-            >
+            <p className="w-full text-start cursor-pointer text-red-500">
               {errorMessage}
             </p>
           </div>
           <AlertDialogDescription></AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="w-full flex flex-row justify-center items-center gap-x-2">
-          <AlertDialogCancel className="m-0 p-0 w-1/2 h-9 text-black" onClick={() => setOpen(false)}>
+          <AlertDialogCancel
+            className="m-0 p-0 w-1/2 h-9 text-black"
+            onClick={() => setOpen(false)}
+          >
             Cancel
           </AlertDialogCancel>
           <Button className="m-0 p-0 w-1/2 h-9" onClick={handleAddUser}>
@@ -164,7 +165,7 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
         <AccordionContent className="flex flex-col gap-y-2 mt-3 pb-2 px-2">
           {addedUsers
             ? addedUsers.map((user) => {
-                return <p key="a">asf</p>;
+                return <p key="a">user</p>;
               })
             : ""}
           <AddUserUi
