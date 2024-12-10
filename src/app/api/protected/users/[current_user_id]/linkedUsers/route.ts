@@ -1,5 +1,5 @@
 import clientPromise from "@/lib/database";
-import { LinkedUserSchema } from "@/lib/models/LinkedUser.model";
+// import { LinkedUserSchema } from "@/lib/models/LinkedUser.model";
 import { ObjectId } from "mongodb";
 import { NextRequest } from "next/dist/server/web/spec-extension/request";
 import { NextResponse } from "next/server";
@@ -23,119 +23,153 @@ export const POST = async (
   // const linkedUserData = LinkedUserSchema.parse(body);
   const linkedUserData = body;
   console.log("linkedUserData", linkedUserData);
+  const client = await clientPromise;
+  const db = client.db("remarker_next");
+  const session = client.startSession();
   try {
-    const client = await clientPromise;
-    const db = client.db("remarker_next");
-    const user = await db.collection("users").findOne({
-      email: linkedUserData.email,
-    });
+      const currentUser = await db
+        .collection("users")
+        .findOne({ _id: new ObjectId(current_user_id) });
 
-    if (!user) {
-      return NextResponse.json(
-        {
-          message: "User is not existed",
-        },
-        { status: 404 },
-      );
-    }
+      const user = await db.collection("users").findOne({
+        email: linkedUserData.email,
+      });
 
-    if (user._id.toString() === current_user_id) {
-      return NextResponse.json(
-        {
-          message: "You cannot add yourself",
-        },
-        { status: 404 },
-      );
-    }
-
-    const data = {
-      user_id: current_user_id,
-      linked_user_id: user._id.toString(),
-      status: "pending",
-      created_at: new Date().toISOString(),
-    };
-
-    const findLinkedUser = await db.collection("linked_users").findOne({
-      $or: [
-        { user_id: current_user_id, linked_user_id: user._id.toString() },
-        { user_id: user._id.toString(), linked_user_id: current_user_id },
-      ],
-    });
-
-    if (findLinkedUser) {
-      if (findLinkedUser.status === "accepted") {
+      if (!user || !currentUser) {
         return NextResponse.json(
           {
-            message: "You have been linked with this user",
-          },
-          { status: 404 },
-        );
-      } else if (findLinkedUser.status === "pending") {
-        return NextResponse.json(
-          {
-            message:
-              findLinkedUser.user_id === current_user_id
-                ? "You have sent a request to this user"
-                : "You have a request from this user",
+            message: "User is not existed",
           },
           { status: 404 },
         );
       }
-    }
+      // console.log("users", user, currentUser);
 
-    const linkedUser = await db.collection("linked_users").insertOne(data);
-    console.log("linkedUser", linkedUser);
+      if (user._id.toString() === current_user_id) {
+        return NextResponse.json(
+          {
+            message: "You cannot add yourself",
+          },
+          { status: 404 },
+        );
+      }
 
-    const currentUser = await db
-      .collection("users").findOne({ _id: new ObjectId(current_user_id) });
-
-    const res = await db
-      .collection("linked_users")
-      .findOne({ _id: linkedUser.insertedId });
-
-    console.log("res", res, res?.linked_user_id.toString());
-    if (res && currentUser) {
-      const notification = await db.collection("notifications").insertOne({
-        type: "LINKING_ACCOUNT",
-        user_id: res.linked_user_id.toString(),
-        from: {
+      const data = {
+        primary_user: {
+          id: currentUser._id.toString(),
           email: currentUser.email,
-          name: currentUser.username
+          username: currentUser.username,
+        },
+        linked_user: {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
         },
         status: "pending",
-        content: {
-          message: `${currentUser.username} requested to link with you.`,
-        },
+        created_at: new Date().toISOString(),
+      };
+
+      const findLinkedUser = await db.collection("linked_users").findOne({
+        $or: [
+          {
+            "primary_user.id": current_user_id,
+            "linked_user.id": user._id.toString(),
+          },
+          {
+            "primary_user.id": user._id.toString(),
+            "linked_user.id": current_user_id,
+          },
+        ],
       });
-      if (notification) {
-        const io = (global as any).io;
-        io.to(res.linked_user_id.toString()).emit("notifications", {
+
+      console.log("findLinkedUser", findLinkedUser);
+
+      if (findLinkedUser) {
+        if (findLinkedUser.status === "accepted") {
+          return NextResponse.json(
+            {
+              message: "You have been linked with this user",
+            },
+            { status: 404 },
+          );
+        } else if (findLinkedUser.status === "pending") {
+          return NextResponse.json(
+            {
+              message:
+                findLinkedUser.user_id === current_user_id
+                  ? "You have sent a request to this user"
+                  : "You have a request from this user",
+            },
+            { status: 404 },
+          );
+        }
+      }
+
+      const linkedUser = await db.collection("linked_users").insertOne(data);
+      console.log("linkedUser", linkedUser);
+
+      const res = await db
+        .collection("linked_users")
+        .findOne({ _id: linkedUser.insertedId });
+
+      // console.log("res", res, res?.linked_user_id.toString());
+
+      // console.log("users", user._id, currentUser._id, res);
+      if (res) {
+        const notification = await db.collection("notifications").insertOne({
           type: "LINKING_ACCOUNT",
-          user_id: res.linked_user_id.toString(),
-          from: currentUser.username,
+          to: {
+            id: user._id.toString(),
+            email: user.email,
+            username: user.username,
+          },
+          from: {
+            id: currentUser._id.toString(),
+            email: currentUser.email,
+            name: currentUser.username,
+          },
           status: "pending",
           content: {
             message: `${currentUser.username} requested to link with you.`,
           },
         });
+        if (notification) {
+          const io = (global as any).io;
+          io.to(res.linked_user_id.toString()).emit("notifications", {
+            type: "LINKING_ACCOUNT",
+            to: {
+              id: res._id.toString(),
+              email: res.email,
+              username: res.username,
+            },
+            from: {
+              id: currentUser._id.toString(),
+              email: currentUser.email,
+              name: currentUser.username,
+            },
+            status: "pending",
+            content: {
+              message: `${currentUser.username} requested to link with you.`,
+            },
+          });
+        }
+        return NextResponse.json(
+          {
+            success: true,
+            message: "User successfully added",
+            data: res,
+          },
+          { status: 200 },
+        );
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "User not found",
+          },
+          { status: 404 },
+        );
       }
-      return NextResponse.json(
-        {
-          success: true,
-          message: "User successfully added",
-          data: res,
-        },
-        { status: 200 },
-      );
-    } else {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "User not found",
-        },
-        { status: 404 },
-      );
-    }
   } catch (e) {
     console.error(e);
     return NextResponse.json(
@@ -162,18 +196,26 @@ export const GET = async (
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    const addedUsers = await db
+
+    const linkedUsers = await db
       .collection("linked_users")
-      .find({ user_id: current_user_id })
+      .find({
+        $or: [
+          {
+            user_id: current_user_id,
+            linked_user_id: current_user_id.toString(),
+          },
+        ],
+      })
       .toArray();
-    if (!addedUsers) {
+    if (!linkedUsers) {
       return NextResponse.json(
         { message: "No Linked users are found" },
         { status: 404 },
       );
     }
     return NextResponse.json(
-      { message: "Linked Users are successfully fetched", data: addedUsers },
+      { message: "Linked Users are successfully fetched", data: linkedUsers },
       { status: 200 },
     );
   } catch (e) {
