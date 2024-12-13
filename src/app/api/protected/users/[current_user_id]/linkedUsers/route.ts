@@ -68,6 +68,7 @@ export const POST = async (
         status: "pending",
         created_at: new Date().toISOString(),
       };
+    console.log("data", data);
 
       const findLinkedUser = await db.collection("linked_users").findOne({
         $or: [
@@ -81,10 +82,9 @@ export const POST = async (
           },
         ],
       });
-
       console.log("findLinkedUser", findLinkedUser);
 
-      if (findLinkedUser) {
+      if (findLinkedUser ) {
         if (findLinkedUser.status === "accepted") {
           return NextResponse.json(
             {
@@ -105,23 +105,25 @@ export const POST = async (
         }
       }
 
+
       const linkedUser = await db.collection("linked_users").insertOne(data);
       console.log("linkedUser", linkedUser);
 
+      //
       const res = await db
         .collection("linked_users")
         .findOne({ _id: linkedUser.insertedId });
+     
+      
+      console.log("res", res);
 
-      // console.log("res", res, res?.linked_user_id.toString());
-
-      // console.log("users", user._id, currentUser._id, res);
       if (res) {
         const notification = await db.collection("notifications").insertOne({
           type: "LINKING_ACCOUNT",
           to: {
-            id: user._id.toString(),
-            email: user.email,
-            username: user.username,
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
           },
           from: {
             id: currentUser._id.toString(),
@@ -135,12 +137,12 @@ export const POST = async (
         });
         if (notification) {
           const io = (global as any).io;
-          io.to(res.linked_user_id.toString()).emit("notifications", {
+          io.to(res.linked_user.id.toString()).emit("notifications", {
             type: "LINKING_ACCOUNT",
             to: {
-              id: res._id.toString(),
-              email: res.email,
-              username: res.username,
+              id: user._id.toString(),
+              email: user.email,
+              username: user.username,
             },
             from: {
               id: currentUser._id.toString(),
