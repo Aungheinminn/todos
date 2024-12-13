@@ -1,7 +1,7 @@
 export type NotificationType = {
   _id?: string;
   type: string;
-  to:{
+  to: {
     id: string;
     email: string;
     name: string;
@@ -13,4 +13,5 @@ export type NotificationType = {
     name: string;
   };
   content: any;
+  last_seen: string;
 };

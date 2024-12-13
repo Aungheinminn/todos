@@ -26,17 +26,39 @@ export const GET = async (
     //   .collection("notifications")
     //   .find({ user_id: user_id })
     //   .toArray();
-    const notifications = await db
+    const pendingNotifications = await db
       .collection("notifications")
-      .aggregate([
-        {
-          $match: { user_id: user_id },
-        },
-        {
-          $set: { status: "seen" },
-        },
-      ])
+      .find({
+        "to.id": user_id,
+        $or: [{ status: "pending" }, { status: "new" }],
+      })
       .toArray();
+
+    if (pendingNotifications.length > 0) {
+      await db
+        .collection("notifications")
+        .aggregate([
+          {
+            $match: { "to.id": user_id },
+          },
+          {
+            $set: { status: "seen", last_seen: new Date() },
+          },
+          {
+            $merge: {
+              into: "notifications",
+              whenMatched: "replace",
+            },
+          },
+        ])
+        .toArray();
+    }
+   const notifications = await db.collection("notifications")
+      .find({
+        "to.id": user_id,
+      })
+      .toArray();
+
     console.log("notifications", notifications);
     if (!notifications) {
       return NextResponse.json(

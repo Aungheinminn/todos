@@ -21,7 +21,7 @@ export const GET = async (
     const notification = await db
       .collection("notifications")
       .find({
-        user_id: user_id,
+        "to.id": user_id,
         $or: [{ status: "pending" }, { status: "new" }],
       })
       .toArray();
