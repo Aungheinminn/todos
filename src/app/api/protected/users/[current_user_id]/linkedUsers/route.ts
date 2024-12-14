@@ -25,7 +25,6 @@ export const POST = async (
   console.log("linkedUserData", linkedUserData);
   const client = await clientPromise;
   const db = client.db("remarker_next");
-  const session = client.startSession();
   try {
     const currentUser = await db
       .collection("users")
@@ -38,6 +37,7 @@ export const POST = async (
     if (!user || !currentUser) {
       return NextResponse.json(
         {
+          success: false,
           message: "User is not existed",
         },
         { status: 404 },
@@ -48,6 +48,7 @@ export const POST = async (
     if (user._id.toString() === current_user_id) {
       return NextResponse.json(
         {
+          success: false,
           message: "You cannot add yourself",
         },
         { status: 404 },
@@ -88,6 +89,7 @@ export const POST = async (
       if (findLinkedUser.status === "accepted") {
         return NextResponse.json(
           {
+            success: false,
             message: "You have been linked with this user",
           },
           { status: 404 },
@@ -95,6 +97,7 @@ export const POST = async (
       } else if (findLinkedUser.status === "pending") {
         return NextResponse.json(
           {
+            success: false,
             message:
               findLinkedUser.user_id === current_user_id
                 ? "You have sent a request to this user"

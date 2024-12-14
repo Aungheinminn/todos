@@ -32,6 +32,15 @@ import tickIcon from "@/assets/tick.svg";
 import removeIcon from "@/assets/remove_cross.svg";
 
 type AccountSwitcherProps = {
+  open: boolean;
+  email: string;
+  password: string;
+  errorMessage: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  handleLinking: (id: string, email: string, password: string) => void;
   currentUser: UserType | null;
   addedUsers: [];
 };
@@ -48,7 +57,7 @@ type AddUserProps = {
   errorMessage: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setPasswod: React.Dispatch<React.SetStateAction<string>>;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
   handleAddUser: () => void;
 };
 
@@ -70,11 +79,11 @@ const AccountUI: React.FC<AccountUiProps> = ({ currentUser, user }) => {
         </p>
       </div>
       <div className="w-full flex justify-end items-center gap-x-2">
-          <p
-            className={`text-white bg-green-500 p-[6px] px-2 cursor-pointer border-0 rounded-lg`}
-          >
-            {user.status.toUpperCase()}
-          </p>
+        <p
+          className={`text-white bg-green-500 p-[6px] px-2 cursor-pointer border-0 rounded-lg`}
+        >
+          {user.status.toUpperCase()}
+        </p>
         <Popover>
           <PopoverTrigger>
             <Image
@@ -92,7 +101,7 @@ const AccountUI: React.FC<AccountUiProps> = ({ currentUser, user }) => {
             </Button>
 
             <Button className="px-2 w-full bg-gray-700 flex justify-start items-center gap-x-2 hover:bg-gray-700">
-                <Image className="w-4 h-4" src={removeIcon} alt="remove" />
+              <Image className="w-4 h-4" src={removeIcon} alt="remove" />
               <p className="text-red-500">Decline</p>
             </Button>
           </PopoverContent>
@@ -109,7 +118,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
   errorMessage,
   setOpen,
   setEmail,
-  setPasswod,
+  setPassword,
   handleAddUser,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -139,7 +148,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
             <div className="w-full flex flex-col items-start gap-y-1">
               <span className="text-white">Password</span>
               <input
-                onChange={(e) => setPasswod(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 className="w-full text-black focus:outline-none bg-white border border-white rounded-md px-2 py-1"
                 value={password}
                 type={showPassword ? "text" : "password"}
@@ -176,35 +185,42 @@ const AddUserUi: React.FC<AddUserProps> = ({
 };
 
 const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
+  open,
+  email,
+  password,
+  errorMessage,
+  setOpen,
+  setEmail,
+  setPassword,
+  setErrorMessage,
+  handleLinking,
   currentUser,
   addedUsers,
 }) => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
   const handleAddUser = async () => {
-    try {
-      const res = await postLinkedUser(
-        { email: email, password: password },
-        currentUser?._id ?? "",
-      );
-      if (!res.success) {
-        setOpen(true);
-        console.log(res.message);
-        setErrorMessage(res.message);
-      } else {
-        setOpen(false);
-      }
-    } catch (e) {
-      setOpen(true);
-      setErrorMessage("Something went wrong");
-      console.log(e);
-    } finally {
-      console.log("blah", email, password);
-      setEmail("");
-      setPassword("");
-    }
+    handleLinking(currentUser?._id || "", email, password);
+    // try {
+    //   const res = await postLinkedUser({
+    //     id: currentUser?._id || "",
+    //     email: email,
+    //     password: password,
+    //   });
+    //   if (!res.success) {
+    //     setOpen(true);
+    //     console.log(res.message);
+    //     setErrorMessage(res.message);
+    //   } else {
+    //     setOpen(false);
+    //   }
+    // } catch (e) {
+    //   setOpen(true);
+    //   setErrorMessage("Something went wrong");
+    //   console.log(e);
+    // } finally {
+    //   console.log("blah", email, password);
+    //   setEmail("");
+    //   setPassword("");
+    // }
   };
   if (currentUser === null) return <></>;
   return (
@@ -243,7 +259,7 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
             errorMessage={errorMessage}
             setOpen={setOpen}
             setEmail={setEmail}
-            setPasswod={setPassword}
+            setPassword={setPassword}
             handleAddUser={handleAddUser}
           />
         </AccordionContent>

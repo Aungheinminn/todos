@@ -14,7 +14,7 @@ export const ItemMutationProvider = () => {
         old ? [...old, data] : [],
       );
 
-      return { previousItems };
+     return { previousItems };
     },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("items", context.previousItems);

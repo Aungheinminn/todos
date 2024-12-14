@@ -42,7 +42,7 @@ export const GET = async (
             $match: { "to.id": user_id },
           },
           {
-            $set: { status: "Seen", last_seen: new Date() },
+            $set: { status: "seen", last_seen: new Date() },
           },
           {
             $merge: {
