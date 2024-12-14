@@ -11,7 +11,6 @@ import Image from "next/image";
 import addIcon from "@/assets/filled_plus.svg";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -20,13 +19,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { postLinkedUser } from "@/lib/linkedUsers.service";
+import moreIcon from "@/assets/white_more.svg";
+import tickIcon from "@/assets/tick.svg";
+import removeIcon from "@/assets/remove_cross.svg";
 
 type AccountSwitcherProps = {
   currentUser: UserType | null;
   addedUsers: [];
+};
+
+type AccountUiProps = {
+  currentUser: UserType;
+  user: any;
 };
 
 type AddUserProps = {
@@ -38,6 +50,56 @@ type AddUserProps = {
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPasswod: React.Dispatch<React.SetStateAction<string>>;
   handleAddUser: () => void;
+};
+
+const AccountUI: React.FC<AccountUiProps> = ({ currentUser, user }) => {
+  return (
+    <div className="w-full flex justify-between items-center" key={user._id}>
+      <div className="w-full flex justify-start items-center gap-x-2">
+        <div className="w-8 h-8 flex justify-center items-center bg-muted border-0 rounded-full">
+          <p className="text-black shrink-0">
+            {user.primary_user.email === currentUser.email
+              ? user.linked_user.username.slice(0, 2).toUpperCase()
+              : user.primary_user.username.slice(0, 2).toUpperCase()}
+          </p>
+        </div>
+        <p className="text-lg text-white truncate max-w-[100px]">
+          {user.primary_user.email === currentUser.email
+            ? user.linked_user.username
+            : user.primary_user.username}
+        </p>
+      </div>
+      <div className="w-full flex justify-end items-center gap-x-2">
+          <p
+            className={`text-white bg-green-500 p-[6px] px-2 cursor-pointer border-0 rounded-lg`}
+          >
+            {user.status.toUpperCase()}
+          </p>
+        <Popover>
+          <PopoverTrigger>
+            <Image
+              alt="more"
+              className={`w-8 h-8 cursor-pointer`}
+              src={moreIcon}
+            />
+          </PopoverTrigger>
+          <PopoverContent className="p-1 w-full flex flex-col justify-center items-start gap-y-1 border-gray-500 bg-gray-800">
+            <Button
+              className={`px-2 w-full flex justify-start bg-gray-700 gap-x-2 hover:bg-gray-700 items-center ${user.status !== "pending" && "hidden"} ${user.primary_user.id === currentUser._id && "hidden"}`}
+            >
+              <Image className="w-4 h-4" src={tickIcon} alt="tick" />
+              <p className="text-green-500">Accept</p>
+            </Button>
+
+            <Button className="px-2 w-full bg-gray-700 flex justify-start items-center gap-x-2 hover:bg-gray-700">
+                <Image className="w-4 h-4" src={removeIcon} alt="remove" />
+              <p className="text-red-500">Decline</p>
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
+    </div>
+  );
 };
 
 const AddUserUi: React.FC<AddUserProps> = ({
@@ -54,7 +116,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger onClick={() => setOpen(true)} asChild>
-        <div className="w-[150px] cursor-pointer flex items-center gap-x-2">
+        <div className="w-[150px] mt-3 cursor-pointer flex items-center gap-x-2">
           <Image className="w-8 h-8" src={addIcon} alt="add icon" />
           <p>Link an account</p>
         </div>
@@ -164,8 +226,14 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-y-2 mt-3 pb-2 px-2">
           {addedUsers
-            ? addedUsers.map((user) => {
-                return <p key="a">user</p>;
+            ? addedUsers.map((user: any) => {
+                return (
+                  <AccountUI
+                    key={user._id}
+                    currentUser={currentUser}
+                    user={user}
+                  />
+                );
               })
             : ""}
           <AddUserUi
