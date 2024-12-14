@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { useQuery } from "react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +10,25 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import { getCurrentUser } from "@/lib/users.service";
 import { UserType } from "@/lib/types/user.type";
 import { getLinkedUsers } from "@/lib/linkedUsers.service";
+import { AccountMutationProvider } from "./accountMutationProvider";
+
+const useLinkingInfo = () => {
+  const [open, setOpen] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  return {
+    open,
+    setOpen,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    errorMessage,
+    setErrorMessage,
+  };
+};
 
 const AccountHeader = () => {
   return (
@@ -37,7 +57,19 @@ const Account = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
+  const { createMutation, declineMutation, acceptMutation } =
+    AccountMutationProvider();
 
+  const {
+    open,
+    setOpen,
+    email,
+    setEmail,
+    password,
+    setPassword,
+    errorMessage,
+    setErrorMessage,
+  } = useLinkingInfo();
   useQuery("currentUser", getCurrentUser, {
     onSuccess: (data) => {
       updateCurrentUser(data.data.currentUser);
@@ -50,11 +82,46 @@ const Account = () => {
     enabled: !!currentUser?._id,
   });
 
+  const handleLinking = async (id: string, email: string, password: string) => {
+    try {
+      createMutation.mutate(
+        { id: id, email: email, password: password },
+        {
+          onError: (error: any) => {
+            console.log(error);
+          },
+          onSuccess: (data) => {
+            if (data.success) {
+              setEmail("");
+              setPassword("");
+              setOpen(false);
+            } else {
+              setErrorMessage(data.message);
+            }
+          },
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   console.log("currentUser", currentUser);
   return (
     <div className="w-full">
       <AccountHeader />
-      <AccountSwitcher currentUser={currentUser} addedUsers={linkedUsers} />
+      <AccountSwitcher
+        open={open}
+        setOpen={setOpen}
+        email={email}
+        setEmail={setEmail}
+        password={password}
+        setPassword={setPassword}
+        errorMessage={errorMessage}
+        setErrorMessage={setErrorMessage}
+        handleLinking={handleLinking}
+        currentUser={currentUser}
+        addedUsers={linkedUsers}
+      />
       <AccountFooter />
     </div>
   );

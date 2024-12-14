@@ -11,9 +11,10 @@ const LinkingAccountNotification = ({
   last_seen,
 }: NotificationType) => {
   TimeAgo.addLocale(en);
-  const date = new TimeAgo("en-US").format(new Date(last_seen)).split(" ");
-  const time = date[0] + " " + date[1];
-  console.log(date);
+  const date =
+    last_seen !== "" &&
+    new TimeAgo("en-US").format(new Date(last_seen)).split(" ");
+  const time = (date && date[0] + " " + date[1]) || "just now";
   return (
     <div
       key={_id}
@@ -32,7 +33,7 @@ const LinkingAccountNotification = ({
         <Button className="px-6">Decline</Button>
       </div>
       <div className="flex flex-col justify-start items-start gap-x-2">
-        <p className="text-xs text-gray-800">{status}</p>
+        <p className="text-xs text-gray-800">{status.toUpperCase()}</p>
         <div className="flex justify-start items-center gap-x-1">
           <span
             className={`w-2 h-2 rounded-full ${time === "just now" ? "bg-green-400" : "bg-gray-600"}`}

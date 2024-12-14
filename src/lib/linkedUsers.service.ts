@@ -1,10 +1,16 @@
-export const postLinkedUser = async (
-  data: {
-    email: string;
-    password: string;
-  },
-  id: string,
-) => {
+export const postLinkedUser = async ({
+  id,
+  email,
+  password,
+}: {
+  id: string;
+  email: string;
+  password: string;
+}) => {
+  const data = {
+    email,
+    password,
+  };
   try {
     const res = await fetch(
       `http://localhost:3000/api/protected/users/${id}/linkedUsers`,
@@ -41,10 +47,15 @@ export const getLinkedUsers = async (id: string) => {
   }
 };
 
-export const declineLinking = async (
-  currentUserId: string,
-  linkedUserId: string,
-  declinedBy: string,
+export const declineLinking = async ({
+  currentUserId,
+  linkedUserId,
+  declinedBy,
+}:{
+   currentUserId: string;
+    linkedUserId: string;
+    declinedBy: string;
+  }
 ) => {
   const data = {
     linkedUserId,
@@ -69,15 +80,22 @@ export const declineLinking = async (
 };
 
 export const acceptLinking = async (
-  currentUserId: string,
-  linkedUserId: string,
-  newStatus: string,
+  {
+
+  currentUserId,
+  linkedUserId,
+  newStatus
+  }: {
+    currentUserId: string;
+    linkedUserId: string;
+    newStatus: string;
+  }
 ) => {
   try {
     const data = {
       linkedUserId,
       newStatus,
-    }
+    };
     const res = await fetch(
       `http://localhost:3000/api/protected/users/${currentUserId}/linkedUsers/accept`,
       {
@@ -87,9 +105,9 @@ export const acceptLinking = async (
         },
         body: JSON.stringify(data),
       },
-    )
+    );
     const response = await res.json();
-    return response.data
+    return response.data;
   } catch (error) {
     console.error(error);
   }
