@@ -204,12 +204,15 @@ export const GET = async (
       .find({
         $or: [
           {
-            user_id: current_user_id,
-            linked_user_id: current_user_id.toString(),
+            "primary_user.id": current_user_id,
+          },
+          {
+            "linked_user.id": current_user_id,
           },
         ],
       })
       .toArray();
+    console.log("linkedUsers", linkedUsers);
     if (!linkedUsers) {
       return NextResponse.json(
         { message: "No Linked users are found" },
@@ -218,6 +221,51 @@ export const GET = async (
     }
     return NextResponse.json(
       { message: "Linked Users are successfully fetched", data: linkedUsers },
+      { status: 200 },
+    );
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
+  }
+};
+
+export const DELETE = async (
+  req: NextRequest,
+  {
+    params,
+  }: {
+    params: {
+      current_user_id: string;
+      user_id: string;
+    };
+  },
+) => {
+  if (!params) {
+    return NextResponse.json({ error: "User Id is required" }, { status: 500 });
+  }
+  const { current_user_id, user_id } = params;
+  try {
+    const client = await clientPromise;
+    const db = client.db("remarker_next");
+
+    const linkedUser = await db.collection("linked_users").deleteOne({
+      $or: [
+        {
+          user_id: current_user_id,
+          linked_user_id: user_id,
+        },
+        {
+          user_id: user_id,
+          linked_user_id: current_user_id,
+        },
+      ],
+    });
+
+    return NextResponse.json(
+      { message: "Linked User is successfully deleted", data: linkedUser },
       { status: 200 },
     );
   } catch (e) {
