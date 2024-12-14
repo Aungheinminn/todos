@@ -7,6 +7,7 @@ const LinkingAccountNotification = ({
   _id,
   from,
   content,
+  status,
   last_seen,
 }: NotificationType) => {
   TimeAgo.addLocale(en);
@@ -30,15 +31,18 @@ const LinkingAccountNotification = ({
         <Button className="bg-sky-500 px-6">Accept</Button>
         <Button className="px-6">Decline</Button>
       </div>
-      <div className="flex justify-start items-center gap-x-2">
-        <div
-          className={`w-2 h-2 rounded-full ${time === "just now" ? "bg-green-400" : "bg-gray-600"}`}
-        ></div>
-        <p
-          className={`text-xs ${time === "just now" ? "text-green-400" : "text-gray-800"} `}
-        >
-          {time}
-        </p>
+      <div className="flex flex-col justify-start items-start gap-x-2">
+        <p className="text-xs text-gray-800">{status}</p>
+        <div className="flex justify-start items-center gap-x-1">
+          <span
+            className={`w-2 h-2 rounded-full ${time === "just now" ? "bg-green-400" : "bg-gray-600"}`}
+          ></span>
+          <p
+            className={`text-xs ${time === "just now" ? "text-green-400" : "text-gray-800"} `}
+          >
+            {time}
+          </p>
+        </div>
       </div>
     </div>
   );

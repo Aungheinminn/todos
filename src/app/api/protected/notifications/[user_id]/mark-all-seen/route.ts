@@ -42,7 +42,7 @@ export const GET = async (
             $match: { "to.id": user_id },
           },
           {
-            $set: { status: "seen", last_seen: new Date() },
+            $set: { status: "Seen", last_seen: new Date() },
           },
           {
             $merge: {
@@ -53,7 +53,8 @@ export const GET = async (
         ])
         .toArray();
     }
-   const notifications = await db.collection("notifications")
+    const notifications = await db
+      .collection("notifications")
       .find({
         "to.id": user_id,
       })
