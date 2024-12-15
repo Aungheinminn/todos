@@ -155,7 +155,7 @@ export const POST = async (
           content: {
             message: `${currentUser.username} requested to link with you.`,
           },
-          last_seen: "",
+          last_seen: new Date(),
         });
       }
       return NextResponse.json(
@@ -234,4 +234,3 @@ export const GET = async (
     );
   }
 };
-

@@ -30,6 +30,7 @@ import { postLinkedUser } from "@/lib/linkedUsers.service";
 import moreIcon from "@/assets/white_more.svg";
 import tickIcon from "@/assets/tick.svg";
 import removeIcon from "@/assets/remove_cross.svg";
+import { Skeleton } from "../ui/skeleton";
 
 type AccountSwitcherProps = {
   open: boolean;
@@ -122,12 +123,11 @@ const AccountUI: React.FC<AccountUiProps> = ({
     <div className="w-full flex justify-between items-center" key={user._id}>
       <div className="w-full flex justify-start items-center gap-x-2">
         <div className="w-8 h-8 flex justify-center items-center bg-muted border-0 rounded-full">
-
-        <p className="text-black shrink-0">
-          {user.primary_user.email === currentUser.email
-            ? user.linked_user.username.slice(0, 2).toUpperCase()
-            : user.primary_user.username.slice(0, 2).toUpperCase()}
-        </p>
+          <p className="text-black shrink-0">
+            {user.primary_user.email === currentUser.email
+              ? user.linked_user.username.slice(0, 2).toUpperCase()
+              : user.primary_user.username.slice(0, 2).toUpperCase()}
+          </p>
         </div>
         <p className="text-lg text-white truncate max-w-[100px]">
           {user.primary_user.email === currentUser.email
@@ -137,7 +137,7 @@ const AccountUI: React.FC<AccountUiProps> = ({
       </div>
       <div className="w-full flex justify-end items-center gap-x-2">
         <p
-          className={`text-white bg-green-500 p-[6px] px-2 cursor-pointer border-0 rounded-lg`}
+          className={`text-white bg-green-500 p-[6px] px-2 cursor-pointer border-0 rounded-lg ${user.status === "accepted" && "hidden"}`}
         >
           {user.status.toUpperCase()}
         </p>
@@ -279,7 +279,12 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
   const handleLinkUsers = async () => {
     handleLinking(currentUser?._id || "", email, password);
   };
-  if (currentUser === null) return <></>;
+  if (!currentUser)
+    return (
+      <div className="p-2">
+        <Skeleton className="w-full h-[90px] bg-gray-500 rounded-lg" />
+      </div>
+    );
   return (
     <Accordion type="single" collapsible className="w-full p-2 rounded-lg">
       <AccordionItem
@@ -300,7 +305,7 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
         <AccordionContent className="flex flex-col gap-y-2 mt-3 pb-2 px-2">
           {addedUsers
             ? addedUsers.map((user: any) => (
-                 <AccountUI
+                <AccountUI
                   key={user._id}
                   currentUser={currentUser}
                   user={user}
