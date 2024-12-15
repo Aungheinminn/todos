@@ -74,8 +74,7 @@ export const declineLinking = async ({
         body: JSON.stringify(data),
       },
     );
-    const response = await res.json();
-    return response.data;
+     return res.json();
   } catch (error) {
     console.error(error);
   }
@@ -108,8 +107,7 @@ export const acceptLinking = async ({
         body: JSON.stringify(data),
       },
     );
-    const response = await res.json();
-    return response.data;
+    return res.json();
   } catch (error) {
     console.error(error);
   }

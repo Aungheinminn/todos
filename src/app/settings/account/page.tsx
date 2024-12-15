@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import Image from "next/image";
 import Link from "next/link";
 import back from "@/assets/arrow_left_black.svg";
@@ -11,6 +11,7 @@ import { getCurrentUser } from "@/lib/users.service";
 import { UserType } from "@/lib/types/user.type";
 import { getLinkedUsers } from "@/lib/linkedUsers.service";
 import { AccountMutationProvider } from "./accountMutationProvider";
+import reload from "@/assets/reload.svg";
 
 const useLinkingInfo = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const useLinkingInfo = () => {
 
 const AccountHeader = () => {
   return (
-    <div className="w-full flex justify-start items-center gap-x-2 px-2 py-3 bg-gray-800">
+    <div className="relative z-50 w-full flex justify-start items-center gap-x-2 px-2 py-3 bg-gray-800">
       <Link
         href="/settings"
         className="flex justify-center items-center gap-x-2"
@@ -40,6 +41,19 @@ const AccountHeader = () => {
         <Image src={back} alt="back" className="w-4 h-4" />
       </Link>
       <h3 className="text-white">Account</h3>
+    </div>
+  );
+};
+
+const Reload = ({ isLiveNoti }: { isLiveNoti: boolean }) => {
+  return (
+    <div
+      className={`transition-all z-14 duration-500 ease-in-out cursor-pointer absolute w-full h-[20px] bg-sky-400 flex justify-center items-start rounded-b-2xl ${isLiveNoti ? "top-12" : "top-[-30px]"}`}
+    >
+      <p className="text-[8px] pt-[1px] pb-[1px] z-10">Updates Here</p>
+      <div className="absolute top-[7px] w-6 h-6 flex justify-center items-center rounded-full bg-sky-400">
+        <Image src={reload} alt="reload" className="h-4 w-4" />
+      </div>
     </div>
   );
 };
@@ -54,11 +68,13 @@ const AccountFooter = () => {
 };
 
 const Account = () => {
+  const queryClient = useQueryClient();
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
   );
   const { createMutation, declineMutation, acceptMutation } =
     AccountMutationProvider();
+  const [isLiveNoti, setIsLiveNoti] = useState<boolean>(false);
 
   const {
     open,
@@ -90,11 +106,22 @@ const Account = () => {
           onError: (error: any) => {
             console.log(error);
           },
-          onSuccess: (data) => {
+          onSuccess: async (data) => {
+            console.log(data);
             if (data.success) {
+              await queryClient.cancelQueries("linkedUsers");
+
+              const previousItems = queryClient.getQueryData("linkedUsers");
+
+              queryClient.setQueryData("linkedUsers", (old: any) =>
+                old ? [...old, data.data] : [],
+              );
+
               setEmail("");
               setPassword("");
               setOpen(false);
+
+              return { previousItems };
             } else {
               setErrorMessage(data.message);
             }
@@ -124,8 +151,24 @@ const Account = () => {
           onError: (error: any) => {
             console.log(error);
           },
-          onSuccess: (data) => {
-            console.log(data);
+          onSuccess: async (data) => {
+            if (data.success) {
+              await queryClient.cancelQueries("linkedUsers");
+
+              const previousItems = queryClient.getQueryData("linkedUsers");
+
+              queryClient.setQueryData("linkedUsers", (old: any) =>
+                old ? [...old, data.data] : [],
+              );
+
+              setEmail("");
+              setPassword("");
+              setOpen(false);
+
+              return { previousItems };
+            } else {
+              setErrorMessage(data.message);
+            }
           },
         },
       );
@@ -153,8 +196,22 @@ const Account = () => {
           onError: (error: any) => {
             console.log(error);
           },
-          onSuccess: (data) => {
-            console.log(data);
+          onSuccess: async (data) => {
+            if (data.success) {
+              await queryClient.cancelQueries("linkedUsers");
+
+              const previousItems = queryClient.getQueryData("linkedUsers");
+
+              queryClient.setQueryData("linkedUsers", (old: any) =>
+                old
+                  ? old.filter((item: any) => item._id !== data.data._id)
+                  : [],
+              );
+
+              return { previousItems };
+            } else {
+              setErrorMessage(data.message);
+            }
           },
         },
       );
@@ -164,8 +221,9 @@ const Account = () => {
   };
   console.log("currentUser", currentUser);
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <AccountHeader />
+      <Reload isLiveNoti={isLiveNoti} />
       <AccountSwitcher
         open={open}
         setOpen={setOpen}
@@ -181,6 +239,9 @@ const Account = () => {
         currentUser={currentUser}
         addedUsers={linkedUsers}
       />
+      <button className="text-black" onClick={() => setIsLiveNoti(!isLiveNoti)}>
+        aaaa
+      </button>
       <AccountFooter />
     </div>
   );

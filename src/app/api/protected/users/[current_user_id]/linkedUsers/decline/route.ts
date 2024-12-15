@@ -36,6 +36,7 @@ export const DELETE = async (
     if (declinedBy === "primary_user") {
       return NextResponse.json(
         {
+          success: true,
           message: "Linking request is no longer existed",
           data: linkedUser,
         },
@@ -43,7 +44,11 @@ export const DELETE = async (
       );
     } else {
       return NextResponse.json(
-        { message: "Linking request has been declined", data: linkedUser },
+        {
+          success: true,
+          message: "Linking request has been declined",
+          data: linkedUser,
+        },
         { status: 200 },
       );
     }
