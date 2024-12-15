@@ -122,11 +122,12 @@ const AccountUI: React.FC<AccountUiProps> = ({
     <div className="w-full flex justify-between items-center" key={user._id}>
       <div className="w-full flex justify-start items-center gap-x-2">
         <div className="w-8 h-8 flex justify-center items-center bg-muted border-0 rounded-full">
-          <p className="text-black shrink-0">
-            {user.primary_user.email === currentUser.email
-              ? user.linked_user.username.slice(0, 2).toUpperCase()
-              : user.primary_user.username.slice(0, 2).toUpperCase()}
-          </p>
+
+        <p className="text-black shrink-0">
+          {user.primary_user.email === currentUser.email
+            ? user.linked_user.username.slice(0, 2).toUpperCase()
+            : user.primary_user.username.slice(0, 2).toUpperCase()}
+        </p>
         </div>
         <p className="text-lg text-white truncate max-w-[100px]">
           {user.primary_user.email === currentUser.email
@@ -298,17 +299,15 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-y-2 mt-3 pb-2 px-2">
           {addedUsers
-            ? addedUsers.map((user: any) => {
-                return (
-                  <AccountUI
-                    key={user._id}
-                    currentUser={currentUser}
-                    user={user}
-                    handleAcceptLinking={handleAcceptLinking}
-                    handleDeclineLinking={handleDeclineLinking}
-                  />
-                );
-              })
+            ? addedUsers.map((user: any) => (
+                 <AccountUI
+                  key={user._id}
+                  currentUser={currentUser}
+                  user={user}
+                  handleAcceptLinking={handleAcceptLinking}
+                  handleDeclineLinking={handleDeclineLinking}
+                />
+              ))
             : ""}
           <AddUserUi
             open={open}
