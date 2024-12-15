@@ -105,6 +105,63 @@ const Account = () => {
       console.log(error);
     }
   };
+  const handleAcceptLinking = async (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    newStatus: string,
+  ) => {
+    console.log(currentUserId, primaryUserId, linkedUserId, newStatus);
+    try {
+      acceptMutation.mutate(
+        {
+          currentUserId: currentUserId,
+          primaryUserId: primaryUserId,
+          linkedUserId: linkedUserId,
+          newStatus: newStatus,
+        },
+        {
+          onError: (error: any) => {
+            console.log(error);
+          },
+          onSuccess: (data) => {
+            console.log(data);
+          },
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeclineLinking = async (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    declinedBy: string,
+  ) => {
+    try {
+      console.log(currentUserId, primaryUserId, linkedUserId, declinedBy);
+      declineMutation.mutate(
+        {
+          currentUserId: currentUserId,
+          primaryUserId: primaryUserId,
+          linkedUserId: linkedUserId,
+          declinedBy: declinedBy,
+        },
+        {
+          onError: (error: any) => {
+            console.log(error);
+          },
+          onSuccess: (data) => {
+            console.log(data);
+          },
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
   console.log("currentUser", currentUser);
   return (
     <div className="w-full">
@@ -119,6 +176,8 @@ const Account = () => {
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
         handleLinking={handleLinking}
+        handleAcceptLinking={handleAcceptLinking}
+        handleDeclineLinking={handleDeclineLinking}
         currentUser={currentUser}
         addedUsers={linkedUsers}
       />

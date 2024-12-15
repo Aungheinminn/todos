@@ -41,6 +41,18 @@ type AccountSwitcherProps = {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
   handleLinking: (id: string, email: string, password: string) => void;
+  handleAcceptLinking: (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    newStatus: string,
+  ) => void;
+  handleDeclineLinking: (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    declinedBy: string,
+  ) => void;
   currentUser: UserType | null;
   addedUsers: [];
 };
@@ -48,6 +60,18 @@ type AccountSwitcherProps = {
 type AccountUiProps = {
   currentUser: UserType;
   user: any;
+  handleAcceptLinking: (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    newStatus: string,
+  ) => void;
+  handleDeclineLinking: (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    declinedBy: string,
+  ) => void;
 };
 
 type AddUserProps = {
@@ -58,10 +82,42 @@ type AddUserProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
-  handleAddUser: () => void;
+  handleLinkUsers: () => void;
 };
 
-const AccountUI: React.FC<AccountUiProps> = ({ currentUser, user }) => {
+const AccountUI: React.FC<AccountUiProps> = ({
+  currentUser,
+  user,
+  handleAcceptLinking,
+  handleDeclineLinking,
+}) => {
+  const handleAccept = async (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    newStatus: string,
+  ) => {
+    if (!currentUserId || !primaryUserId || !linkedUserId || !newStatus) return;
+    console.log(currentUserId, primaryUserId, linkedUserId, newStatus);
+    handleAcceptLinking(currentUserId, primaryUserId, linkedUserId, newStatus);
+  };
+
+  const handleDecline = async (
+    currentUserId: string,
+    primaryUserId: string,
+    linkedUserId: string,
+    declinedBy: string,
+  ) => {
+    if (!currentUserId || !primaryUserId || !linkedUserId || !declinedBy)
+      return;
+    console.log(currentUserId, primaryUserId, linkedUserId, declinedBy);
+    handleDeclineLinking(
+      currentUserId,
+      primaryUserId,
+      linkedUserId,
+      declinedBy,
+    );
+  };
   return (
     <div className="w-full flex justify-between items-center" key={user._id}>
       <div className="w-full flex justify-start items-center gap-x-2">
@@ -94,13 +150,33 @@ const AccountUI: React.FC<AccountUiProps> = ({ currentUser, user }) => {
           </PopoverTrigger>
           <PopoverContent className="p-1 w-full flex flex-col justify-center items-start gap-y-1 border-gray-500 bg-gray-800">
             <Button
+              onClick={() =>
+                handleAccept(
+                  currentUser._id || "",
+                  user.primary_user.id,
+                  user.linked_user.id,
+                  "accepted",
+                )
+              }
               className={`px-2 w-full flex justify-start bg-gray-700 gap-x-2 hover:bg-gray-700 items-center ${user.status !== "pending" && "hidden"} ${user.primary_user.id === currentUser._id && "hidden"}`}
             >
               <Image className="w-4 h-4" src={tickIcon} alt="tick" />
               <p className="text-green-500">Accept</p>
             </Button>
 
-            <Button className="px-2 w-full bg-gray-700 flex justify-start items-center gap-x-2 hover:bg-gray-700">
+            <Button
+              onClick={() =>
+                handleDecline(
+                  currentUser._id || "",
+                  user.primary_user.id,
+                  user.linked_user.id,
+                  currentUser._id === user.primary_user.id
+                    ? "primary_user"
+                    : "linked_user",
+                )
+              }
+              className="px-2 w-full bg-gray-700 flex justify-start items-center gap-x-2 hover:bg-gray-700"
+            >
               <Image className="w-4 h-4" src={removeIcon} alt="remove" />
               <p className="text-red-500">Decline</p>
             </Button>
@@ -119,7 +195,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
   setOpen,
   setEmail,
   setPassword,
-  handleAddUser,
+  handleLinkUsers,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   return (
@@ -175,7 +251,7 @@ const AddUserUi: React.FC<AddUserProps> = ({
           >
             Cancel
           </AlertDialogCancel>
-          <Button className="m-0 p-0 w-1/2 h-9" onClick={handleAddUser}>
+          <Button className="m-0 p-0 w-1/2 h-9" onClick={handleLinkUsers}>
             Continue
           </Button>
         </AlertDialogFooter>
@@ -194,33 +270,13 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
   setPassword,
   setErrorMessage,
   handleLinking,
+  handleAcceptLinking,
+  handleDeclineLinking,
   currentUser,
   addedUsers,
 }) => {
-  const handleAddUser = async () => {
+  const handleLinkUsers = async () => {
     handleLinking(currentUser?._id || "", email, password);
-    // try {
-    //   const res = await postLinkedUser({
-    //     id: currentUser?._id || "",
-    //     email: email,
-    //     password: password,
-    //   });
-    //   if (!res.success) {
-    //     setOpen(true);
-    //     console.log(res.message);
-    //     setErrorMessage(res.message);
-    //   } else {
-    //     setOpen(false);
-    //   }
-    // } catch (e) {
-    //   setOpen(true);
-    //   setErrorMessage("Something went wrong");
-    //   console.log(e);
-    // } finally {
-    //   console.log("blah", email, password);
-    //   setEmail("");
-    //   setPassword("");
-    // }
   };
   if (currentUser === null) return <></>;
   return (
@@ -248,6 +304,8 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
                     key={user._id}
                     currentUser={currentUser}
                     user={user}
+                    handleAcceptLinking={handleAcceptLinking}
+                    handleDeclineLinking={handleDeclineLinking}
                   />
                 );
               })
@@ -260,7 +318,7 @@ const AccountSwitcher: React.FC<AccountSwitcherProps> = ({
             setOpen={setOpen}
             setEmail={setEmail}
             setPassword={setPassword}
-            handleAddUser={handleAddUser}
+            handleLinkUsers={handleLinkUsers}
           />
         </AccordionContent>
       </AccordionItem>

@@ -15,23 +15,24 @@ export const DELETE = async (
   }
   const { current_user_id } = params;
   const body = await req.json();
-  const { linked_user_id, declinedBy } = body;
+  const { primaryUserId, linkedUserId, declinedBy } = body;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
-    const linkedUser = await db.collection("linked_users").deleteOne({
+    const linkedUser = await db.collection("linked_users").findOneAndDelete({
       $or: [
         {
-          "primary_user.id": current_user_id,
-          "linked_user.id": linked_user_id,
+          "primary_user.id": primaryUserId,
+          "linked_user.id": linkedUserId,
         },
         {
-	  "primary_user.id": linked_user_id,
-	  "linked_user.id": current_user_id,
+          "primary_user.id": primaryUserId,
+          "linked_user.id": linkedUserId,
         },
       ],
     });
+    console.log("linkedUser", linkedUser);
     if (declinedBy === "primary_user") {
       return NextResponse.json(
         {
