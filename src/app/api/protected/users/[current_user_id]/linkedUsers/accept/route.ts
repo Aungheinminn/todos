@@ -9,7 +9,7 @@ export const PUT = async (
   }
   const { current_user_id } = params;
   const body = await req.json();
-  const { primary_user_id ,linked_user_id, newStatus } = body;
+  const { primaryUserId, linkedUserId, newStatus } = body;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -17,12 +17,12 @@ export const PUT = async (
       {
         $or: [
           {
-            "primary_user.id": primary_user_id,
-            "linked_user.id": linked_user_id,
+            "primary_user.id": primaryUserId,
+            "linked_user.id": linkedUserId,
           },
           {
-            "primary_user.id": linked_user_id,
-            "linked_user.id": linked_user_id,
+            "primary_user.id": linkedUserId,
+            "linked_user.id": primaryUserId,
           },
         ],
       },
@@ -35,6 +35,11 @@ export const PUT = async (
         { status: 404 },
       );
     }
+    const io = (global as any).io;
+    io.to(primaryUserId).emit("linkingStatus", {
+      message: "Linked user status updated",
+      status: "accepted",
+    });
     return NextResponse.json(
       { message: "Linked user status updated", data: linkedUsers },
       { status: 200 },

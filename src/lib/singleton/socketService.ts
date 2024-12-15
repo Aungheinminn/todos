@@ -34,6 +34,13 @@ export class Socket {
     });
   }
 
+  getLinkingStatus(callback: (data: any) => void) {
+    this.socket.on("linkingStatus", (data: any) => {
+      console.log("Notification received:", data);
+      callback(data);
+    });
+  }
+
   disconnect() {
     this.socket.on("disconnect", () => {
       console.log("socket is disconnected");

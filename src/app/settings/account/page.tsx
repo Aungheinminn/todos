@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,8 @@ import { UserType } from "@/lib/types/user.type";
 import { getLinkedUsers } from "@/lib/linkedUsers.service";
 import { AccountMutationProvider } from "./accountMutationProvider";
 import reload from "@/assets/reload.svg";
+import { SocketAddress } from "net";
+import { Socket } from "@/lib/singleton/socketService";
 
 const useLinkingInfo = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -45,9 +47,20 @@ const AccountHeader = () => {
   );
 };
 
-const Reload = ({ isLiveNoti }: { isLiveNoti: boolean }) => {
+const Reload = ({
+  isLiveNoti,
+  setIsLiveNoti,
+}: {
+  isLiveNoti: boolean;
+  setIsLiveNoti: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const handleReload = () => {
+    setIsLiveNoti(!isLiveNoti);
+    window.location.reload();
+  };
   return (
     <div
+      onClick={handleReload}
       className={`transition-all z-14 duration-500 ease-in-out cursor-pointer absolute w-full h-[20px] bg-sky-400 flex justify-center items-start rounded-b-2xl ${isLiveNoti ? "top-12" : "top-[-30px]"}`}
     >
       <p className="text-[8px] pt-[1px] pb-[1px] z-10">Updates Here</p>
@@ -68,6 +81,21 @@ const AccountFooter = () => {
 };
 
 const Account = () => {
+  const socketIo = Socket.getInstance();
+  useEffect(() => {
+    socketIo.connect("account");
+    socketIo.join(currentUser?._id || "");
+    socketIo.getNotifications((data: any) => {
+      if (data) {
+        setIsLiveNoti(true);
+      }
+    });
+    socketIo.getLinkingStatus((data: any) => {
+      if (data) {
+        setIsLiveNoti(true);
+      }
+    });
+  });
   const queryClient = useQueryClient();
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
     (state) => state,
@@ -132,6 +160,7 @@ const Account = () => {
       console.log(error);
     }
   };
+
   const handleAcceptLinking = async (
     currentUserId: string,
     primaryUserId: string,
@@ -158,7 +187,7 @@ const Account = () => {
               const previousItems = queryClient.getQueryData("linkedUsers");
 
               queryClient.setQueryData("linkedUsers", (old: any) =>
-                old ? [...old, data.data] : [],
+                old ? [data.data, ...old] : [],
               );
 
               setEmail("");
@@ -219,11 +248,12 @@ const Account = () => {
       console.log(error);
     }
   };
+
   console.log("currentUser", currentUser);
   return (
     <div className="w-full relative">
       <AccountHeader />
-      <Reload isLiveNoti={isLiveNoti} />
+      <Reload isLiveNoti={isLiveNoti} setIsLiveNoti={setIsLiveNoti} />
       <AccountSwitcher
         open={open}
         setOpen={setOpen}
@@ -239,9 +269,6 @@ const Account = () => {
         currentUser={currentUser}
         addedUsers={linkedUsers}
       />
-      <button className="text-black" onClick={() => setIsLiveNoti(!isLiveNoti)}>
-        aaaa
-      </button>
       <AccountFooter />
     </div>
   );

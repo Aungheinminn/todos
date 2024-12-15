@@ -33,7 +33,22 @@ export const DELETE = async (
       ],
     });
     console.log("linkedUser", linkedUser);
+    if (!linkedUser) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Linking users are not existed",
+          data: linkedUser,
+        },
+        { status: 200 },
+      );
+    }
+    const io = (global as any).io;
     if (declinedBy === "primary_user") {
+      io.to(linkedUserId).emit("linkingStatus", {
+        message: "Linking request has been deleted",
+        status: "declined",
+      });
       return NextResponse.json(
         {
           success: true,
@@ -43,6 +58,10 @@ export const DELETE = async (
         { status: 200 },
       );
     } else {
+      io.to(primaryUserId).emit("linkingStatus", {
+        message: "Linking request has been declined",
+        status: "declined",
+      });
       return NextResponse.json(
         {
           success: true,

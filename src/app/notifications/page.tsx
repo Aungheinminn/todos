@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
 import { useNotificationStore } from "@/lib/notificationStore";
 import {
-  getUnseenNotifications,
   markAllAsSeen,
 } from "@/lib/notifications.service";
 import NoticationsHandler from "@/components/NotificationsHandler/NotificationsHandler";
@@ -39,7 +38,7 @@ const Notifications = () => {
     socketIo.join(currentUser?._id || "");
     socketIo.getNotifications((data: any) => {
       console.log("getNotifications in noti", data);
-      if(data){
+      if (data) {
         queryClient.setQueryData("notifications", (old: any) => [data, ...old]);
       }
     });
