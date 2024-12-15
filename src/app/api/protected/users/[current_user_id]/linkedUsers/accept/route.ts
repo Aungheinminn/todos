@@ -9,7 +9,7 @@ export const PUT = async (
   }
   const { current_user_id } = params;
   const body = await req.json();
-  const { linked_user_id, newStatus } = body;
+  const { primary_user_id ,linked_user_id, newStatus } = body;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -17,12 +17,12 @@ export const PUT = async (
       {
         $or: [
           {
-            "primary_user.id": current_user_id,
+            "primary_user.id": primary_user_id,
             "linked_user.id": linked_user_id,
           },
           {
             "primary_user.id": linked_user_id,
-            "linked_user.id": current_user_id,
+            "linked_user.id": linked_user_id,
           },
         ],
       },

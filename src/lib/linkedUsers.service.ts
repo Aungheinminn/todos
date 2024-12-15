@@ -49,15 +49,17 @@ export const getLinkedUsers = async (id: string) => {
 
 export const declineLinking = async ({
   currentUserId,
+  primaryUserId,
   linkedUserId,
   declinedBy,
-}:{
-   currentUserId: string;
-    linkedUserId: string;
-    declinedBy: string;
-  }
-) => {
+}: {
+  currentUserId: string;
+  primaryUserId: string;
+  linkedUserId: string;
+  declinedBy: string;
+}) => {
   const data = {
+    primaryUserId,
     linkedUserId,
     declinedBy,
   };
@@ -79,20 +81,20 @@ export const declineLinking = async ({
   }
 };
 
-export const acceptLinking = async (
-  {
-
+export const acceptLinking = async ({
   currentUserId,
+  primaryUserId,
   linkedUserId,
-  newStatus
-  }: {
-    currentUserId: string;
-    linkedUserId: string;
-    newStatus: string;
-  }
-) => {
+  newStatus,
+}: {
+  currentUserId: string;
+  primaryUserId: string;
+  linkedUserId: string;
+  newStatus: string;
+}) => {
   try {
     const data = {
+      primaryUserId,
       linkedUserId,
       newStatus,
     };
