@@ -31,7 +31,7 @@ export const PUT = async (
     );
     if (!linkedUsers) {
       return NextResponse.json(
-        { message: "Linked user not found" },
+        { success: false, message: "Linked user not found" },
         { status: 404 },
       );
     }
@@ -41,7 +41,7 @@ export const PUT = async (
       status: "accepted",
     });
     return NextResponse.json(
-      { message: "Linked user status updated", data: linkedUsers },
+      { success: true, message: "Linked user status updated", data: linkedUsers },
       { status: 200 },
     );
   } catch (error) {
