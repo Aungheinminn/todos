@@ -187,7 +187,11 @@ const Account = () => {
               const previousItems = queryClient.getQueryData("linkedUsers");
 
               queryClient.setQueryData("linkedUsers", (old: any) =>
-                old ? [data.data, ...old] : [],
+                old
+                  ? old.map((item: any) =>
+                      item._id === data.data._id ? data.data : item,
+                    )
+                  : [],
               );
 
               setEmail("");
