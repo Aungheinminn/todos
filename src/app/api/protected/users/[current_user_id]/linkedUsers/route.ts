@@ -157,6 +157,11 @@ export const POST = async (
           },
           last_seen: new Date(),
         });
+
+        io.to(res.linked_user.id.toString()).emit("linkingStatus", {
+          message: "Linked user status updated",
+          status: "accepted",
+        });
       }
       return NextResponse.json(
         {

@@ -85,11 +85,6 @@ const Account = () => {
   useEffect(() => {
     socketIo.connect("account");
     socketIo.join(currentUser?._id || "");
-    socketIo.getNotifications((data: any) => {
-      if (data) {
-        setIsLiveNoti(true);
-      }
-    });
     socketIo.getLinkingStatus((data: any) => {
       if (data) {
         setIsLiveNoti(true);
