@@ -8,7 +8,7 @@ const NoticationsHandler: React.FC<NotificationsHandlerProps> = ({
   notifications,
 }) => {
   return (
-    <div className="w-full grid grid-cols-1 gap-y-2 p-1">
+    <div className="w-full grid grid-cols-1 gap-y-2 p-1 overflow-y-scroll">
       {notifications &&
         notifications.map((noti, index) => (
           <NotificationTypeHandler key={index} notification={noti} />

@@ -26,20 +26,26 @@ const Home = () => {
     (state) => state,
   );
 
-  const { updatePendingNotifications } = useNotificationStore((state) => state);
+  const {
+    pendingNotifications,
+    updatePendingNotifications,
+    updatePendingNotification,
+  } = useNotificationStore((state) => state);
 
   const socketIo = Socket.getInstance();
   useEffect(() => {
     socketIo.connect("home");
     socketIo.join(currentUser?._id || "");
     socketIo.getNotifications((data) => {
-      console.log("getNotifications in home", data);
-    });
+      updatePendingNotification(data);
 
+      console.log("pending", pendingNotifications);
+    }, "home page");
     return () => {
+      socketIo.socket.off("notifications");
       socketIo.disconnect();
     };
-  }, [currentUser]);
+  }, [currentUser, pendingNotifications]);
 
   const { openPopup, popupData } = useItemDetailsPopupStore();
   const [open, setOpen] = useState<boolean>(false);

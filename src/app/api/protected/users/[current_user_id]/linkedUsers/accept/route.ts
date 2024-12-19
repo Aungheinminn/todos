@@ -73,14 +73,18 @@ export const PUT = async (
       },
       last_seen: "",
     };
-    await db.collection("notifications").insertOne(acceptedNotification);
-    console.log("currentNotification", currentNotification);
+
+    const notification = await db.collection("notifications").insertOne(acceptedNotification);
+
     const io = (global as any).io;
     io.to(primaryUserId).emit("linkingStatus", {
       message: "Linked user status updated",
       status: "accepted",
     });
-    io.to(primaryUserId).emit("notifications", acceptedNotification);
+    io.to(primaryUserId).emit("notifications", {
+      _id: notification.insertedId,
+      ...acceptedNotification,
+    });
     return NextResponse.json(
       {
         success: true,

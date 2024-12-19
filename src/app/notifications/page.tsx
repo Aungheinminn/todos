@@ -5,9 +5,7 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import { useState, useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
 import { useNotificationStore } from "@/lib/notificationStore";
-import {
-  markAllAsSeen,
-} from "@/lib/notifications.service";
+import { markAllAsSeen } from "@/lib/notifications.service";
 import NoticationsHandler from "@/components/NotificationsHandler/NotificationsHandler";
 
 const Notifications = () => {
@@ -41,7 +39,7 @@ const Notifications = () => {
       if (data) {
         queryClient.setQueryData("notifications", (old: any) => [data, ...old]);
       }
-    });
+    }, "notification page");
 
     return () => {
       socketIo.socket.off("notifications");
@@ -49,7 +47,7 @@ const Notifications = () => {
     };
   }, [currentUser]);
   return (
-    <div>
+    <div className="">
       <div className="w-full text-start p-3 px-2 bg-gray-800">
         <h3 className="text-white">Notifications</h3>
       </div>

@@ -120,22 +120,22 @@ export const POST = async (
 
     if (res) {
       const notiData = {
-          type: "LINKING_ACCOUNT",
-          to: {
-            id: user._id.toString(),
-            email: user.email,
-            username: user.username,
-          },
-          from: {
-            id: currentUser._id.toString(),
-            email: currentUser.email,
-            username: currentUser.username,
-          },
-          status: "pending",
-          content: {
-            message: `${currentUser.username} requested to link with you.`,
-          }
-      }
+        type: "LINKING_ACCOUNT",
+        to: {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+        },
+        from: {
+          id: currentUser._id.toString(),
+          email: currentUser.email,
+          username: currentUser.username,
+        },
+        status: "pending",
+        content: {
+          message: `${currentUser.username} requested to link with you.`,
+        },
+      };
       const notification = await db.collection("notifications").insertOne({
         ...notiData,
         last_seen: "",
@@ -143,10 +143,11 @@ export const POST = async (
       if (notification) {
         const io = (global as any).io;
         io.to(res.linked_user.id.toString()).emit("notifications", {
+          _id: notification.insertedId,
           ...notiData,
-          last_seen: new Date()
+          last_seen: new Date(),
         });
-
+        //just to show updates in account page
         io.to(res.linked_user.id.toString()).emit("linkingStatus", {
           message: "Linked user status updated",
           status: "accepted",
