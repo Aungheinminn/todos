@@ -29,7 +29,7 @@ export const GET = async (
       return NextResponse.json(
         {
           success: false,
-          message: "Notification are not fetched",
+          message: "Notifications are not fetched",
         },
         { status: 404 },
       );
@@ -37,7 +37,7 @@ export const GET = async (
     return NextResponse.json(
       {
         success: true,
-        message: "Notification are fetched",
+        message: "New notifications are fetched",
         data: notification,
       },
       { status: 200 },

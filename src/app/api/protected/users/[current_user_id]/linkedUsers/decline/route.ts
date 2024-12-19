@@ -56,7 +56,7 @@ export const DELETE = async (
       type: "LINKING_ACCOUNT",
       "to.id": linkedUserId,
       "from.id": primaryUserId,
-    })
+    });
     const io = (global as any).io;
     if (declinedBy === "primary_user") {
       const declineByPrimaryUser = {
@@ -77,12 +77,15 @@ export const DELETE = async (
         },
         last_seen: "",
       };
-      await db.collection("notifications").insertOne(declineByPrimaryUser);
+      const notification = await db.collection("notifications").insertOne(declineByPrimaryUser);
       io.to(linkedUserId).emit("linkingStatus", {
         message: "Linking has been deleted",
         status: "declined",
       });
-      io.to(linkedUserId).emit("notifications", declineByPrimaryUser);
+      io.to(linkedUserId).emit("notifications", {
+      _id: notification.insertedId,
+        ...declineByPrimaryUser,
+      });
       return NextResponse.json(
         {
           success: true,
@@ -110,12 +113,15 @@ export const DELETE = async (
         },
         last_seen: "",
       };
-      await db.collection("notifications").insertOne(declineByLinkedUser);
+      const notification = await db.collection("notifications").insertOne(declineByLinkedUser);
       io.to(primaryUserId).emit("linkingStatus", {
         message: "Linking has been declined",
         status: "declined",
       });
-      io.to(primaryUserId).emit("notifications", declineByLinkedUser);
+      io.to(primaryUserId).emit("notifications", {
+        _id: notification.insertedId,
+        ...declineByLinkedUser,
+      });
       return NextResponse.json(
         {
           success: true,

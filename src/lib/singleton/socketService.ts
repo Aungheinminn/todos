@@ -27,9 +27,9 @@ export class Socket {
     this.socket.emit("join", channel);
   }
 
-  getNotifications(callback: (data: any) => void) {
+  getNotifications(callback: (data: any) => void, channel?: string) {
     this.socket.on("notifications", (data: any) => {
-      console.log("Notification received:", data);
+      console.log(`Notification received: from ${channel}`, data);
       callback(data);
     });
   }
