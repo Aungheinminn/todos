@@ -35,13 +35,58 @@ export const PUT = async (
         { status: 404 },
       );
     }
+    const currentNotification = await db
+      .collection("notifications")
+      .findOneAndUpdate(
+        {
+          "to.id": linkedUserId,
+          "from.id": primaryUserId,
+          type: "LINKING_ACCOUNT",
+        },
+        {
+          $set: { status: "accepted" },
+        },
+        { returnDocument: "after" },
+      );
+    if (!currentNotification) {
+      return NextResponse.json(
+        { success: false, message: "Linked user not found" },
+        { status: 404 },
+      );
+    }
+    // reverse "to and from" as the notification is sent to the primary user
+    const acceptedNotification = {
+      type: "LINKING_ACCEPT",
+      to: {
+        id: currentNotification.from.id,
+        email: currentNotification.from.email,
+        username: currentNotification.from.username,
+      },
+      from: {
+        id: currentNotification.from.id,
+        email: currentNotification.from.email,
+        username: currentNotification.from.username,
+      },
+      status: "accepted",
+      content: {
+        message: `${currentNotification.to.username} accepted your linking request`,
+      },
+      last_seen: "",
+    };
+    await db.collection("notifications").insertOne(acceptedNotification);
+    console.log("currentNotification", currentNotification);
     const io = (global as any).io;
     io.to(primaryUserId).emit("linkingStatus", {
       message: "Linked user status updated",
       status: "accepted",
     });
+    io.to(primaryUserId).emit("notifications", acceptedNotification);
     return NextResponse.json(
-      { success: true, message: "Linked user status updated", data: linkedUsers },
+      {
+        success: true,
+        message: "Linked user status updated",
+        data: linkedUsers,
+      },
       { status: 200 },
     );
   } catch (error) {
