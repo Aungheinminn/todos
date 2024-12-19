@@ -119,27 +119,7 @@ export const POST = async (
     console.log("res", res);
 
     if (res) {
-      const notification = await db.collection("notifications").insertOne({
-        type: "LINKING_ACCOUNT",
-        to: {
-          id: user._id.toString(),
-          email: user.email,
-          username: user.username,
-        },
-        from: {
-          id: currentUser._id.toString(),
-          email: currentUser.email,
-          name: currentUser.username,
-        },
-        status: "pending",
-        content: {
-          message: `${currentUser.username} requested to link with you.`,
-        },
-        last_seen: "",
-      });
-      if (notification) {
-        const io = (global as any).io;
-        io.to(res.linked_user.id.toString()).emit("notifications", {
+      const notiData = {
           type: "LINKING_ACCOUNT",
           to: {
             id: user._id.toString(),
@@ -149,13 +129,22 @@ export const POST = async (
           from: {
             id: currentUser._id.toString(),
             email: currentUser.email,
-            name: currentUser.username,
+            username: currentUser.username,
           },
           status: "pending",
           content: {
             message: `${currentUser.username} requested to link with you.`,
-          },
-          last_seen: new Date(),
+          }
+      }
+      const notification = await db.collection("notifications").insertOne({
+        ...notiData,
+        last_seen: "",
+      });
+      if (notification) {
+        const io = (global as any).io;
+        io.to(res.linked_user.id.toString()).emit("notifications", {
+          ...notiData,
+          last_seen: new Date()
         });
 
         io.to(res.linked_user.id.toString()).emit("linkingStatus", {

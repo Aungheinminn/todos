@@ -53,11 +53,12 @@ export const GET = async (
         ])
         .toArray();
     }
+    console.log("user_id", user_id);
     const notifications = await db
       .collection("notifications")
       .find({
         "to.id": user_id,
-      })
+      }).sort({ _id: -1 })
       .toArray();
 
     console.log("notifications", notifications);

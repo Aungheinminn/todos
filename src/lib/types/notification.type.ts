@@ -4,13 +4,13 @@ export type NotificationType = {
   to: {
     id: string;
     email: string;
-    name: string;
+    username: string;
   };
   status: string;
   from: {
     id: string;
     email: string;
-    name: string;
+    username: string;
   };
   content: any;
   last_seen: string;
