@@ -54,3 +54,21 @@ export const markAllAsSeen = async (id: string) => {
     console.error(error);
   }
 };
+
+export const deleteNotification = async (id: string) => {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/protected/notifications/delete/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const response = await res.json();
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

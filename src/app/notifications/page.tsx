@@ -7,6 +7,7 @@ import { Socket } from "@/lib/singleton/socketService";
 import { useNotificationStore } from "@/lib/notificationStore";
 import { markAllAsSeen } from "@/lib/notifications.service";
 import NoticationsHandler from "@/components/NotificationsHandler/NotificationsHandler";
+import { NotificationMutationProvider } from "./notificationMutation";
 
 const Notifications = () => {
   const queryClient = useQueryClient();
@@ -15,6 +16,8 @@ const Notifications = () => {
     (state) => state,
   );
   const { resetPendingNotifications } = useNotificationStore((state) => state);
+
+  const { deleteMutation } = NotificationMutationProvider();
 
   useQuery("currentUser", getCurrentUser, {
     onSuccess: (data) => {
@@ -30,7 +33,14 @@ const Notifications = () => {
       resetPendingNotifications();
     },
   });
-  console.log("notifications", notifications);
+
+  const handleDeleteNotification = async (id: string) => {
+    try {
+      deleteMutation.mutate(id);
+    } catch (error) {
+      console.error("Error deleting notification", error);
+    }
+  }
   useEffect(() => {
     socketIo.connect("notification");
     socketIo.join(currentUser?._id || "");
