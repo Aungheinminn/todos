@@ -67,6 +67,7 @@ export const PUT = async (
         email: currentNotification.from.email,
         username: currentNotification.from.username,
       },
+      notiStatus: "new",
       status: "accepted",
       content: {
         message: `${currentNotification.to.username} accepted your linking request`,
@@ -79,6 +80,7 @@ export const PUT = async (
     const io = (global as any).io;
     io.to(primaryUserId).emit("linkingStatus", {
       message: "Linked user status updated",
+      notiStatus: "new",
       status: "accepted",
     });
     io.to(primaryUserId).emit("notifications", {

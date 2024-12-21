@@ -40,7 +40,7 @@ const Notifications = () => {
     } catch (error) {
       console.error("Error deleting notification", error);
     }
-  }
+  };
   useEffect(() => {
     socketIo.connect("notification");
     socketIo.join(currentUser?._id || "");
@@ -57,12 +57,17 @@ const Notifications = () => {
     };
   }, [currentUser]);
   return (
-    <div className="">
-      <div className="w-full text-start p-3 px-2 bg-gray-800">
+    <div className="flex flex-col">
+      <div className="fixed top-0 w-full text-start p-4 px-2 bg-gray-800">
         <h3 className="text-white">Notifications</h3>
       </div>
+<div className="pt-[58px]">
 
-      <NoticationsHandler notifications={notifications} />
+      <NoticationsHandler
+        handleDeleteNotification={handleDeleteNotification}
+        notifications={notifications}
+      />
+      </div>
     </div>
   );
 };

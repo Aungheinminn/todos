@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
-export const DELERE = async (
+export const DELETE = async (
   req: NextRequest,
   {
     params,

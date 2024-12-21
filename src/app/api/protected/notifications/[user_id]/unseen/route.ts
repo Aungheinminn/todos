@@ -22,7 +22,7 @@ export const GET = async (
       .collection("notifications")
       .find({
         "to.id": user_id,
-        $or: [{ status: "pending" }, { status: "new" }],
+        notiStatus: "new",
       })
       .toArray();
     if (!notification) {
@@ -42,5 +42,7 @@ export const GET = async (
       },
       { status: 200 },
     );
-  } catch (e) {}
+  } catch (e) {
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
 };

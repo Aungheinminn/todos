@@ -18,19 +18,11 @@ export const GET = async (
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    // const a = await db
-    //   .collection("notifications")
-    //   .updateMany({ user_id: user_id }, { $set: { status: "seen" } });
-    //
-    // const notifications = await db
-    //   .collection("notifications")
-    //   .find({ user_id: user_id })
-    //   .toArray();
     const pendingNotifications = await db
       .collection("notifications")
       .find({
         "to.id": user_id,
-        $or: [{ status: "pending" }, { status: "new" }],
+        notiStatus: "new"
       })
       .toArray();
 
@@ -42,7 +34,7 @@ export const GET = async (
             $match: { "to.id": user_id },
           },
           {
-            $set: { status: "seen", last_seen: new Date() },
+            $set: { notiStatus: "seen", last_seen: new Date() },
           },
           {
             $merge: {
