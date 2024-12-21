@@ -71,6 +71,7 @@ export const DELETE = async (
           email: primary_user?.email,
           username: primary_user?.username,
         },
+        notiStatus: "new",
         status: "declined",
         content: {
           message: `Linking has been declined by ${primary_user?.username}`,
@@ -80,6 +81,7 @@ export const DELETE = async (
       const notification = await db.collection("notifications").insertOne(declineByPrimaryUser);
       io.to(linkedUserId).emit("linkingStatus", {
         message: "Linking has been deleted",
+        notiStatus: "new",
         status: "declined",
       });
       io.to(linkedUserId).emit("notifications", {
@@ -107,6 +109,7 @@ export const DELETE = async (
           email: linked_user?.email,
           username: linked_user?.username,
         },
+        notiStatus: "new",
         status: "declined",
         content: {
           message: `Linking has been declined by ${linked_user?.username}`,
@@ -116,6 +119,7 @@ export const DELETE = async (
       const notification = await db.collection("notifications").insertOne(declineByLinkedUser);
       io.to(primaryUserId).emit("linkingStatus", {
         message: "Linking has been declined",
+        notiStatus: "new",
         status: "declined",
       });
       io.to(primaryUserId).emit("notifications", {

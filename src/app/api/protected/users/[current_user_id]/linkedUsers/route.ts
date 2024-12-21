@@ -66,6 +66,7 @@ export const POST = async (
         email: user.email,
         username: user.username,
       },
+      notiStatus: "new",
       status: "pending",
       created_at: new Date().toISOString(),
     };
@@ -131,6 +132,7 @@ export const POST = async (
           email: currentUser.email,
           username: currentUser.username,
         },
+        notiStatus: "new",
         status: "pending",
         content: {
           message: `${currentUser.username} requested to link with you.`,
@@ -150,6 +152,7 @@ export const POST = async (
         //just to show updates in account page
         io.to(res.linked_user.id.toString()).emit("linkingStatus", {
           message: "Linked user status updated",
+          notiStatus: "new",
           status: "accepted",
         });
       }

@@ -3,7 +3,7 @@ import LinkingAccountNotification from "./LinkingAccountNotification";
 import LinkingDeclinedFromUser from "./LinkingDeclinedFromUser";
 type NotificationType = {
   type: string;
-  component: () => JSX.Element<{ notification: any }>;
+  component: any;
 };
 export const NotificationTypes: NotificationType[] = [
   {

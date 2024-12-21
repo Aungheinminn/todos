@@ -1,6 +1,12 @@
 import { NotificationTypes } from "./NotificationsHandlerUtils";
 
-const NotificationTypeHandler = ({ notification }: { notification: any }) => {
+const NotificationTypeHandler = ({
+  handleDeleteNotification,
+  notification,
+}: {
+  handleDeleteNotification: (id: string) => void;
+  notification: any;
+}) => {
   return (
     <>
       {NotificationTypes.map((item, index) => {
@@ -9,7 +15,8 @@ const NotificationTypeHandler = ({ notification }: { notification: any }) => {
           return (
             <Component
               key={notification._id || index}
-              {...notification}
+              handleDeleteNotification={handleDeleteNotification}
+              notification={notification}
             />
           );
         }
