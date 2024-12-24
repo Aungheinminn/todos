@@ -35,11 +35,10 @@ const LinkingDeclinedFromUser = ({
           </p>
         </div>
         <div onClick={(e) => e.preventDefault()}>
-
-        <NotificationPopover handleDeleteNotification={handleDelete} />
+          <NotificationPopover handleDeleteNotification={handleDelete} />
         </div>
       </div>
-      <NotificationStatus status={notification.status} />
+      <NotificationStatus status={notification.status} notiStatus={notification.notiStatus} />
     </Link>
   );
 };
