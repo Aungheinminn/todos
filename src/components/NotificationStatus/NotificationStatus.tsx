@@ -1,4 +1,10 @@
-const NotificationStatus = ({ status }: { status: string }) => {
+const NotificationStatus = ({
+  status,
+  notiStatus,
+}: {
+  status: string;
+  notiStatus: string;
+}) => {
   const pendingState = {
     text: "text-yellow-400",
     bg: "bg-yellow-400",
@@ -20,15 +26,28 @@ const NotificationStatus = ({ status }: { status: string }) => {
     bg: "bg-red-500",
   };
   return (
-    <div className="flex justify-start items-center gap-x-1">
-      <span
-        className={`${status === "pending" ? pendingState.bg : status === "new" ? newState.bg : status === "seen" ? seenState.bg : status === "accepted" ? acceptedState.bg : status === "declined" ? declinedState.bg : ""} w-2 h-2 rounded-full`}
-      ></span>
-      <p
-        className={`${status === "pending" ? pendingState.text : status === "new" ? newState.text : status === "seen" ? seenState.text : status === "accepted" ? acceptedState.text : status === "declined" ? declinedState.text : ""} text-xs`}
-      >
-        {status.toUpperCase()}
-      </p>
+    <div className="flex flex-col justify-center items-start gap-y-1">
+      <div className="flex justify-start items-center gap-x-1">
+        <span
+          className={`${status === "pending" ? pendingState.bg : status === "new" ? newState.bg : status === "seen" ? seenState.bg : status === "accepted" ? acceptedState.bg : status === "declined" ? declinedState.bg : ""} w-2 h-2 rounded-full`}
+        ></span>
+        <p
+          className={`${status === "pending" ? pendingState.text : status === "new" ? newState.text : status === "seen" ? seenState.text : status === "accepted" ? acceptedState.text : status === "declined" ? declinedState.text : ""} text-xs`}
+        >
+          {status.toUpperCase()}
+        </p>
+      </div>
+
+      <div className="flex justify-start items-center gap-x-1">
+        <span
+          className={`${notiStatus === "new" ? newState.bg : seenState.bg} w-2 h-2 rounded-full`}
+        ></span>
+        <p
+          className={`${notiStatus === "new" ? newState.text : seenState.text} text-xs`}
+        >
+          {notiStatus.toUpperCase()}
+        </p>
+      </div>
     </div>
   );
 };

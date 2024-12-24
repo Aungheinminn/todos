@@ -61,12 +61,11 @@ const Notifications = () => {
       <div className="fixed top-0 w-full text-start p-4 px-2 bg-gray-800">
         <h3 className="text-white">Notifications</h3>
       </div>
-<div className="pt-[58px]">
-
-      <NoticationsHandler
-        handleDeleteNotification={handleDeleteNotification}
-        notifications={notifications}
-      />
+      <div className="pt-[58px]">
+        <NoticationsHandler
+          handleDeleteNotification={handleDeleteNotification}
+          notifications={notifications}
+        />
       </div>
     </div>
   );
