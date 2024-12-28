@@ -8,6 +8,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNotificationStore } from "@/lib/notificationStore";
+import AddTransactionComponent from "../AddTransactionComponent/AddTransactionComponent";
 
 const Bottombar = () => {
   const { pendingNotifications } = useNotificationStore((state) => state);
@@ -55,6 +56,8 @@ const Bottombar = () => {
                     <Image className="" src={whiteCreate} alt="create"  width={20} height={20} />
                 </div>
             </div>              */}
+
+      <AddTransactionComponent />
       <Link
         href="/plans"
         onClick={() => handleChange("plans")}
