@@ -39,7 +39,7 @@ const AddTransactionComponent = () => {
       >
         <Image className="w-8 h-8" src={add} alt="add" />
       </DrawerTrigger>
-      <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-2">
+      <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-4">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={() => setOpen(false)} className="">
             Cancel
@@ -60,6 +60,7 @@ const AddTransactionComponent = () => {
         >
           Save
         </DrawerClose>
+        <div></div>
       </DrawerContent>
     </Drawer>
   );
