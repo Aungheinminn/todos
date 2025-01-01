@@ -8,23 +8,33 @@ import {
 } from "../ui/accordion";
 import walletIcon from "@/assets/wallet.svg";
 import AddWallet from "../AddWallet/AddWallet";
+import { WalletType } from "@/lib/types/wallet.type";
 
-const WalletComponent = () => {
+type TotalWalletsProps = {
+  wallets: WalletType[];
+};
+
+type WalletComponentProps = {
+  wallet: WalletType;
+};
+
+const WalletComponent: React.FC<WalletComponentProps> = ({ wallet }) => {
   return (
     <div className="w-full flex justify-between items-center p-3">
       <div className="flex justify-start items-center gap-x-3">
         <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
-        <p className="text-sm text-white">Wallet</p>
+        <p className="text-sm text-white">{wallet.wallet_name}</p>
       </div>
-      <p className="text-sm text-white">$0.00</p>
+      <p className="text-sm text-white">K{wallet.balance}</p>
     </div>
   );
 };
 
-const TotalWallets = () => {
+const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
   const { isOpen: walletOpen, setIsOpen: setWalletOpen } = useWalletStore(
     (state) => state,
   );
+  const currentWallet = wallets && wallets.find((w) => w.current === true);
   return (
     <Accordion type="single" collapsible className="w-full px-2">
       <AccordionItem
@@ -39,12 +49,17 @@ const TotalWallets = () => {
             <p className="text-sm text-white pl-3">My Wallets</p>
             <p className="text-sm text-green-300 pr-3">See All</p>
           </div>
-          <WalletComponent />
+	  {currentWallet && <WalletComponent wallet={currentWallet} />
+	  }
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-y-1">
-          <WalletComponent />
-          <WalletComponent />
-          <WalletComponent />
+          {wallets
+            ? wallets
+                .filter((w) => w.current !== true)
+                .map((wallet) => (
+                  <WalletComponent key={wallet._id} wallet={wallet} />
+                ))
+            : ""}
           <AddWallet open={walletOpen} setOpen={setWalletOpen} />
         </AccordionContent>
       </AccordionItem>
