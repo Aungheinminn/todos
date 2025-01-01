@@ -12,10 +12,9 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { useState } from "react";
-import { useQuery } from "react-query";
-import { getCurrentUser } from "@/lib/users.service";
 import Image from "next/image";
 import add from "@/assets/add_wallet.svg";
+import { useWalletMutation } from "@/lib/walletMutation";
 
 type AddWalletProps = {
   open: boolean;
@@ -26,20 +25,31 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
   const [wallet, setWallet] = useState<string>("");
   const [currency, setCurrency] = useState<string>("MMK");
   const [initialAmount, setInitialAmount] = useState<number | string>("");
+  const { currentUser } = useCurrentUserStore((state) => state);
+  const { createMutation } = useWalletMutation();
 
-  const { currentUser, updateCurrentUser } = useCurrentUserStore(
-    (state) => state,
-  );
+  const handleCreateWallet = () => {
+    const newWallet = {
+      wallet_name: wallet,
+      user_id: currentUser?._id || "",
+      currency: currency,
+      balance: initialAmount,
+      current: false,
+    };
 
-  useQuery({
-    queryKey: ["currentUser"],
-    queryFn: () => getCurrentUser(),
-    onSuccess: (data) => {
-      updateCurrentUser(data.data.currentUser);
-    },
-  });
-
-  console.log("currentUser", currentUser);
+    try {
+      createMutation.mutate(newWallet, {
+        onSuccess: () => {
+          setOpen(false);
+        },
+        onError: (error: any) => {
+          console.log(error);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
@@ -65,7 +75,7 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
         </div>
 
         <DrawerClose
-          onClick={() => setOpen(false)}
+          onClick={handleCreateWallet}
           className="w-[80%] bg-gray-700 py-1 rounded-2xl"
         >
           Save

@@ -1,7 +1,9 @@
-export const createWallet = async ({ data, id }: { data: any; id: string }) => {
+import { WalletType } from "./types/wallet.type";
+
+export const createWallet = async (data: WalletType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/wallets/user/${id}`,
+      `http://localhost:3000/api/protected/wallets/user/${data.user_id}`,
       {
         method: "POST",
         headers: {
