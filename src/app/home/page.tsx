@@ -9,6 +9,7 @@ import AddWallet from "@/components/AddWallet/AddWallet";
 import { useWalletStore } from "@/lib/walletStore";
 import TotalWallets from "@/components/TotalWallets/TotalWallets";
 import { getWallets } from "@/lib/wallet.service";
+import Balance from "@/components/Balance/Balance";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -34,6 +35,8 @@ const Home = () => {
   return (
     <Suspense fallback={<HomeLoading />}>
       <div className="w-full pt-[55px] text-black flex items-center flex-col justify-center">
+        <Balance />
+
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />
       </div>
