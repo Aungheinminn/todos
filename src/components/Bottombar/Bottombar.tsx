@@ -3,6 +3,8 @@ import whiteHouse from "../../assets/white_home.svg";
 import whiteRoutines from "../../assets/white_routines.svg";
 import notifications from "@/assets/notification.svg";
 import item from "../../assets/white_item.svg";
+import wallets from "../../assets/wallet_page_indicator_icon.svg";
+import transactions from "../../assets/transaction_page_indicator_icon.svg";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
@@ -40,15 +42,22 @@ const Bottombar = () => {
           />
         </div>
       </Link>
+
       <Link
-        href="/routines"
-        onClick={() => handleChange("routines")}
+        href="/transactions"
+        onClick={() => handleChange("transactions")}
         className="cursor-pointer w-[80px] relative group flex flex-col items-center"
       >
         <div
-          className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "routines" ? activeInterface : ""}`}
+          className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "transactions" ? activeInterface : ""}`}
         >
-          <Image className="" src={item} alt="home" width={25} height={25} />
+          <Image
+            className=""
+            src={transactions}
+            alt="routines"
+            width={25}
+            height={25}
+          />
         </div>
       </Link>
       {/* <div onClick={() => {}} className="cursor-pointer w-[40px] relative group flex flex-col items-center bg-[#58ed18] rounded-full">
@@ -58,21 +67,16 @@ const Bottombar = () => {
             </div>              */}
 
       <AddTransactionComponent />
+
       <Link
-        href="/plans"
-        onClick={() => handleChange("plans")}
+        href="/wallets"
+        onClick={() => handleChange("wallets")}
         className="cursor-pointer w-[80px] relative group flex flex-col items-center"
       >
         <div
-          className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "plans" ? activeInterface : ""}`}
+          className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center ${active === "wallets" ? activeInterface : ""}`}
         >
-          <Image
-            className=""
-            src={whiteRoutines}
-            alt="routines"
-            width={25}
-            height={25}
-          />
+          <Image className="" src={wallets} alt="home" width={25} height={25} />
         </div>
       </Link>
       <Link

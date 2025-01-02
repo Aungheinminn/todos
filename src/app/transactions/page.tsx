@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import wallet from "@/assets/wallet_1.svg";
+import wallet from "@/assets/wallet_2.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionGroup from "@/components/TransactionsGroup/TransactionGroup";

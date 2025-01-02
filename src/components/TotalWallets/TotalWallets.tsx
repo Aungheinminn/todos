@@ -9,6 +9,7 @@ import {
 import walletIcon from "@/assets/wallet.svg";
 import AddWallet from "../AddWallet/AddWallet";
 import { WalletType } from "@/lib/types/wallet.type";
+import Link from "next/link";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
@@ -20,7 +21,9 @@ type WalletComponentProps = {
 
 const WalletComponent: React.FC<WalletComponentProps> = ({ wallet }) => {
   return (
-    <div className="w-full flex justify-between items-center p-3">
+    <div
+      className={`w-full  flex justify-between items-center p-3 ${!wallet.current ? "hover:bg-gray-600" : ""}`}
+    >
       <div className="flex justify-start items-center gap-x-3">
         <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
         <p className="text-sm text-white">{wallet.wallet_name}</p>
@@ -47,10 +50,9 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
         >
           <div className="w-full flex justify-between items-center border-b border-b-slate-600 py-3">
             <p className="text-sm text-white pl-3">My Wallets</p>
-            <p className="text-sm text-green-300 pr-3">See All</p>
+            <Link href={"/wallets"} className="text-sm text-green-300 pr-3">See All</Link>
           </div>
-	  {currentWallet && <WalletComponent wallet={currentWallet} />
-	  }
+          {currentWallet && <WalletComponent wallet={currentWallet} />}
         </AccordionTrigger>
         <AccordionContent className="flex flex-col gap-y-1">
           {wallets
