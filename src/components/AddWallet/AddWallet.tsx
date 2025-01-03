@@ -57,7 +57,7 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
         <Image className="w-5 h-5" src={add} alt="add wallet" />
         <p className="text-sm text-green-300">Add wallet</p>
       </DrawerTrigger>
-      <DrawerContent className="flex flex-col items-center gap-y-4 bg-gray-800">
+      <DrawerContent className="pointer-events-auto flex flex-col items-center gap-y-4 bg-gray-800">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={() => setOpen(false)} className="">
             Cancel
@@ -75,8 +75,8 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
         </div>
 
         <DrawerClose
-          onClick={handleCreateWallet}
-          className="w-[80%] bg-gray-700 py-1 rounded-2xl"
+          onClick={() => console.log("it works")}
+          className="w-[80%] bg-gray-700 py-1 rounded-2xl hover:bg-sky-400"
         >
           Save
         </DrawerClose>
