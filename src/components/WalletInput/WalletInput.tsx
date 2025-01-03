@@ -15,7 +15,7 @@ const WalletInput: React.FC<WalletInputProps> = ({ wallet, setWallet }) => {
         placeholder="Name"
         value={wallet}
         onChange={(e) => setWallet(e.target.value)}
-        className="w-full bg-gray-700 text-xl text-slate-300 pt-2 pb-3 py-1 outline-0 rounded-0"
+        className="z-50 w-full bg-gray-700 text-xl text-slate-300 pt-2 pb-3 py-1 outline-0 rounded-0"
       />
     </div>
   );
