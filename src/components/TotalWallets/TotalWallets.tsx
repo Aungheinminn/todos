@@ -27,27 +27,39 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { usePressHook } from "@/hooks/usePressHook";
+import { useWalletMutation } from "@/lib/walletMutation";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
 };
 
 type WalletComponentProps = {
+  currentlyShown?: boolean;
   wallet: WalletType;
 };
 
-const WalletComponent: React.FC<WalletComponentProps> = ({ wallet }) => {
-  const [isLongPress, setIsLongPress] = useState<boolean>(false);
-  const { handleMouseDown } = usePressHook({
-    isLongPress,
-    setIsLongPress,
+const WalletComponent: React.FC<WalletComponentProps> = ({ currentlyShown, wallet }) => {
+  const { updateCurrentWalletMutation } = useWalletMutation();
+
+  const handleMouseClick = () => {
+    if (currentlyShown) return;
+    updateCurrentWalletMutation.mutate({ wallet_id: wallet._id || "", user_id: wallet.user_id });
+    console.log("clicking");
+  };
+
+  const handleMousePress = () => {
+    if (currentlyShown) return;
+    console.log("pressing");
+  };
+  const { handleMouseDown, handleMouseUp } = usePressHook({
+    mousePressFunction: handleMousePress,
+    mouseClickFunction: handleMouseClick,
   });
-  console.log("isLongPress", isLongPress);
   return (
     <div
       onMouseDown={handleMouseDown}
-      onClick={!isLongPress ? () => console.log("bruh") : () => console.log("blah")}
-      className={`w-full  flex justify-between items-center p-3 ${!wallet.current ? "hover:bg-gray-600" : ""}`}
+      onMouseUp={handleMouseUp}
+      className={`w-full  flex justify-between items-center p-3 ${!currentlyShown ? "hover:bg-gray-600" : ""}`}
     >
       <div className="flex justify-start items-center gap-x-3">
         <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
@@ -62,6 +74,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
   const { isOpen: isWalletOpen, setIsOpen: setWalletOpen } = useWalletStore(
     (state) => state,
   );
+
   const currentWallet = wallets && wallets.find((w) => w.current === true);
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -83,7 +96,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
             See All
           </button>
         </div>
-        {currentWallet && <WalletComponent wallet={currentWallet} />}
+        {currentWallet && <WalletComponent currentlyShown={true} wallet={currentWallet} />}
       </div>
       <DialogContent
         ref={ref}
@@ -92,9 +105,8 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
         <DialogTitle className="text-base text-white px-3">Wallets</DialogTitle>
         {wallets
           ? wallets
-              .filter((w) => w.current !== true)
               .map((wallet) => (
-                <WalletComponent key={wallet._id} wallet={wallet} />
+                <WalletComponent currentlyShown={false} key={wallet._id} wallet={wallet} />
               ))
           : ""}
         <AddWallet open={isWalletOpen} setOpen={setWalletOpen} />
