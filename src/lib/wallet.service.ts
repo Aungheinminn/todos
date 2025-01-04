@@ -35,3 +35,22 @@ export const getWallets = async (id: string) => {
     console.error(e);
   }
 };
+
+export const updateCurrentWallet = async ({ wallet_id, user_id }: {
+  wallet_id: string,
+  user_id: string
+}) => {
+  const response = await fetch(
+`http://localhost:3000/api/protected/wallets/user/${user_id}/make-current-wallet`,    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ wallet_id }),
+    }
+  )
+
+  const res = await response.json();
+  return res.data
+
+}

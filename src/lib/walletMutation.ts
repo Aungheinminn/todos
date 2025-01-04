@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createWallet } from "./wallet.service";
+import { createWallet, updateCurrentWallet } from "./wallet.service";
 import { WalletType } from "./types/wallet.type";
 export const useWalletMutation = () => {
   const queryClient = useQueryClient();
@@ -23,7 +23,12 @@ export const useWalletMutation = () => {
     onSettled: () => queryClient.invalidateQueries({ queryKey: "wallets" }),
   });
 
+  const updateCurrentWalletMutation = useMutation({
+    mutationFn: updateCurrentWallet 
+  })
+
   return {
     createMutation,
+    updateCurrentWalletMutation
   };
 };

@@ -1,23 +1,32 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 export const usePressHook = ({
-  isLongPress,
-  setIsLongPress,
+  mousePressFunction,
+  mouseClickFunction,
 }: {
-  isLongPress: boolean;
-  setIsLongPress: React.Dispatch<React.SetStateAction<boolean>>;
+  mousePressFunction: () => void;
+  mouseClickFunction: () => void;
 }) => {
+  const [startTime, setStartTime] = useState<number>(0);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const handleMouseDown = () => {
-    const timeout = setTimeout(() => {
-      setIsLongPress(true);
+    setStartTime(Date.now());
+    timeoutRef.current = setTimeout(() => {
       console.log("work");
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeout);
-    };
+      mousePressFunction();
+    }, 500);
   };
+
+  const handleMouseUp = () => {
+    const endTime = Date.now();
+    const pressDuration = endTime - startTime;
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    if (pressDuration < 500) {
+      mouseClickFunction();
+    }  };
   return {
-    isLongPress,
     handleMouseDown,
+    handleMouseUp,
   };
 };
