@@ -6,7 +6,7 @@ export const useWalletMutation = () => {
   const createMutation = useMutation({
     mutationFn: createWallet,
     onMutate: async (data: WalletType) => {
-      console.log('wallet mutation', data);
+      console.log("wallet mutation", data);
       await queryClient.cancelQueries("wallets");
 
       const previousItems = queryClient.getQueryData("wallets");
@@ -24,11 +24,36 @@ export const useWalletMutation = () => {
   });
 
   const updateCurrentWalletMutation = useMutation({
-    mutationFn: updateCurrentWallet 
-  })
+    mutationFn: updateCurrentWallet,
+    onMutate: async (data: any) => {
+      console.log("wallet mutation", data);
+      await queryClient.cancelQueries("wallets");
+
+      const previousItems = queryClient.getQueryData("wallets");
+      console.log(data);
+
+      const updatedCurrentWallet = (previousItems as any).find(
+        (w: WalletType) => w._id === data.wallet_id,
+      );
+
+      // queryClient.setQueryData("wallets", (old: any) =>
+      //   old ? [{ ...updatedCurrentWallet, current: true }, ...old.filter((w: WalletType) => w._id !== data.wallet_id)] : [],
+      // );
+      //
+      queryClient.setQueryData("wallets", (old: any) => 
+  old ? old.map((w: WalletType) => 
+    w._id === data.wallet_id 
+      ? { ...updatedCurrentWallet, current: true }
+      : { ...w, current: false }
+  ) : []
+);
+
+      return { previousItems };
+    },
+  });
 
   return {
     createMutation,
-    updateCurrentWalletMutation
+    updateCurrentWalletMutation,
   };
 };

@@ -34,13 +34,6 @@ export const PUT = async (
       .collection("wallets")
       .updateOne({ _id: new ObjectId(wallet_id) }, { $set: { current: true } });
 
-    const wallets = await db
-    	.collection("wallets")
-    	.find({ user_id: id })
-    	.toArray();
-
-      console.log(wallets);
-
     if (!current) {
       return NextResponse.json(
         { success: false, error: "Error updating wallet" },
