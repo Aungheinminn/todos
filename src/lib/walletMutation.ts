@@ -1,5 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createWallet, updateCurrentWallet } from "./wallet.service";
+import {
+  createWallet,
+  deleteWallet,
+  updateCurrentWallet,
+} from "./wallet.service";
 import { WalletType } from "./types/wallet.type";
 export const useWalletMutation = () => {
   const queryClient = useQueryClient();
@@ -30,23 +34,35 @@ export const useWalletMutation = () => {
       await queryClient.cancelQueries("wallets");
 
       const previousItems = queryClient.getQueryData("wallets");
-      console.log(data);
 
       const updatedCurrentWallet = (previousItems as any).find(
         (w: WalletType) => w._id === data.wallet_id,
       );
 
-      // queryClient.setQueryData("wallets", (old: any) =>
-      //   old ? [{ ...updatedCurrentWallet, current: true }, ...old.filter((w: WalletType) => w._id !== data.wallet_id)] : [],
-      // );
-      //
-      queryClient.setQueryData("wallets", (old: any) => 
-  old ? old.map((w: WalletType) => 
-    w._id === data.wallet_id 
-      ? { ...updatedCurrentWallet, current: true }
-      : { ...w, current: false }
-  ) : []
-);
+      queryClient.setQueryData("wallets", (old: any) =>
+        old
+          ? old.map((w: WalletType) =>
+              w._id === data.wallet_id
+                ? { ...updatedCurrentWallet, current: true }
+                : { ...w, current: false },
+            )
+          : [],
+      );
+
+      return { previousItems };
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteWallet,
+    onMutate: async (data: string) => {
+      await queryClient.cancelQueries("wallets");
+
+      const previousItems = queryClient.getQueryData("wallets");
+
+      queryClient.setQueryData("wallets", (old: any) =>
+        old ? old.filter((o: any) => o._id !== data) : [],
+      );
 
       return { previousItems };
     },
@@ -55,5 +71,6 @@ export const useWalletMutation = () => {
   return {
     createMutation,
     updateCurrentWalletMutation,
+    deleteMutation,
   };
 };

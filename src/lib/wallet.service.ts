@@ -36,21 +36,42 @@ export const getWallets = async (id: string) => {
   }
 };
 
-export const updateCurrentWallet = async ({ wallet_id, user_id }: {
-  wallet_id: string,
-  user_id: string
+export const updateCurrentWallet = async ({
+  wallet_id,
+  user_id,
+}: {
+  wallet_id: string;
+  user_id: string;
 }) => {
   const response = await fetch(
-`http://localhost:3000/api/protected/wallets/user/${user_id}/make-current-wallet`,    {
+    `http://localhost:3000/api/protected/wallets/user/${user_id}/make-current-wallet`,
+    {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ wallet_id }),
-    }
-  )
+    },
+  );
 
   const res = await response.json();
-  return res
+  return res;
+};
 
-}
+export const deleteWallet = async ({ id, wallet_id }: { id: string, wallet_id: string }) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/wallets/user/${id}/delete/${wallet_id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};

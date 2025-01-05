@@ -73,33 +73,33 @@ export const POST = async (
       .collection("wallets")
       .findOne({ current: true, user_id: id });
     if (!currentWallet) {
-			const wallet = await db.collection("wallets").insertOne({
-				...data,
-				current: true,
-			})
+      const wallet = await db.collection("wallets").insertOne({
+        ...data,
+        current: true,
+      });
 
-			if(!wallet) {
-				return NextResponse.json(
-					{ success: false, message: "Wallet not created" },
-					{ status: 400 },
-				);
-			}
+      if (!wallet) {
+        return NextResponse.json(
+          { success: false, message: "Wallet not created" },
+          { status: 400 },
+        );
+      }
 
       return NextResponse.json(
-	{ success: true, message: "Wallet successfully created", data: wallet },
-	{ status: 200 },
+        { success: true, message: "Wallet successfully created", data: wallet },
+        { status: 200 },
       );
     } else {
       const wallet = await db.collection("wallets").insertOne({
         ...data,
         current: false,
       });
-			if(!wallet) {
-				return NextResponse.json(
-					{ success: false, message: "Wallet not created" },
-					{ status: 400 },
-				);
-			}
+      if (!wallet) {
+        return NextResponse.json(
+          { success: false, message: "Wallet not created" },
+          { status: 400 },
+        );
+      }
 
       return NextResponse.json(
         { success: true, message: "Wallet successfully created", data: wallet },

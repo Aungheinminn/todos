@@ -24,7 +24,8 @@ export const usePressHook = ({
     }
     if (pressDuration < 500) {
       mouseClickFunction();
-    }  };
+    }
+  };
   return {
     handleMouseDown,
     handleMouseUp,
