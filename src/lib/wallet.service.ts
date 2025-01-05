@@ -51,6 +51,6 @@ export const updateCurrentWallet = async ({ wallet_id, user_id }: {
   )
 
   const res = await response.json();
-  return res.data
+  return res
 
 }

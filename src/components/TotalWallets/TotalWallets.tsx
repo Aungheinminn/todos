@@ -36,14 +36,29 @@ type TotalWalletsProps = {
 type WalletComponentProps = {
   currentlyShown?: boolean;
   wallet: WalletType;
+  handleOpenChange: () => void;
 };
 
-const WalletComponent: React.FC<WalletComponentProps> = ({ currentlyShown, wallet }) => {
+const WalletComponent: React.FC<WalletComponentProps> = ({
+  currentlyShown,
+  wallet,
+  handleOpenChange,
+}) => {
   const { updateCurrentWalletMutation } = useWalletMutation();
 
   const handleMouseClick = () => {
     if (currentlyShown) return;
-    updateCurrentWalletMutation.mutate({ wallet_id: wallet._id || "", user_id: wallet.user_id });
+    updateCurrentWalletMutation.mutate(
+      { wallet_id: wallet._id || "", user_id: wallet.user_id },
+      {
+        onSuccess: (data) => {
+          if (data.success) {
+            handleOpenChange();
+          }
+        },
+      },
+    );
+
     console.log("clicking");
   };
 
@@ -96,7 +111,13 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
             See All
           </button>
         </div>
-        {currentWallet && <WalletComponent currentlyShown={true} wallet={currentWallet} />}
+        {currentWallet && (
+          <WalletComponent
+            handleOpenChange={handleOpenChange}
+            currentlyShown={true}
+            wallet={currentWallet}
+          />
+        )}
       </div>
       <DialogContent
         ref={ref}
@@ -104,10 +125,14 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
       >
         <DialogTitle className="text-base text-white px-3">Wallets</DialogTitle>
         {wallets
-          ? wallets
-              .map((wallet) => (
-                <WalletComponent currentlyShown={false} key={wallet._id} wallet={wallet} />
-              ))
+          ? wallets.map((wallet) => (
+              <WalletComponent
+                currentlyShown={false}
+                key={wallet._id}
+                wallet={wallet}
+                handleOpenChange={handleOpenChange}
+              />
+            ))
           : ""}
         <AddWallet open={isWalletOpen} setOpen={setWalletOpen} />
       </DialogContent>
