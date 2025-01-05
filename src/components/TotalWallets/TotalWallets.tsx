@@ -1,33 +1,20 @@
 import { useWalletStore } from "@/lib/walletStore";
 import Image from "next/image";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
 import walletIcon from "@/assets/wallet.svg";
 import AddWallet from "../AddWallet/AddWallet";
 import { WalletType } from "@/lib/types/wallet.type";
-import Link from "next/link";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
+
 import { useRef, useState } from "react";
-import useOutsideClick from "@/hooks/useOutsideClick";
-import add from "@/assets/add_wallet.svg";
-import closeIcon from "@/assets/cross_x.svg";
+
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { usePressHook } from "@/hooks/usePressHook";
 import { useWalletMutation } from "@/lib/walletMutation";
+import WalletSettings from "../WalletSettings/WalletSettings";
+import { useRouter } from "next/navigation";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
@@ -44,10 +31,21 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   wallet,
   handleOpenChange,
 }) => {
-  const { updateCurrentWalletMutation } = useWalletMutation();
+  const router = useRouter();
+  const { updateCurrentWalletMutation, deleteMutation } = useWalletMutation();
 
-  const handleMouseClick = () => {
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
+
+  const handleSettingsOpenChange = () => {
+    setIsSettingsOpen(!isSettingsOpen);
+  };
+
+  const handleClick = () => {
     if (currentlyShown) return;
+    setIsSettingsOpen(true);
+  };
+
+  const handleSetDefault = () => {
     updateCurrentWalletMutation.mutate(
       { wallet_id: wallet._id || "", user_id: wallet.user_id },
       {
@@ -58,30 +56,41 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
         },
       },
     );
-
-    console.log("clicking");
   };
 
-  const handleMousePress = () => {
-    if (currentlyShown) return;
-    console.log("pressing");
+  const handleDelete = () => {
+    deleteMutation.mutate({
+
+      id: wallet.user_id,
+      wallet_id: wallet._id || "",
+    });
   };
-  const { handleMouseDown, handleMouseUp } = usePressHook({
-    mousePressFunction: handleMousePress,
-    mouseClickFunction: handleMouseClick,
-  });
+
+  const handleViewDetails = () => {
+    console.log(wallet);
+    router.push(`/wallet/${wallet._id}`);
+  };
+
   return (
-    <div
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      className={`w-full  flex justify-between items-center p-3 ${!currentlyShown ? "hover:bg-gray-600" : ""}`}
+    <WalletSettings
+      isOpen={isSettingsOpen}
+      currentlyShown={currentlyShown}
+      handleClick={handleClick}
+      handleDelete={handleDelete}
+      handleSetDefault={handleSetDefault}
+      handleViewDetails={handleViewDetails}
+      handleOpenChange={handleSettingsOpenChange}
     >
-      <div className="flex justify-start items-center gap-x-3">
-        <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
-        <p className="text-sm text-white">{wallet.wallet_name}</p>
+      <div
+        className={`w-full flex justify-between items-center p-3 ${!currentlyShown ? "hover:bg-gray-600" : ""}`}
+      >
+        <div className="flex justify-start items-center gap-x-3">
+          <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
+          <p className="text-sm text-white">{wallet.wallet_name}</p>
+        </div>
+        <p className="text-sm text-white">K{wallet.balance}</p>
       </div>
-      <p className="text-sm text-white">K{wallet.balance}</p>
-    </div>
+    </WalletSettings>
   );
 };
 
