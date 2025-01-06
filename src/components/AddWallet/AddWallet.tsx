@@ -75,7 +75,7 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
         </div>
 
         <DrawerClose
-          onClick={() => console.log("it works")}
+          onClick={handleCreateWallet}
           className="w-[80%] bg-gray-700 py-1 rounded-2xl hover:bg-sky-400"
         >
           Save

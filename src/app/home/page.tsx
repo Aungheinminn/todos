@@ -5,14 +5,17 @@ import { useQuery } from "react-query";
 import { Suspense } from "react";
 import "react-day-picker/dist/style.css";
 import HomeLoading from "./loading";
-import AddWallet from "@/components/AddWallet/AddWallet";
-import { useWalletStore } from "@/lib/walletStore";
 import TotalWallets from "@/components/TotalWallets/TotalWallets";
-import { getWallets } from "@/lib/wallet.service";
+import { getCurrentWallet, getWallets } from "@/lib/wallet.service";
 import Balance from "@/components/Balance/Balance";
+import { useWalletStore } from "@/lib/walletStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
+    (state) => state,
+  );
+
+  const { currentWallet, updateCurrentWallet } = useWalletStore(
     (state) => state,
   );
 
@@ -24,6 +27,15 @@ const Home = () => {
     },
   });
 
+  const { isLoading: isCurrentWalletLoading } = useQuery({
+    queryKey: ["currentWallet"],
+    queryFn: () => getCurrentWallet(currentUser?._id || ""),
+    enabled: !!currentUser?._id,
+    onSuccess: (data) => {
+      updateCurrentWallet(data);
+    },
+  });
+
   const { data: wallets } = useQuery({
     queryKey: ["wallets"],
     queryFn: () => getWallets(currentUser?._id || ""),
@@ -32,10 +44,14 @@ const Home = () => {
 
   console.log("wallets", wallets);
   console.log("currentUser", currentUser);
+  console.log("currentWallet", currentWallet);
   return (
     <Suspense fallback={<HomeLoading />}>
       <div className="w-full pt-[55px] text-black flex items-center flex-col justify-center">
-        <Balance />
+        <Balance
+          currentWallet={currentWallet}
+          isLoading={isCurrentWalletLoading}
+        />
 
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />

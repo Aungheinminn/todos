@@ -55,13 +55,13 @@ export const useWalletMutation = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteWallet,
-    onMutate: async (data: string) => {
+    onMutate: async ({ id, wallet_id }: { id: string, wallet_id: string }) => {
       await queryClient.cancelQueries("wallets");
 
       const previousItems = queryClient.getQueryData("wallets");
 
       queryClient.setQueryData("wallets", (old: any) =>
-        old ? old.filter((o: any) => o._id !== data) : [],
+        old ? old.filter((o: any) => o._id !== wallet_id) : [],
       );
 
       return { previousItems };

@@ -30,11 +30,15 @@ export const PUT = async (
       .collection("wallets")
       .updateMany({ user_id: id }, { $set: { current: false } });
 
-    const current = await db
+    await db
       .collection("wallets")
       .updateOne({ _id: new ObjectId(wallet_id) }, { $set: { current: true } });
 
-    if (!current) {
+    const currentWallet = await db
+      .collection("wallets")
+      .findOne({ _id: new ObjectId(wallet_id), current: true });
+
+    if (!currentWallet) {
       return NextResponse.json(
         { success: false, error: "Error updating wallet" },
         { status: 500 },
@@ -42,7 +46,11 @@ export const PUT = async (
     }
 
     return NextResponse.json(
-      { success: true, message: "Wallet updated successfully", data: current },
+      {
+        success: true,
+        message: "Wallet updated successfully",
+        data: currentWallet,
+      },
       { status: 200 },
     );
   } catch (e) {
