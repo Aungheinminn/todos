@@ -1,31 +1,22 @@
-import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
-export const DELETE = async (
+export const GET = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: {
-      id: string;
-      wallet_id: string;
-    };
-  },
+  { params }: { params: { id: string } },
 ) => {
   if (!params) {
-    return NextResponse.json(
-      { success: false, error: "User ID is required" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
-  const { id, wallet_id } = params;
+  const { id } = params;
+
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const wallet = await db
       .collection("wallets")
-      .deleteOne({ _id: new ObjectId(wallet_id), user_id: id });
+      .findOne({ current: true, user_id: id });
+
 
     if (!wallet) {
       return NextResponse.json(
@@ -35,14 +26,14 @@ export const DELETE = async (
     }
 
     return NextResponse.json(
-      { success: true, message: "Wallet successfully deleted" },
+      { success: true, message: "Wallet successfully fetched", data: wallet },
       { status: 200 },
     );
   } catch (e) {
-    console.error(e);
+    console.log(e);
     return NextResponse.json(
-      { success: false, error: "Internal Server Error" },
-      { status: 400 },
+      { success: false, message: "Internal Server Error" },
+      { status: 500 },
     );
   }
 };

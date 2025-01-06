@@ -1,15 +1,22 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { WalletType } from "./types/wallet.type";
 
 interface WalletStore {
-  isOpen: boolean;
-  wallet: string;
-  setWallet: (wallet: string) => void;
-  setIsOpen: (isOpen: boolean) => void;
+  currentWallet: WalletType | null;
+  updateCurrentWallet: (currentWallet: WalletType) => void;
 }
 
-export const useWalletStore = create<WalletStore>((set) => ({
-  isOpen: false,
-  wallet: "",
-  setWallet: (wallet) => set({ wallet }),
-  setIsOpen: (isOpen) => set({ isOpen }),
-}));
+export const useWalletStore = create<WalletStore>()(
+  persist(
+    (set) => ({
+      currentWallet: null,
+      updateCurrentWallet: (currentWallet) => set({ currentWallet }),
+    }), {
+      name: "current-wallet-storage",
+      partialize: (state) => ({
+        currentWallet: state.currentWallet
+      }),
+    }
+  )
+)

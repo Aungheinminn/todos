@@ -23,16 +23,15 @@ type TotalWalletsProps = {
 type WalletComponentProps = {
   currentlyShown?: boolean;
   wallet: WalletType;
-  handleOpenChange: () => void;
 };
 
 const WalletComponent: React.FC<WalletComponentProps> = ({
   currentlyShown,
   wallet,
-  handleOpenChange,
 }) => {
   const router = useRouter();
   const { updateCurrentWalletMutation, deleteMutation } = useWalletMutation();
+  const { updateCurrentWallet } = useWalletStore((state) => state);
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
@@ -51,7 +50,8 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
       {
         onSuccess: (data) => {
           if (data.success) {
-            handleOpenChange();
+            updateCurrentWallet(data.data);
+            setIsSettingsOpen(false);
           }
         },
       },
@@ -60,7 +60,6 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
 
   const handleDelete = () => {
     deleteMutation.mutate({
-
       id: wallet.user_id,
       wallet_id: wallet._id || "",
     });
@@ -88,16 +87,17 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
           <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
           <p className="text-sm text-white">{wallet.wallet_name}</p>
         </div>
+        <div className="flex justify-end items-center gap-x-3">
+          <div className={`flex h-[20px] justify-center items-center gap-x-1 bg-green-500 px-2 rounded ${currentlyShown && "hidden"} ${!wallet.current ? "hidden" : ""}`}><p className="mb-[3px]">curr</p></div>
         <p className="text-sm text-white">K{wallet.balance}</p>
+        </div>
       </div>
     </WalletSettings>
   );
 };
 
 const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
-  const { isOpen: isWalletOpen, setIsOpen: setWalletOpen } = useWalletStore(
-    (state) => state,
-  );
+  const [isWalletOpen, setWalletOpen] = useState<boolean>(false);
 
   const currentWallet = wallets && wallets.find((w) => w.current === true);
   const ref = useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
   const handleOpenChange = () => {
     setIsOpen(!isOpen);
   };
-  console.log("isOpen", isOpen);
+  console.log("total isOpen", isOpen);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -121,11 +121,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
           </button>
         </div>
         {currentWallet && (
-          <WalletComponent
-            handleOpenChange={handleOpenChange}
-            currentlyShown={true}
-            wallet={currentWallet}
-          />
+          <WalletComponent currentlyShown={true} wallet={currentWallet} />
         )}
       </div>
       <DialogContent
@@ -139,7 +135,6 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
                 currentlyShown={false}
                 key={wallet._id}
                 wallet={wallet}
-                handleOpenChange={handleOpenChange}
               />
             ))
           : ""}
