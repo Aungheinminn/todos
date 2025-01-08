@@ -1,4 +1,5 @@
 "use client";
+import { useQuery } from "react-query";
 import {
   Drawer,
   DrawerClose,
@@ -9,14 +10,27 @@ import {
 } from "@/components/ui/drawer";
 import Image from "next/image";
 import add from "@/assets/add.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AmountInput from "../AmountInput/AmountInput";
 import CategorySelection from "../CategorySelection/CategorySelection";
 import NoteInput from "../NoteInput/NoteInput";
 import Calendar from "../Calendar/Calendar";
 import WalletSelection from "../WalletSelection/WalletSelection";
+import { useCurrentUserStore } from "@/lib/userStore";
+import { useWalletStore } from "@/lib/walletStore";
+import { getWallets } from "@/lib/wallet.service";
+import { WalletType } from "@/lib/types/wallet.type";
 
 const AddTransactionComponent = () => {
+  const { currentUser } = useCurrentUserStore((state) => state);
+  const { currentWallet } = useWalletStore((state) => state);
+
+  const { data: wallets } = useQuery({
+    queryKey: ["wallets"],
+    queryFn: () => getWallets(currentUser?._id || ""),
+    enabled: !!currentUser?._id,
+  });
+
   const [open, setOpen] = useState<boolean>(false);
   const [amount, setAmount] = useState<number | string>(0);
   const [category, setCategory] = useState<{
@@ -30,7 +44,29 @@ const AddTransactionComponent = () => {
   });
   const [note, setNote] = useState<string>("");
   const [date, setDate] = useState<Date>(new Date());
-  const [wallet, setWallet] = useState<string>("Blah");
+  const [wallet, setWallet] = useState<{
+    id: string;
+    wallet_name: string;
+  }>({
+    id: currentWallet?._id ?? "",
+    wallet_name: currentWallet?.wallet_name ?? "Add a wallet",
+  });
+
+  const data = {
+    amount,
+    category: category.name,
+    note,
+    date: date.toISOString(),
+    wallet: wallet.id,
+  };
+
+  useEffect(() => {
+    setWallet({
+      id: currentWallet?._id ?? "",
+      wallet_name: currentWallet?.wallet_name ?? "",
+    });
+  }, [currentWallet]);
+
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger
@@ -52,7 +88,11 @@ const AddTransactionComponent = () => {
           <CategorySelection category={category} setCategory={setCategory} />
           <NoteInput note={note} setNote={setNote} />
           <Calendar date={date} setDate={setDate} />
-          <WalletSelection wallet={wallet} setWallet={setWallet} />
+          <WalletSelection
+            wallets={wallets}
+            seletedWallet={wallet}
+            setSeletedWallet={setWallet}
+          />
         </div>
         <DrawerClose
           className="bg-gray-700 w-[80%] py-2 rounded-2xl text-sm"
