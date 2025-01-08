@@ -5,6 +5,8 @@ import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionGroup from "@/components/TransactionsGroup/TransactionGroup";
 import TransactionLoading from "./loading";
+import { useCurrentUserStore } from "@/lib/userStore";
+import { useWalletStore } from "@/lib/walletStore";
 
 const TransactionHeader = () => {
   return (
@@ -20,6 +22,10 @@ const TransactionHeader = () => {
   );
 };
 const Transactions = () => {
+  const { currentUser } = useCurrentUserStore(state => state);
+  const { currentWallet } = useWalletStore(state => state);
+
+  const { data: wallet } = useQuery({})
   return (
     <Suspense fallback={<TransactionLoading />}>
       <div className="w-full px-0 mx-0 bg-gray-800 pt-[55px]">

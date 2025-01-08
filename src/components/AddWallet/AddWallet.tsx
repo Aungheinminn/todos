@@ -22,10 +22,10 @@ type AddWalletProps = {
 };
 
 const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
+  const { currentUser } = useCurrentUserStore((state) => state);
   const [wallet, setWallet] = useState<string>("");
   const [currency, setCurrency] = useState<string>("MMK");
   const [initialAmount, setInitialAmount] = useState<number | string>("");
-  const { currentUser } = useCurrentUserStore((state) => state);
   const { createMutation } = useWalletMutation();
 
   const handleCreateWallet = () => {
