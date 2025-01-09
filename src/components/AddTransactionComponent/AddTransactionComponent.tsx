@@ -20,10 +20,14 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import { useWalletStore } from "@/lib/walletStore";
 import { getWallets } from "@/lib/wallet.service";
 import { WalletType } from "@/lib/types/wallet.type";
+import { getDate } from "@/lib/utils/getDate";
+import { useTransactionMutation } from "@/lib/transactionMutation";
+import { Button } from "../ui/button";
 
 const AddTransactionComponent = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
+  const { createMutation } = useTransactionMutation();
 
   const { data: wallets } = useQuery({
     queryKey: ["wallets"],
@@ -52,12 +56,33 @@ const AddTransactionComponent = () => {
     wallet_name: currentWallet?.wallet_name ?? "Add a wallet",
   });
 
-  const data = {
-    amount,
-    category: category.name,
-    note,
-    date: date.toISOString(),
-    wallet: wallet.id,
+  const handleCreateTransaction = async () => {
+    const data = {
+      wallet_id: wallet.id,
+      transaction: amount,
+      user_id: currentUser?._id || "",
+      category: category.name,
+      note,
+      transaction_day: getDate(date).day,
+      transaction_month: getDate(date).month,
+      transaction_year: getDate(date).year,
+    };
+    try {
+      createMutation.mutate(data, {
+        onSuccess: (data) => {
+          if (data.success) {
+            setOpen(false);
+          } else {
+            setOpen(true);
+          }
+        },
+        onError: (error: any) => {
+          console.log(error);
+        },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -94,12 +119,12 @@ const AddTransactionComponent = () => {
             setSeletedWallet={setWallet}
           />
         </div>
-        <DrawerClose
-          className="bg-gray-700 w-[80%] py-2 rounded-2xl text-sm"
-          onClick={() => setOpen(false)}
+        <Button
+          className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
+          onClick={handleCreateTransaction}
         >
           Save
-        </DrawerClose>
+        </Button>
         <div></div>
       </DrawerContent>
     </Drawer>
