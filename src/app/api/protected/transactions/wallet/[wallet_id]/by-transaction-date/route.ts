@@ -15,13 +15,14 @@ export const GET = async (
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    const transactions = db
+    const transactions = await db
       .collection("transactions")
       .find({
         wallet_id: wallet_id,
-        transaction_month: transaction_month,
-        transaction_year: transaction_year,
+        transaction_month: Number(transaction_month),
+        transaction_year: Number(transaction_year),
       })
+      .sort({ transaction_day: -1 })
       .toArray();
 
     if (!transactions) {
