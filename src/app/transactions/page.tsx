@@ -5,13 +5,13 @@ import Image from "next/image";
 import wallet from "@/assets/wallet_2.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
-import TransactionGroup from "@/components/TransactionsGroup/TransactionGroup";
 import TransactionLoading from "./loading";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { useWalletStore } from "@/lib/walletStore";
 import { useQuery } from "react-query";
 import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
+import TransactionsComponent from "@/components/Transactions/Transactions";
 
 const TransactionHeader = () => {
   return (
@@ -48,9 +48,7 @@ const Transactions = () => {
       <div className="w-full flex flex-col items-center justify-center  px-0 mx-0 bg-gray-800 pt-[55px]">
         <TransactionHeader />
         <TransactionMonthPicker date={date} setDate={setDate} />
-        <div className="w-full flex justify-center items-center">
-          <TransactionGroup />
-        </div>
+        <TransactionsComponent transactions={transactions} />
       </div>
     </Suspense>
   );
