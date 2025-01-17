@@ -10,10 +10,16 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
   return (
     <div className="w-full flex justify-between items-center bg-gray-700 px-3 py-4">
       <div className="flex justify-start gap-x-2 items-center">
-        <Image className="w-6 h-6" src={Categories.find((cate) => cate.name === transaction.category)?.icon} alt="transportation" />
+        <Image
+          className="w-6 h-6"
+          src={
+            Categories.find((cate) => cate.name === transaction.category)?.icon
+          }
+          alt="transportation"
+        />
         <p className="text-sm">{transaction.category}</p>
       </div>
-      <p className="text-sm">1,0000.00</p>
+      <p className="text-sm">{transaction.transaction}</p>
     </div>
   );
 };
