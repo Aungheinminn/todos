@@ -1,21 +1,66 @@
+import { TransactionType } from "@/lib/types/transaction.type";
 import TransactionCard from "../TransactionCard/TransactionCard";
+import { useMemo } from "react";
+type TransactionGroupProps = {
+  date: {
+    day: number | string;
+    month: number | string;
+    year: number | string;
+  };
+  transactions: TransactionType[];
+};
 
-const TransactionGroupHeader = () => {
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const TransactionGroupHeader = ({
+  date,
+  totalCost,
+}: {
+  date: TransactionGroupProps["date"];
+  totalCost: number;
+}) => {
   return (
     <div className="w-full flex justify-between items-center px-2 py-3">
       <div className="flex justify-start items-end gap-x-2">
-        <p className="text-2xl">27</p>
-        <p className="text-sm text-gray-400">December 2024</p>
+        <p className="text-2xl w-8 text-center">{date.day}</p>
+        <p className="text-sm text-gray-400">
+          {months[Number(date.month) - 1]} {date.year}
+        </p>
       </div>
-      <p>100,000.00</p>
+      <p>{totalCost}</p>
     </div>
   );
 };
-const TransactionGroup = () => {
+const TransactionGroup: React.FC<TransactionGroupProps> = ({
+  date,
+  transactions,
+}) => {
+  const totalCosts = useMemo(() => {
+    return transactions.reduce((total, transaction) => {
+      return Number(total) + Number(transaction.transaction);
+    }, 0);
+  }, [transactions]);
+  console.log("totalCosts", totalCosts);
   return (
     <div className="w-full bg-gray-700">
-      <TransactionGroupHeader />
-      <TransactionCard />
+      <TransactionGroupHeader date={date} totalCost={totalCosts} />
+      {transactions &&
+        transactions.map((transaction, idx) => (
+          <TransactionCard key={transaction?._id || idx} transaction={transaction} />
+        ))}
     </div>
   );
 };
