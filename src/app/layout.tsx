@@ -17,7 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="w-full text-white min-h-screen"
+        className="w-full bg-gray-800 text-white min-h-screen"
         suppressHydrationWarning={false}
       >
         <ReactQueryProvider>{children}</ReactQueryProvider>
