@@ -12,6 +12,18 @@ export const getTransactionsByWallet = async (wallet_id: string) => {
   }
 };
 
+export const getTransactionById = async (wallet_id: string, transaction_id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/transaction/${transaction_id}`,
+    );
+    const res = await response.json();
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const getTransactionsByDate = async (
   wallet_id: string,
   month: number,
