@@ -34,12 +34,50 @@ export const getTransactionsByDate = async (
   }
 };
 
-export const postTransactionByWallet = async (data: TransactionType) => {
+export const createTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}`,
       {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateTransaction = async (data: TransactionType) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/transaction/${data._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteTransaction = async (data: TransactionType) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/transaction/${data._id}`,
+      {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
