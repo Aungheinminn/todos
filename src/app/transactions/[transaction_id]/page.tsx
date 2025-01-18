@@ -10,12 +10,19 @@ import walletIcon from "@/assets/wallet.svg";
 import { TransactionType } from "@/lib/types/transaction.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useQuery } from "react-query";
+import { getTransactionById } from "@/lib/transaction.service";
+import { useWalletStore } from "@/lib/walletStore";
+import { getWalletById } from "@/lib/wallet.service";
+import { useCurrentUserStore } from "@/lib/userStore";
+import { WalletType } from "@/lib/types/wallet.type";
 
 type TransactionHeaderProps = {
   handleEdit: () => void;
 };
 
 type TransactionBodyProps = {
+  wallet: WalletType;
   transaction: TransactionType;
 };
 
@@ -38,7 +45,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   );
 };
 
-const TransactionBody: React.FC<TransactionBodyProps> = ({ transaction }) => {
+const TransactionBody: React.FC<TransactionBodyProps> = ({
+  wallet,
+  transaction,
+}) => {
+  if (!transaction || !wallet) return null;
+  const date = new Date(
+    transaction.transaction_year,
+    transaction.transaction_month - 1,
+    transaction.transaction_day,
+  );
   return (
     <div className="w-full bg-gray-700 py-4">
       <div className="w-full flex justify-start items-start gap-x-4">
@@ -48,19 +64,25 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({ transaction }) => {
           alt="transportation"
         />
         <div className="w-full flex flex-col gap-y-4 items-start pb-3 border-b border-slate-400">
-          <p className="text-lg text-white">Transportation</p>
-          <p className="text-lg text-red-500">100,000.00</p>
+          <div className="flex flex-col items-start gap-y-1">
+            <p className="text-lg text-white">{transaction.category}</p>
+            <p className="text-xs text-white">{transaction.note || ""}</p>
+          </div>
+          <p className="text-lg text-red-500">{transaction.transaction}</p>
         </div>
       </div>
       <div className="w-full flex flex-col items-start gap-y-1 px-4 pt-4">
         <div className="w-full flex justify-start items-center gap-x-4">
           <Image className="h-5 w-5" src={calendarIcon} alt="calender" />
-          <p className="text-sm text-white">2023-01-01</p>
+          <p className="text-sm text-white">
+            {date.toString().split(" ").slice(0, 1).join(" ")},{" "}
+            {date.toString().split(" ").slice(1, 4).join(" ")}
+          </p>
         </div>
 
         <div className="w-full flex justify-start items-center gap-x-4">
           <Image className="h-5 w-5" src={walletIcon} alt="calender" />
-          <p className="text-sm text-white">wallet</p>
+          <p className="text-sm text-white">{wallet.wallet_name}</p>
         </div>
       </div>
     </div>
@@ -73,14 +95,46 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
 }) => {
   return (
     <div className="w-full flex flex-col justify-center items-center bg-gray-700">
-      <Button className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-green-500 border-t border-slate-500" onClick={handleDuplicate}>Duplicate</Button>
-      <Button className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-red-500 border-y border-slate-500" onClick={handleDelete}>Delete</Button>
+      <Button
+        className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-green-500 border-t border-slate-500"
+        onClick={handleDuplicate}
+      >
+        Duplicate
+      </Button>
+      <Button
+        className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-red-500 border-y border-slate-500"
+        onClick={handleDelete}
+      >
+        Delete
+      </Button>
     </div>
   );
 };
 
 const Transaction = () => {
   const router = useParams();
+  const { transaction_id } = router;
+  const { currentUser } = useCurrentUserStore((state) => state);
+  const { currentWallet } = useWalletStore((state) => state);
+
+  const { data: transaction } = useQuery({
+    queryKey: ["transactions"],
+    queryFn: () =>
+      getTransactionById(
+        currentWallet?._id || "",
+        transaction_id.toString() || "",
+      ),
+    enabled: !!currentWallet?._id,
+  });
+
+  const { data: wallet } = useQuery({
+    queryKey: ["wallet"],
+    queryFn: () =>
+      getWalletById(currentUser?._id || "", transaction.wallet_id || ""),
+    enabled: !!currentUser?._id && !!transaction,
+  });
+
+  console.log(transaction, wallet);
 
   const handleEdit = () => {
     console.log(router);
@@ -97,7 +151,7 @@ const Transaction = () => {
     <Suspense fallback={<TransactionsLoading />}>
       <div className="w-full pt-[56px] mb-4">
         <TransactionHeader handleEdit={handleEdit} />
-        <TransactionBody transaction={{} as TransactionType} />
+        <TransactionBody wallet={wallet} transaction={transaction} />
       </div>
       <TransactionFooter
         handleDuplicate={handleDuplicate}
