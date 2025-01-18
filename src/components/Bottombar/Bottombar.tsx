@@ -1,4 +1,5 @@
 "use client";
+import add from "@/assets/add.svg";
 import whiteHouse from "../../assets/white_home.svg";
 import whiteRoutines from "../../assets/white_routines.svg";
 import notifications from "@/assets/notification.svg";
@@ -11,6 +12,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNotificationStore } from "@/lib/notificationStore";
 import AddTransactionComponent from "../AddTransactionComponent/AddTransactionComponent";
+import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
 
 const Bottombar = () => {
   const { pendingNotifications } = useNotificationStore((state) => state);
@@ -23,8 +25,10 @@ const Bottombar = () => {
     setActive(current);
   };
 
+  const { setIsOpen, setType } = useTransactionPopupStore((state) => state);
+
   return (
-    <div className="w-full flex justify-between items-center bg-gray-800 lg:hidden px-2 h-[50px]">
+    <div className="w-full flex justify-between items-center bg-gray-800 lg:hidden px-2 h-[50px] border-t border-slate-500">
       <Link
         href="/home"
         onClick={() => handleChange("home")}
@@ -60,13 +64,16 @@ const Bottombar = () => {
           />
         </div>
       </Link>
-      {/* <div onClick={() => {}} className="cursor-pointer w-[40px] relative group flex flex-col items-center bg-[#58ed18] rounded-full">
-                <div className={`transition-all duration-300 w-[35px] h-[35px] flex justify-center items-center `}>
-                    <Image className="" src={whiteCreate} alt="create"  width={20} height={20} />
-                </div>
-            </div>              */}
 
-      <AddTransactionComponent />
+      <div
+        onClick={() => {
+          setType("create");
+          setIsOpen(true);
+        }}
+        className="w-[80px] flex justify-center items-center"
+      >
+        <Image className="w-8 h-8" src={add} alt="add" />
+      </div>
 
       <Link
         href="/wallets"
@@ -79,6 +86,7 @@ const Bottombar = () => {
           <Image className="" src={wallets} alt="home" width={25} height={25} />
         </div>
       </Link>
+
       <Link
         href="/notifications"
         onClick={() => handleChange("notifications")}

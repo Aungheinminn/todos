@@ -8,7 +8,7 @@ type TransactionCardProps = {
 };
 const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
   return (
-    <div className="w-full flex justify-between items-center bg-gray-700 px-3 py-4">
+    <div className="cursor-pointer w-full flex justify-between items-center bg-gray-700 px-3 py-4">
       <div className="flex justify-start gap-x-2 items-center">
         <Image
           className="w-6 h-6"

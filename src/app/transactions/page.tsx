@@ -45,9 +45,12 @@ const Transactions = () => {
 
   return (
     <Suspense fallback={<TransactionLoading />}>
-      <div className="w-full flex flex-col items-center justify-center  px-0 mx-0 bg-gray-800 pt-[55px]">
-        <TransactionHeader />
-        <TransactionMonthPicker date={date} setDate={setDate} />
+      <div className="h-fit">
+        <div className="w-full flex flex-col items-center justify-center px-0 mx-0 bg-gray-800 pt-[55px]">
+          <TransactionHeader />
+          <TransactionMonthPicker date={date} setDate={setDate} />
+        </div>
+
         <TransactionsComponent transactions={transactions} />
       </div>
     </Suspense>
