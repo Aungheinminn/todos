@@ -16,6 +16,9 @@ import { useWalletStore } from "@/lib/walletStore";
 import { getWalletById } from "@/lib/wallet.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { WalletType } from "@/lib/types/wallet.type";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { useTransactionMutation } from "@/lib/transactionMutation";
 
 type TransactionHeaderProps = {
   handleEdit: () => void;
@@ -24,6 +27,7 @@ type TransactionHeaderProps = {
 type TransactionBodyProps = {
   wallet: WalletType;
   transaction: TransactionType;
+  isLoading: boolean;
 };
 
 type TransactionFooterProps = {
@@ -48,7 +52,10 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 const TransactionBody: React.FC<TransactionBodyProps> = ({
   wallet,
   transaction,
+  isLoading,
 }) => {
+  if (isLoading)
+    return <Skeleton className="h-[200px] bg-gray-700 rounded-none w-full" />;
   if (!transaction || !wallet) return null;
   const date = new Date(
     transaction.transaction_year,
@@ -116,8 +123,12 @@ const Transaction = () => {
   const { transaction_id } = router;
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
+  const { editMutation, deleteMutation } = useTransactionMutation();
 
-  const { data: transaction } = useQuery({
+  const { setIsOpen, setType, setTransactionDatas } = useTransactionPopupStore(
+    (state) => state,
+  );
+  const { data: transaction, isLoading: isTransactionLoading } = useQuery({
     queryKey: ["transactions"],
     queryFn: () =>
       getTransactionById(
@@ -126,6 +137,8 @@ const Transaction = () => {
       ),
     enabled: !!currentWallet?._id,
   });
+
+  console.log("isTransactionLoading", isTransactionLoading);
 
   const { data: wallet } = useQuery({
     queryKey: ["wallet"],
@@ -137,6 +150,29 @@ const Transaction = () => {
   console.log(transaction, wallet);
 
   const handleEdit = () => {
+    setIsOpen(true);
+    setType("edit");
+    setTransactionDatas({
+      _id: transaction._id,
+      amount: transaction.transaction,
+      category: {
+        id: transaction.category_id,
+        name: transaction.category,
+        icon: Categories.find((cate) => cate.name === transaction.category)
+          ?.icon,
+      },
+      note: transaction.note,
+      date: new Date(
+        transaction.transaction_year,
+        transaction.transaction_month - 1,
+        transaction.transaction_day,
+      ),
+      wallet: {
+        id: transaction.wallet_id,
+        wallet_name: wallet.wallet_name,
+      },
+      process: editMutation,
+    });
     console.log(router);
   };
 
@@ -145,13 +181,23 @@ const Transaction = () => {
   };
 
   const handleDelete = () => {
+    setIsOpen(true);
+    setType("delete");
+    setTransactionDatas({
+      _id: transaction._id,
+      process: deleteMutation,
+    });
     console.log(router);
   };
   return (
     <Suspense fallback={<TransactionsLoading />}>
       <div className="w-full pt-[56px] mb-4">
         <TransactionHeader handleEdit={handleEdit} />
-        <TransactionBody wallet={wallet} transaction={transaction} />
+        <TransactionBody
+          wallet={wallet}
+          transaction={transaction}
+          isLoading={isTransactionLoading}
+        />
       </div>
       <TransactionFooter
         handleDuplicate={handleDuplicate}

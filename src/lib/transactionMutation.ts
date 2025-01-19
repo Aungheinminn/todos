@@ -11,16 +11,6 @@ export const useTransactionMutation = () => {
 
   const createMutation = useMutation({
     mutationFn: createTransaction,
-    onMutate: async (data: TransactionType) => {
-      await queryClient.cancelQueries("transactions");
-      const previousItems = queryClient.getQueryData("transactions");
-
-      queryClient.setQueryData("transactions", (old: any) =>
-        old ? [data, ...old] : [],
-      );
-
-      return { previousItems };
-    },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
@@ -34,11 +24,10 @@ export const useTransactionMutation = () => {
       await queryClient.cancelQueries("transactions");
       const previousItems = queryClient.getQueryData("transactions");
 
-      queryClient.setQueryData("transactions", (old: any) =>
-        old
-          ? old.map((t: TransactionType) => (t._id === data._id ? data : t))
-          : [],
-      );
+      queryClient.setQueryData<TransactionType>("transactions", (old) => {
+        if (!old) return data;
+        return old._id === data._id ? data : old;
+      });
 
       return { previousItems };
     },
@@ -51,16 +40,6 @@ export const useTransactionMutation = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTransaction,
-    onMutate: async (data: TransactionType) => {
-      await queryClient.cancelQueries("transactions");
-      const previousItems = queryClient.getQueryData("transactions");
-
-      queryClient.setQueryData("transactions", (old: any) =>
-        old ? old.filter((t: TransactionType) => t._id !== data._id) : [],
-      );
-
-      return { previousItems };
-    },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },

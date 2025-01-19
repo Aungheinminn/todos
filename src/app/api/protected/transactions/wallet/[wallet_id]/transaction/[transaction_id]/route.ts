@@ -19,12 +19,12 @@ export const GET = async (
     const transaction = await db
       .collection("transactions")
       .findOne({ _id: new ObjectId(transaction_id), wallet_id: wallet_id });
-		if(!transaction) {
-			return NextResponse.json(
-				{ success: false, error: "Transaction not found" },
-				{ status: 404 },
-			);
-		}
+    if (!transaction) {
+      return NextResponse.json(
+        { success: false, error: "Transaction not found" },
+        { status: 404 },
+      );
+    }
     return NextResponse.json(
       { success: true, data: transaction },
       { status: 200 },
@@ -50,13 +50,14 @@ export const PUT = async (
   }
   const { wallet_id, transaction_id } = params;
   const body = await req.json();
+  const { _id, ...rest } = body;
 
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const transaction = await db
       .collection("transactions")
-      .updateOne({ _id: new ObjectId(transaction_id) }, { $set: body });
+      .updateOne({ _id: new ObjectId(transaction_id) }, { $set: rest });
 
     if (!transaction) {
       return NextResponse.json(
