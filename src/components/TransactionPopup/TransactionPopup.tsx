@@ -20,15 +20,19 @@ import { getDate } from "@/lib/utils/getDate";
 import { useTransactionMutation } from "@/lib/transactionMutation";
 import { Button } from "../ui/button";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { redirect, useRouter } from "next/navigation";
 
 const TransactionPopup = () => {
+  const router = useRouter();
   const {
     isOpen: open,
     setIsOpen: setOpen,
     type,
     transactionDatas,
+    resetTransactionDatas,
   } = useTransactionPopupStore((state) => state);
 
+  console.log(transactionDatas, "transactionDatas");
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
   const { createMutation } = useTransactionMutation();
@@ -65,6 +69,11 @@ const TransactionPopup = () => {
     },
   );
 
+  const handleClose = () => {
+    setOpen(false);
+    resetTransactionDatas();
+  };
+
   const handleTransaction = async () => {
     let data;
     if (type === "create") {
@@ -81,7 +90,7 @@ const TransactionPopup = () => {
       transactionDatas.process = createMutation;
     } else if (type === "edit") {
       data = {
-        id: transactionDatas?.id || "",
+        _id: transactionDatas?._id || "",
         wallet_id: wallet.id,
         transaction: amount,
         user_id: currentUser?._id || "",
@@ -93,7 +102,8 @@ const TransactionPopup = () => {
       };
     } else if (type === "delete") {
       data = {
-        id: transactionDatas?.id || "",
+        _id: transactionDatas?._id || "",
+        wallet_id: wallet.id,
       };
     }
 
@@ -102,6 +112,8 @@ const TransactionPopup = () => {
         onSuccess: (data: any) => {
           if (data.success) {
             setOpen(false);
+            resetTransactionDatas();
+            type === "delete" && router.push("/transactions");
           } else {
             setOpen(true);
           }
@@ -116,24 +128,40 @@ const TransactionPopup = () => {
   };
 
   useEffect(() => {
-    setWallet({
-      id: transactionDatas.wallet.id || currentWallet?._id || "",
-      wallet_name:
-        transactionDatas.wallet.wallet_name || currentWallet?.wallet_name || "",
+    if (!currentWallet || !transactionDatas) return;
+    setAmount(transactionDatas.amount || 0);
+    setCategory({
+      id: transactionDatas.category?.id || 0,
+      name: transactionDatas.category?.name || "",
+      icon: transactionDatas.category?.icon || "",
     });
-  }, [currentWallet, transactionDatas.wallet]);
+    setNote(transactionDatas.note || "");
+    setDate(transactionDatas.date || new Date());
+    setWallet({
+      id: transactionDatas.wallet?.id || currentWallet?._id || "",
+      wallet_name:
+        transactionDatas.wallet?.wallet_name ||
+        currentWallet?.wallet_name ||
+        "",
+    });
+  }, [currentWallet, transactionDatas]);
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-4">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
-          <DrawerClose onClick={() => setOpen(false)} className="">
+          <DrawerClose onClick={handleClose} className="">
             Cancel
           </DrawerClose>
-          <DrawerTitle className="font-medium">Add transaction</DrawerTitle>
+          <DrawerTitle className="font-medium">
+            {type === "create" ? "Add" : type === "edit" ? "Edit" : "Delete"}{" "}
+            transaction
+          </DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
-        <div className="w-full flex flex-col bg-gray-700 gap-y-3 py-3">
+        <div
+          className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 ${type === "delete" && "hidden"}`}
+        >
           <AmountInput amount={amount} setAmount={setAmount} />
           <CategorySelection category={category} setCategory={setCategory} />
           <NoteInput note={note} setNote={setNote} />
@@ -148,10 +176,10 @@ const TransactionPopup = () => {
           className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
           onClick={handleTransaction}
         >
-          Save
+          {type !== "delete" ? "Save" : "Delete"}
         </Button>
         <div></div>
-      </DrawerContent>
+      </DrawerContent>{" "}
     </Drawer>
   );
 };

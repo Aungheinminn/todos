@@ -4,7 +4,7 @@ interface TransactionPopupStore {
   isOpen: boolean;
   type: string;
   transactionDatas: {
-    id?: string;
+    _id?: string;
     amount: number;
     category: {
       id: number;
@@ -21,6 +21,7 @@ interface TransactionPopupStore {
   };
   setType: (data: string) => void;
   setTransactionDatas: (data: any) => void;
+  resetTransactionDatas: () => void;
   currentWallet: string;
   setIsOpen: (data: boolean) => void;
   openPopup: () => void;
@@ -32,7 +33,7 @@ export const useTransactionPopupStore = create<TransactionPopupStore>(
     isOpen: false,
     type: "",
     transactionDatas: {
-      id: "",
+      _id: "",
       amount: 0,
       category: {
         id: 0,
@@ -49,6 +50,26 @@ export const useTransactionPopupStore = create<TransactionPopupStore>(
     },
     setType: (data: string) => set({ type: data }),
     setTransactionDatas: (data: any) => set({ transactionDatas: data }),
+    resetTransactionDatas: () =>
+      set({
+        transactionDatas: {
+          _id: "",
+          amount: 0,
+          category: {
+            id: 0,
+            name: "",
+            icon: "",
+          },
+          note: "",
+          date: new Date(),
+          wallet: {
+            id: "",
+            wallet_name: "",
+          },
+          process: (data: any) => {},
+        },
+        type: "",
+      }),
     currentWallet: "",
     setIsOpen: (data: boolean) => set({ isOpen: data }),
     openPopup: () => set({ isOpen: true }),
