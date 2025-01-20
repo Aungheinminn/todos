@@ -12,12 +12,19 @@ import { useQuery } from "react-query";
 import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
+import { WalletType } from "@/lib/types/wallet.type";
 
-const TransactionHeader = () => {
+type TransactionHeaderProps = {
+  currentWallet: WalletType
+}
+
+const TransactionHeader:React.FC<TransactionHeaderProps> = ({
+  currentWallet
+}) => {
   return (
     <div className="w-full box-border flex flex-col justify-center items-center gap-y-1 p-2 ">
       <p className="text-sm">Balance</p>
-      <p>K 100,000.00</p>
+      <p>K {currentWallet?.balance || "*********"}</p>
       <Button className="w-[100px] flex items-center justify-center gap-x-2">
         <Image className="w-6 h-6" src={wallet} alt="transaction wallet" />
         <p>Total</p>
@@ -47,7 +54,7 @@ const Transactions = () => {
     <Suspense fallback={<TransactionLoading />}>
       <div className="h-fit">
         <div className="w-full flex flex-col items-center justify-center px-0 mx-0 bg-gray-800 pt-[55px]">
-          <TransactionHeader />
+          <TransactionHeader currentWallet={currentWallet} />
           <TransactionMonthPicker date={date} setDate={setDate} />
         </div>
 
