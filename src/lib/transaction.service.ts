@@ -12,7 +12,10 @@ export const getTransactionsByWallet = async (wallet_id: string) => {
   }
 };
 
-export const getTransactionById = async (wallet_id: string, transaction_id: string) => {
+export const getTransactionById = async (
+  wallet_id: string,
+  transaction_id: string,
+) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/transaction/${transaction_id}`,
@@ -22,7 +25,7 @@ export const getTransactionById = async (wallet_id: string, transaction_id: stri
   } catch (error) {
     console.error(error);
   }
-}
+};
 
 export const getTransactionsByDate = async (
   wallet_id: string,
@@ -50,6 +53,25 @@ export const createTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const duplicateTransaction = async (data: TransactionType) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/duplicate`,
       {
         method: "POST",
         headers: {

@@ -54,44 +54,49 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({
   transaction,
   isLoading,
 }) => {
-  if (isLoading)
-    return <Skeleton className="h-[200px] bg-gray-700 rounded-none w-full" />;
-  if (!transaction || !wallet) return null;
-  const date = new Date(
-    transaction.transaction_year,
-    transaction.transaction_month - 1,
-    transaction.transaction_day,
-  );
+  const date =
+    transaction &&
+    new Date(
+      transaction.transaction_year,
+      transaction.transaction_month - 1,
+      transaction.transaction_day,
+    );
   return (
-    <div className="w-full bg-gray-700 py-4">
-      <div className="w-full flex justify-start items-start gap-x-4">
-        <Image
-          className="w-10 h-10 ml-2"
-          src={Categories[0].icon}
-          alt="transportation"
-        />
-        <div className="w-full flex flex-col gap-y-4 items-start pb-3 border-b border-slate-400">
-          <div className="flex flex-col items-start gap-y-1">
-            <p className="text-lg text-white">{transaction.category}</p>
-            <p className="text-xs text-white">{transaction.note || ""}</p>
+    <div className="w-full flex justify-center items-center bg-gray-700 py-4">
+      {isLoading || !wallet || !transaction ? (
+        <Skeleton className="w-[98%] h-[150px] bg-slate-500 rounded-lg" />
+      ) : (
+        <div className="w-full">
+          <div className="w-full flex justify-start items-start gap-x-4">
+            <Image
+              className="w-10 h-10 ml-2"
+              src={Categories[0].icon}
+              alt="transportation"
+            />
+            <div className="w-full flex flex-col gap-y-4 items-start pb-3 border-b border-slate-400">
+              <div className="flex flex-col items-start gap-y-1">
+                <p className="text-lg text-white">{transaction.category}</p>
+                <p className="text-xs text-white">{transaction.note || ""}</p>
+              </div>
+              <p className="text-lg text-red-500">{transaction.transaction}</p>
+            </div>
           </div>
-          <p className="text-lg text-red-500">{transaction.transaction}</p>
-        </div>
-      </div>
-      <div className="w-full flex flex-col items-start gap-y-1 px-4 pt-4">
-        <div className="w-full flex justify-start items-center gap-x-4">
-          <Image className="h-5 w-5" src={calendarIcon} alt="calender" />
-          <p className="text-sm text-white">
-            {date.toString().split(" ").slice(0, 1).join(" ")},{" "}
-            {date.toString().split(" ").slice(1, 4).join(" ")}
-          </p>
-        </div>
+          <div className="w-full flex flex-col items-start gap-y-1 px-4 pt-4">
+            <div className="w-full flex justify-start items-center gap-x-4">
+              <Image className="h-5 w-5" src={calendarIcon} alt="calender" />
+              <p className="text-sm text-white">
+                {date.toString().split(" ").slice(0, 1).join(" ")},{" "}
+                {date.toString().split(" ").slice(1, 4).join(" ")}
+              </p>
+            </div>
 
-        <div className="w-full flex justify-start items-center gap-x-4">
-          <Image className="h-5 w-5" src={walletIcon} alt="calender" />
-          <p className="text-sm text-white">{wallet.wallet_name}</p>
+            <div className="w-full flex justify-start items-center gap-x-4">
+              <Image className="h-5 w-5" src={walletIcon} alt="calender" />
+              <p className="text-sm text-white">{wallet.wallet_name}</p>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
