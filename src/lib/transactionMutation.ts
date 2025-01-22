@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "react-query";
 import {
   createTransaction,
   deleteTransaction,
+  duplicateTransaction,
   updateTransaction,
 } from "./transaction.service";
 import { TransactionType } from "./types/transaction.type";
@@ -20,17 +21,6 @@ export const useTransactionMutation = () => {
 
   const editMutation = useMutation({
     mutationFn: updateTransaction,
-    onMutate: async (data: TransactionType) => {
-      await queryClient.cancelQueries("transactions");
-      const previousItems = queryClient.getQueryData("transactions");
-
-      queryClient.setQueryData<TransactionType>("transactions", (old) => {
-        if (!old) return data;
-        return old._id === data._id ? data : old;
-      });
-
-      return { previousItems };
-    },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
@@ -46,6 +36,15 @@ export const useTransactionMutation = () => {
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: "transactions" }),
   });
+
+  const duplicateMutation = useMutation({
+    mutationFn: duplicateTransaction,
+    onError: (error, variables, context: any) => {
+      queryClient.setQueryData("transactions", context.previousItems);
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: "transactions" }),
+  })
   return {
     createMutation,
     editMutation,
