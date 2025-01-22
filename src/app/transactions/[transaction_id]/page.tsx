@@ -70,7 +70,7 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({
           <div className="w-full flex justify-start items-start gap-x-4">
             <Image
               className="w-10 h-10 ml-2"
-              src={Categories[0].icon}
+              src={Categories.find((cate) => cate.name === transaction.category)?.icon}
               alt="transportation"
             />
             <div className="w-full flex flex-col gap-y-4 items-start pb-3 border-b border-slate-400">
