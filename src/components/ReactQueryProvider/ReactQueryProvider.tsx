@@ -1,9 +1,10 @@
 "use client";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { usePathname } from "next/navigation";
-import TransactionPopup from "../TransactionPopup/TransactionPopup";
+import ConfirmTransactionPopup from "../ConfirmTransactionPopup/ConfirmTransactionPopup";
+import DeleteTransactionPopup from "../DeleteTransactionPopup/DeleteTransactionPopup";
 
 type ReactQueryProviderProps = {
   children: React.ReactNode;
@@ -23,11 +24,11 @@ const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TransactionPopup />
+      <ConfirmTransactionPopup />
+      <DeleteTransactionPopup />
       <Wrapper router={router}>{children}</Wrapper>
     </QueryClientProvider>
   );
 };
 
 export default ReactQueryProvider;
-

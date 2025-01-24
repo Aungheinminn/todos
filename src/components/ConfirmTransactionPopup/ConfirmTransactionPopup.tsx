@@ -20,10 +20,9 @@ import { getDate } from "@/lib/utils/getDate";
 import { useTransactionMutation } from "@/lib/transactionMutation";
 import { Button } from "../ui/button";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const TransactionPopup = () => {
-  const router = useRouter();
+const ConfirmTransactionPopup = () => {
   const {
     isOpen: open,
     setIsOpen: setOpen,
@@ -44,7 +43,7 @@ const TransactionPopup = () => {
   });
 
   const [amount, setAmount] = useState<number | string>(
-    transactionDatas.amount || 0,
+    transactionDatas.amount || "",
   );
   const [category, setCategory] = useState<{
     id: number;
@@ -100,20 +99,13 @@ const TransactionPopup = () => {
         transaction_month: getDate(date).month,
         transaction_year: getDate(date).year,
       };
-    } else if (type === "delete") {
-      data = {
-        _id: transactionDatas?._id || "",
-        wallet_id: wallet.id,
-      };
     }
-
     try {
       transactionDatas.process.mutate(data, {
         onSuccess: (data: any) => {
           if (data.success) {
             setOpen(false);
             resetTransactionDatas();
-            type === "delete" && router.push("/transactions");
           } else {
             setOpen(true);
           }
@@ -129,7 +121,7 @@ const TransactionPopup = () => {
 
   useEffect(() => {
     if (!currentWallet || !transactionDatas) return;
-    setAmount(transactionDatas.amount || 0);
+    setAmount(transactionDatas.amount || "");
     setCategory({
       id: transactionDatas.category?.id || 0,
       name: transactionDatas.category?.name || "",
@@ -147,21 +139,18 @@ const TransactionPopup = () => {
   }, [currentWallet, transactionDatas]);
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={type !== "delete" && open} onOpenChange={setOpen}>
       <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-4">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={handleClose} className="">
             Cancel
           </DrawerClose>
           <DrawerTitle className="font-medium">
-            {type === "create" ? "Add" : type === "edit" ? "Edit" : "Delete"}{" "}
-            transaction
+            {type === "create" ? "Add" : "Edit"} transaction
           </DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
-        <div
-          className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 ${type === "delete" && "hidden"}`}
-        >
+        <div className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 `}>
           <AmountInput amount={amount} setAmount={setAmount} />
           <CategorySelection category={category} setCategory={setCategory} />
           <NoteInput note={note} setNote={setNote} />
@@ -176,7 +165,7 @@ const TransactionPopup = () => {
           className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
           onClick={handleTransaction}
         >
-          {type !== "delete" ? "Save" : "Delete"}
+          "Save"
         </Button>
         <div></div>
       </DrawerContent>{" "}
@@ -184,4 +173,4 @@ const TransactionPopup = () => {
   );
 };
 
-export default TransactionPopup;
+export default ConfirmTransactionPopup;

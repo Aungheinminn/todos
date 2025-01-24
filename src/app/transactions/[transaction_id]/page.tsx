@@ -70,7 +70,10 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({
           <div className="w-full flex justify-start items-start gap-x-4">
             <Image
               className="w-10 h-10 ml-2"
-              src={Categories.find((cate) => cate.name === transaction.category)?.icon}
+              src={
+                Categories.find((cate) => cate.name === transaction.category)
+                  ?.icon
+              }
               alt="transportation"
             />
             <div className="w-full flex flex-col gap-y-4 items-start pb-3 border-b border-slate-400">
@@ -190,6 +193,10 @@ const Transaction = () => {
     setType("delete");
     setTransactionDatas({
       _id: transaction._id,
+      wallet: {
+        id: transaction.wallet_id,
+        wallet_name: wallet.wallet_name,
+      },
       process: deleteMutation,
     });
     console.log(router);
