@@ -55,7 +55,7 @@ const WalletSelection: React.FC<WalletSelectionProps> = ({
         <div className="w-full flex flex-col gap-y-2">
           <p className="px-3 pt-3 text-slate-500">INCLUDED IN TOTAL</p>
 
-          {wallets.map((wallet: WalletType) => (
+          {wallets && wallets.map((wallet: WalletType) => (
             <DrawerClose
               onClick={() =>
                 setSeletedWallet({

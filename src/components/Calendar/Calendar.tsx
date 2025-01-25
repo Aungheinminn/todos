@@ -44,7 +44,7 @@ const Calendar: React.FC<CalendarProps> = ({ date, setDate }) => {
       >
         <DayPicker
           classNames={{
-            month: `bg-gray-700 w-full rounded-md`,
+            month: `bg-gray-700 w-full p-4 rounded-md`,
             table: `w-full`,
             caption_label: `text-green-500 font-normal `,
             button: "",

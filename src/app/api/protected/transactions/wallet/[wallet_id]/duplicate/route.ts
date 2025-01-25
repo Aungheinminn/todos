@@ -19,13 +19,12 @@ export const POST = async (
   }
   const { wallet_id } = params;
   const body = await req.json();
+	const { _id, ...rest } = body;
 
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    const transaction = await db.collection("transactions").find({
-			wallet_id: wallet_id
-		}).insertOne(body);
+    const transaction = await db.collection("transactions").insertOne(rest);
     if (!transaction) {
       return NextResponse.json(
         { success: false, error: "Error Duplicating" },

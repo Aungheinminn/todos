@@ -20,7 +20,6 @@ import { getDate } from "@/lib/utils/getDate";
 import { useTransactionMutation } from "@/lib/transactionMutation";
 import { Button } from "../ui/button";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
-import { useRouter } from "next/navigation";
 
 const ConfirmTransactionPopup = () => {
   const {
@@ -139,7 +138,7 @@ const ConfirmTransactionPopup = () => {
   }, [currentWallet, transactionDatas]);
 
   return (
-    <Drawer open={type !== "delete" && open} onOpenChange={setOpen}>
+    <Drawer open={(type === "create" || type === "edit") && open} onOpenChange={setOpen}>
       <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-4">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={handleClose} className="">
@@ -165,7 +164,7 @@ const ConfirmTransactionPopup = () => {
           className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
           onClick={handleTransaction}
         >
-          "Save"
+          Save
         </Button>
         <div></div>
       </DrawerContent>{" "}

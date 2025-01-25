@@ -44,10 +44,11 @@ export const useTransactionMutation = () => {
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: "transactions" }),
-  })
+  });
   return {
     createMutation,
     editMutation,
     deleteMutation,
+    duplicateMutation,
   };
 };
