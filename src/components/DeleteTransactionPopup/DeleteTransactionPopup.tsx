@@ -4,12 +4,11 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
-  DrawerTitle,
 } from "@/components/ui/drawer";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
 import { Button } from "../ui/button";
-import { useTransactionMutation } from "@/lib/transactionMutation";
 import { useRouter } from "next/navigation";
+
 const DeleteTransactionPopup = () => {
   const router = useRouter();
   const {
@@ -32,7 +31,7 @@ const DeleteTransactionPopup = () => {
             if (data.success) {
               setOpen(false);
               resetTransactionDatas();
-              type === "delete" && router.push("/transactions");
+              router.push("/transactions");
             }
           },
           onError: (error: any) => {

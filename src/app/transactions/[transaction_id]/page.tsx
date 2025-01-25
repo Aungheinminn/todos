@@ -131,7 +131,8 @@ const Transaction = () => {
   const { transaction_id } = router;
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
-  const { editMutation, deleteMutation } = useTransactionMutation();
+  const { editMutation, deleteMutation, duplicateMutation } =
+    useTransactionMutation();
 
   const { setIsOpen, setType, setTransactionDatas } = useTransactionPopupStore(
     (state) => state,
@@ -158,8 +159,8 @@ const Transaction = () => {
   console.log(transaction, wallet);
 
   const handleEdit = () => {
-    setIsOpen(true);
     setType("edit");
+    setIsOpen(true);
     setTransactionDatas({
       _id: transaction._id,
       amount: transaction.transaction,
@@ -185,18 +186,48 @@ const Transaction = () => {
   };
 
   const handleDuplicate = () => {
+    setType("duplicate");
+    setIsOpen(true);
+    setTransactionDatas({
+      _id: transaction._id,
+      amount: transaction.transaction,
+      category: {
+        id: transaction.category_id,
+        name: transaction.category,
+        icon: Categories.find((cate) => cate.name === transaction.category)
+          ?.icon,
+      },
+      note: transaction.note,
+      date: new Date(
+        transaction.transaction_year,
+        transaction.transaction_month - 1,
+        transaction.transaction_day,
+      ),
+      wallet: {
+        id: transaction.wallet_id,
+        wallet_name: wallet.wallet_name,
+      },
+      process: duplicateMutation,
+    });
     console.log(router);
   };
 
   const handleDelete = () => {
-    setIsOpen(true);
     setType("delete");
+    setIsOpen(true);
     setTransactionDatas({
       _id: transaction._id,
       wallet: {
         id: transaction.wallet_id,
         wallet_name: wallet.wallet_name,
       },
+      category: {
+        id: transaction.category_id,
+        name: transaction.category,
+        icon: Categories.find((cate) => cate.name === transaction.category)
+          ?.icon,
+      },
+
       process: deleteMutation,
     });
     console.log(router);

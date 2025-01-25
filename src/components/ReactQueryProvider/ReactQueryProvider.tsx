@@ -5,6 +5,7 @@ import Wrapper from "@/components/Wrapper/Wrapper";
 import { usePathname } from "next/navigation";
 import ConfirmTransactionPopup from "../ConfirmTransactionPopup/ConfirmTransactionPopup";
 import DeleteTransactionPopup from "../DeleteTransactionPopup/DeleteTransactionPopup";
+import DuplicateTransactionPopup from "../DuplicateTransactionPopup/DuplicateTransactionPopup";
 
 type ReactQueryProviderProps = {
   children: React.ReactNode;
@@ -26,6 +27,7 @@ const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({
     <QueryClientProvider client={queryClient}>
       <ConfirmTransactionPopup />
       <DeleteTransactionPopup />
+      <DuplicateTransactionPopup />
       <Wrapper router={router}>{children}</Wrapper>
     </QueryClientProvider>
   );
