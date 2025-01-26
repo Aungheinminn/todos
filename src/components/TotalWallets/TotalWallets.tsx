@@ -15,6 +15,7 @@ import {
 import { useWalletMutation } from "@/lib/walletMutation";
 import WalletSettings from "../WalletSettings/WalletSettings";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "../ui/skeleton";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
@@ -83,13 +84,17 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
       <div
         className={`w-full flex justify-between items-center p-3 ${!currentlyShown ? "hover:bg-gray-600" : ""}`}
       >
-        <div className="flex justify-start items-center gap-x-3">
+        <div className="w-full flex justify-start items-center gap-x-3">
           <Image className="w-6 h-6" src={walletIcon} alt="wallet" />
           <p className="text-sm text-white">{wallet.wallet_name}</p>
         </div>
         <div className="flex justify-end items-center gap-x-3">
-          <div className={`flex h-[20px] justify-center items-center gap-x-1 bg-green-500 px-2 rounded ${currentlyShown && "hidden"} ${!wallet.current ? "hidden" : ""}`}><p className="mb-[3px]">curr</p></div>
-        <p className="text-sm text-white">K{wallet.balance}</p>
+          <div
+            className={`flex h-[20px] justify-center items-center gap-x-1 bg-green-500 px-2 rounded ${currentlyShown && "hidden"} ${!wallet.current ? "hidden" : ""}`}
+          >
+            <p className="mb-[3px]">curr</p>
+          </div>
+          <p className="text-sm text-white">K{wallet.balance}</p>
         </div>
       </div>
     </WalletSettings>
@@ -110,7 +115,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger className="hidden"></DialogTrigger>
-      <div className="w-[95%] bg-gray-700 rounded-xl py-1 flex flex-col hover:no-underline ">
+      <div className="w-[95%] bg-gray-700 rounded-xl py-1 flex flex-col items-center hover:no-underline ">
         <div className="w-full flex justify-between items-center border-b border-b-slate-600 py-3">
           <p className="text-sm text-white pl-3">My Wallets</p>
           <button
@@ -120,8 +125,10 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
             See All
           </button>
         </div>
-        {currentWallet && (
+        {currentWallet ? (
           <WalletComponent currentlyShown={true} wallet={currentWallet} />
+        ) : (
+          <Skeleton className="h-10 my-1 mt-2 w-[95%] bg-gray-600" />
         )}
       </div>
       <DialogContent
