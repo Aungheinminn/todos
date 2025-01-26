@@ -25,7 +25,11 @@ const WalletSettings: React.FC<WalletSettingsProps> = ({
   console.log("isOpen", isOpen);
   return (
     <Popover modal={true} open={isOpen} onOpenChange={handleOpenChange}>
-      <PopoverTrigger disabled={currentlyShown} onClick={handleClick}>
+      <PopoverTrigger
+        className="w-full"
+        disabled={currentlyShown}
+        onClick={handleClick}
+      >
         {children}
       </PopoverTrigger>
       <PopoverContent className="z-50 w-fit bg-gray-700 flex flex-col gap-y-1 p-1">
