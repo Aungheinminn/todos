@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/database";
+import { WalletSchema } from "@/lib/models/wallet.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
@@ -47,9 +48,10 @@ export const POST = async (
   }
   const { id } = params;
   const body = await req.json();
+  const parsedBody = WalletSchema.parse(body);
 
   const data = {
-    ...body,
+    ...parsedBody,
     createdAt: new Date().toISOString(),
   };
 

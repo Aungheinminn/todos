@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/database";
+import { TransactionSchmea } from "@/lib/models/transaction.model";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (
@@ -19,7 +20,8 @@ export const POST = async (
   }
   const { wallet_id } = params;
   const body = await req.json();
-	const { _id, ...rest } = body;
+	const parsedBody = TransactionSchmea.parse(body);
+  const { _id, ...rest } = parsedBody;
 
   try {
     const client = await clientPromise;
