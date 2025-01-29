@@ -11,7 +11,7 @@ import { TransactionType } from "@/lib/types/transaction.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useQuery } from "react-query";
-import { getTransactionById } from "@/lib/transaction.service";
+import { duplicateTransaction, getTransactionById } from "@/lib/transaction.service";
 import { useWalletStore } from "@/lib/walletStore";
 import { getWalletById } from "@/lib/wallet.service";
 import { useCurrentUserStore } from "@/lib/userStore";
@@ -138,7 +138,7 @@ const Transaction = () => {
     (state) => state,
   );
   const { data: transaction, isLoading: isTransactionLoading } = useQuery({
-    queryKey: ["transactions"],
+    queryKey: ["transaction", editMutation.isSuccess],
     queryFn: () =>
       getTransactionById(
         currentWallet?._id || "",

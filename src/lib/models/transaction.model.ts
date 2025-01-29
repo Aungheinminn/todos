@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { z } from "zod";
 export const TransactionSchmea = z.object({
-  _id: z.instanceof(ObjectId).optional(),
+  _id: z.union([z.instanceof(ObjectId), z.string()]).optional(),
   wallet_id: z.string(),
   transaction: z.number(),
   user_id: z.string(),

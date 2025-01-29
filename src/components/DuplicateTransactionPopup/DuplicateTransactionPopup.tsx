@@ -13,9 +13,11 @@ import Calendar from "../Calendar/Calendar";
 import { Button } from "../ui/button";
 import { getDate } from "@/lib/utils/getDate";
 import { useRouter } from "next/navigation";
+import { useCurrentUserStore } from "@/lib/userStore";
 
 const DuplicateTransactionPopup = () => {
   const router = useRouter();
+  const { currentUser } = useCurrentUserStore((state) => state);
   const {
     isOpen: open,
     setIsOpen: setOpen,
@@ -26,15 +28,15 @@ const DuplicateTransactionPopup = () => {
   const [currentDate, setCurrentDate] = useState(
     new Date(transactionDatas.date) || "",
   );
-	console
 
   const handleDuplicateTransaction = () => {
     const { date, category, wallet, amount, process, ...rest } =
       transactionDatas;
     const data = {
       ...rest,
+      user_id: currentUser?._id || "",
       wallet_id: wallet.id,
-      transaction: amount,
+      transaction: Number(amount),
       category: category.name,
       transaction_day: getDate(currentDate).day,
       transaction_month: getDate(currentDate).month,
