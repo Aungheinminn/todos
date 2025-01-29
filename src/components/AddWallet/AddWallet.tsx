@@ -33,7 +33,7 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
       wallet_name: wallet,
       user_id: currentUser?._id || "",
       currency: currency,
-      balance: initialAmount,
+      balance: Number(initialAmount),
       current: false,
     };
 

@@ -77,7 +77,7 @@ const ConfirmTransactionPopup = () => {
     if (type === "create") {
       data = {
         wallet_id: wallet.id,
-        transaction: amount,
+        transaction: Number(amount),
         user_id: currentUser?._id || "",
         category: category.name,
         note,
@@ -90,7 +90,7 @@ const ConfirmTransactionPopup = () => {
       data = {
         _id: transactionDatas?._id || "",
         wallet_id: wallet.id,
-        transaction: amount,
+        transaction: Number(amount),
         user_id: currentUser?._id || "",
         category: category.name,
         note,
@@ -138,7 +138,10 @@ const ConfirmTransactionPopup = () => {
   }, [currentWallet, transactionDatas]);
 
   return (
-    <Drawer open={(type === "create" || type === "edit") && open} onOpenChange={setOpen}>
+    <Drawer
+      open={(type === "create" || type === "edit") && open}
+      onOpenChange={setOpen}
+    >
       <DrawerContent className="w-full flex flex-col items-center justify-center bg-gray-800 py-2 gap-y-4">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={handleClose} className="">

@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
+import { TransactionSchmea } from "@/lib/models/transaction.model";
 
 export const GET = async (
   req: NextRequest,
@@ -50,7 +51,8 @@ export const PUT = async (
   }
   const { wallet_id, transaction_id } = params;
   const body = await req.json();
-  const { _id, ...rest } = body;
+  const parsedBody = TransactionSchmea.parse(body);
+  const { _id, ...rest } = parsedBody;
 
   try {
     const client = await clientPromise;
