@@ -22,7 +22,6 @@ interface TransactionPopupStore {
   setType: (data: string) => void;
   setTransactionDatas: (data: any) => void;
   resetTransactionDatas: () => void;
-  currentWallet: string;
   setIsOpen: (data: boolean) => void;
   openPopup: () => void;
   closePopup: () => void;
@@ -70,7 +69,6 @@ export const useTransactionPopupStore = create<TransactionPopupStore>(
         },
         type: "",
       }),
-    currentWallet: "",
     setIsOpen: (data: boolean) => set({ isOpen: data }),
     openPopup: () => set({ isOpen: true }),
     closePopup: () => set({ isOpen: false }),
