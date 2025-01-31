@@ -11,7 +11,7 @@ interface WalletPopupStore {
     currency: string;
     balance: number;
     current: boolean;
-    process: (data: any) => void;
+    process: any;
   };
   setType: (data: string) => void;
   setWalletDatas: (data: any) => void;
@@ -27,7 +27,7 @@ export const useWalletPopupStore = create<WalletPopupStore>((set) => ({
     wallet_name: "",
     user_id: "",
     createdAt: new Date(),
-    currency: "",
+    currency: "MMK",
     balance: 0,
     current: false,
     process: (data: any) => {},

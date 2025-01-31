@@ -19,6 +19,7 @@ const CurrencyInput: React.FC<CurrencyInputProps> = ({
           type="text"
           placeholder="Currency"
           value={currency}
+          disabled
           onChange={(e) => setCurrency(e.target.value)}
           className="cursor-not-allowed w-full bg-gray-700 text-xl text-slate-300 pt-2 pb-3 py-1 outline-0 rounded-0"
         />
