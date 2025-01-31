@@ -66,13 +66,28 @@ export const DELETE = async (
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
+    const isCurrentWallet = await db
+      .collection("wallets")
+      .findOne({ _id: new ObjectId(wallet_id), user_id: id, current: true });
+
+    if (isCurrentWallet) {
+      return NextResponse.json(
+        { success: false, message: "Cannot delete current wallet" },
+        { status: 400 },
+      );
+    }
+
     const wallet = await db
       .collection("wallets")
       .deleteOne({ _id: new ObjectId(wallet_id), user_id: id });
 
-    if (!wallet) {
+    const deleteRelatedTransactions = await db
+      .collection("transactions")
+      .deleteMany({ wallet_id: wallet_id });
+
+    if (!wallet || !deleteRelatedTransactions) {
       return NextResponse.json(
-        { success: false, message: "Wallet not found" },
+        { success: false, message: "Error deleting wallet" },
         { status: 404 },
       );
     }

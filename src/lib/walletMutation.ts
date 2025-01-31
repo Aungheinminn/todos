@@ -9,18 +9,6 @@ export const useWalletMutation = () => {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: createWallet,
-    onMutate: async (data: WalletType) => {
-      console.log("wallet mutation", data);
-      await queryClient.cancelQueries("wallets");
-
-      const previousItems = queryClient.getQueryData("wallets");
-
-      queryClient.setQueryData("wallets", (old: any) =>
-        old ? [...old, data] : [],
-      );
-
-      return { previousItems };
-    },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("wallets", context.previousItems);
     },
@@ -55,16 +43,23 @@ export const useWalletMutation = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteWallet,
-    onMutate: async ({ id, wallet_id }: { id: string, wallet_id: string }) => {
-      await queryClient.cancelQueries("wallets");
+    onSettled: async (data, error, variables, context) => {
+      if (data.success) {
+        await queryClient.cancelQueries("wallets");
 
-      const previousItems = queryClient.getQueryData("wallets");
+        const previousItems = queryClient.getQueryData("wallets");
 
-      queryClient.setQueryData("wallets", (old: any) =>
-        old ? old.filter((o: any) => o._id !== wallet_id) : [],
-      );
+        queryClient.setQueryData("wallets", (old: any) =>
+          old ? old.filter((o: any) => o._id !== variables.wallet_id) : [],
+        );
 
-      return { previousItems };
+        return { previousItems };
+      }
+      console.log("after delete", data, error, context, variables);
+    },
+    onError: (error, variables, context: any) => {
+      console.log("error", error);
+      queryClient.setQueryData("wallets", context.previousItems);
     },
   });
 

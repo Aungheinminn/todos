@@ -4,8 +4,10 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { usePathname } from "next/navigation";
 import ConfirmTransactionPopup from "../ConfirmTransactionPopup/ConfirmTransactionPopup";
-import DeleteTransactionPopup from "../DeleteTransactionPopup/DeleteTransactionPopup";
 import DuplicateTransactionPopup from "../DuplicateTransactionPopup/DuplicateTransactionPopup";
+import ConfirmWalletPopup from "../ConfirmWalletPopup/ConfirmWalletPopup";
+import DeleteTransactionPopup from "../DeleteTransactionPopup/DeleteTransactionPopup";
+import DeleteWalletPopup from "../DeleteWalletPopup/DeleteWalletPopup";
 
 type ReactQueryProviderProps = {
   children: React.ReactNode;
@@ -26,7 +28,9 @@ const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({
   return (
     <QueryClientProvider client={queryClient}>
       <ConfirmTransactionPopup />
+      <ConfirmWalletPopup />
       <DeleteTransactionPopup />
+      <DeleteWalletPopup />
       <DuplicateTransactionPopup />
       <Wrapper router={router}>{children}</Wrapper>
     </QueryClientProvider>

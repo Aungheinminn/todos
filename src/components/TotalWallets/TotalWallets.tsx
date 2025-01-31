@@ -1,7 +1,7 @@
 import { useWalletStore } from "@/lib/walletStore";
 import Image from "next/image";
 import walletIcon from "@/assets/wallet.svg";
-import AddWallet from "../AddWallet/AddWallet";
+import add from "@/assets/add_wallet.svg";
 import { WalletType } from "@/lib/types/wallet.type";
 
 import { useRef, useState } from "react";
@@ -16,6 +16,8 @@ import { useWalletMutation } from "@/lib/walletMutation";
 import WalletSettings from "../WalletSettings/WalletSettings";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
+import { useWalletPopupStore } from "@/lib/walletPopupStore";
+import { useCurrentUserStore } from "@/lib/userStore";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
@@ -30,6 +32,9 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   currentlyShown,
   wallet,
 }) => {
+  const { setType, setIsOpen, setWalletDatas } = useWalletPopupStore(
+    (state) => state,
+  );
   const router = useRouter();
   const { updateCurrentWalletMutation, deleteMutation } = useWalletMutation();
   const { updateCurrentWallet } = useWalletStore((state) => state);
@@ -60,10 +65,14 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   };
 
   const handleDelete = () => {
-    deleteMutation.mutate({
-      id: wallet.user_id,
-      wallet_id: wallet._id || "",
+    console.log(wallet);
+    setWalletDatas({
+      _id: wallet._id,
+      user_id: wallet.user_id,
+      process: deleteMutation,
     });
+    setType("delete");
+    setIsOpen(true);
   };
 
   const handleViewDetails = () => {
@@ -102,8 +111,9 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
 };
 
 const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
-  const [isWalletOpen, setWalletOpen] = useState<boolean>(false);
-
+  const { setType, setIsOpen: setIsPopupOpen } = useWalletPopupStore(
+    (state) => state,
+  );
   const currentWallet = wallets && wallets.find((w) => w.current === true);
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -111,6 +121,11 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
     setIsOpen(!isOpen);
   };
   console.log("total isOpen", isOpen);
+
+  const handleCreateWallet = () => {
+    setType("create");
+    setIsPopupOpen(true);
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -133,7 +148,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
       </div>
       <DialogContent
         ref={ref}
-        className="bg-gray-700 px-1 flex flex-col gap-y-1"
+        className="bg-gray-700 px-1 flex flex-col gap-y-1 rounded-xl"
       >
         <DialogTitle className="text-base text-white px-3">Wallets</DialogTitle>
         {wallets
@@ -145,7 +160,14 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
               />
             ))
           : ""}
-        <AddWallet open={isWalletOpen} setOpen={setWalletOpen} />
+
+        <div
+          onClick={handleCreateWallet}
+          className="cursor-pointer w-full flex justify-start items-center p-3 gap-x-3"
+        >
+          <Image className="w-5 h-5" src={add} alt="add wallet" />
+          <p className="text-sm text-green-300">Add wallet</p>
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -6,41 +6,46 @@ import WalletInput from "../WalletInput/WalletInput";
 import {
   Drawer,
   DrawerContent,
-  DrawerTrigger,
   DrawerHeader,
   DrawerTitle,
   DrawerClose,
 } from "../ui/drawer";
-import { useState } from "react";
-import Image from "next/image";
-import add from "@/assets/add_wallet.svg";
+import { useEffect, useState } from "react";
 import { useWalletMutation } from "@/lib/walletMutation";
+import { useWalletPopupStore } from "@/lib/walletPopupStore";
 
-type AddWalletProps = {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-};
-
-const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
+const ConfirmWalletPopup = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
+  const {
+    isOpen: open,
+    setIsOpen: setOpen,
+    walletDatas,
+    type,
+    resetWalletDatas,
+  } = useWalletPopupStore((state) => state);
   const [wallet, setWallet] = useState<string>("");
   const [currency, setCurrency] = useState<string>("MMK");
   const [initialAmount, setInitialAmount] = useState<number | string>("");
   const { createMutation } = useWalletMutation();
 
   const handleCreateWallet = () => {
-    const newWallet = {
-      wallet_name: wallet,
-      user_id: currentUser?._id || "",
-      currency: currency,
-      balance: Number(initialAmount),
-      current: false,
-    };
+    let newWallet;
+    if (type === "create") {
+      newWallet = {
+        wallet_name: wallet,
+        user_id: currentUser?._id || "",
+        currency: currency,
+        balance: Number(initialAmount),
+        current: false,
+      };
+      walletDatas.process = createMutation;
+    }
 
     try {
-      createMutation.mutate(newWallet, {
+      walletDatas.process.mutate(newWallet, {
         onSuccess: () => {
           setOpen(false);
+          resetWalletDatas();
         },
         onError: (error: any) => {
           console.log(error);
@@ -51,12 +56,17 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
     }
   };
 
+  useEffect(() => {
+    if (!walletDatas) return;
+    setWallet(walletDatas.wallet_name);
+    setCurrency(walletDatas.currency || "MMK");
+    setInitialAmount(walletDatas.balance);
+  }, [walletDatas]);
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger className="w-full flex justify-start items-center p-3 gap-x-3">
-        <Image className="w-5 h-5" src={add} alt="add wallet" />
-        <p className="text-sm text-green-300">Add wallet</p>
-      </DrawerTrigger>
+    <Drawer
+      open={(type === "create" || type === "edit") && open}
+      onOpenChange={setOpen}
+    >
       <DrawerContent className="pointer-events-auto flex flex-col items-center gap-y-4 bg-gray-800">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={() => setOpen(false)} className="">
@@ -85,4 +95,4 @@ const AddWallet: React.FC<AddWalletProps> = ({ open, setOpen }) => {
     </Drawer>
   );
 };
-export default AddWallet;
+export default ConfirmWalletPopup;
