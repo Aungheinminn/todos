@@ -1,5 +1,7 @@
+import { z } from "zod";
 import clientPromise from "@/lib/database";
 import { TransactionSchmea } from "@/lib/models/transaction.model";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
@@ -50,16 +52,27 @@ export const POST = async (
       { status: 400 },
     );
   }
-  const body = await req.json();
-  const parsedBody = TransactionSchmea.parse(body);
 
   try {
+    const body = await req.json();
+    const parsedBody = TransactionSchmea.parse(body);
+
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    const transaction = await db.collection("transactions").insertOne(body);
-    if (!transaction) {
+    const transaction = await db
+      .collection("transactions")
+      .insertOne(parsedBody);
+
+    const updatedWalletBalance = await db
+      .collection("wallets")
+      .findOneAndUpdate(
+        { _id: new ObjectId(params.wallet_id) },
+        { $inc: { balance: -parsedBody.transaction } },
+        { returnDocument: "after" },
+      );
+    if (!transaction || !updatedWalletBalance) {
       return NextResponse.json(
-        { success: false, error: "Wallet not found" },
+        { success: false, error: "Error creating transaction" },
         { status: 404 },
       );
     }
@@ -68,6 +81,12 @@ export const POST = async (
       { status: 200 },
     );
   } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: e.errors },
+        { status: 400 },
+      );
+    }
     console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },

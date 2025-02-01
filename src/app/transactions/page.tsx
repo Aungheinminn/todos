@@ -13,13 +13,15 @@ import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
 import { WalletType } from "@/lib/types/wallet.type";
+import { getCurrentWallet } from "@/lib/wallet.service";
+import { useTransactionMutation } from "@/lib/transactionMutation";
 
 type TransactionHeaderProps = {
-  currentWallet: WalletType
-}
+  currentWallet: WalletType;
+};
 
-const TransactionHeader:React.FC<TransactionHeaderProps> = ({
-  currentWallet
+const TransactionHeader: React.FC<TransactionHeaderProps> = ({
+  currentWallet,
 }) => {
   return (
     <div className="w-full box-border flex flex-col justify-center items-center gap-y-1 p-2 ">
@@ -35,20 +37,27 @@ const TransactionHeader:React.FC<TransactionHeaderProps> = ({
 };
 const Transactions = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
-  const { currentWallet } = useWalletStore((state) => state);
+
+  const { data: currentWallet } = useQuery({
+    queryKey: ["currentWallet", "transactions"],
+    queryFn: () => getCurrentWallet(currentUser?._id || ""),
+    enabled: !!currentUser?._id,
+  });
   const [date, setDate] = useState({
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   });
 
+  console.log(currentWallet, "currentWallet");
+
   const { data: transactions } = useQuery({
     queryKey: ["transactions", date],
     queryFn: () =>
-      getTransactionsByDate(currentWallet?._id || "", date.month, date.year),
-    enabled: !!currentWallet?._id || !!currentUser?._id,
+      getTransactionsByDate(currentWallet._id, date.month, date.year),
+    enabled: !!currentWallet,
   });
 
-  console.log(transactions);
+  console.log(transactions, date, currentWallet, currentUser);
 
   return (
     <Suspense fallback={<TransactionLoading />}>

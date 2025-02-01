@@ -12,6 +12,8 @@ export const GET = async (
   const transaction_month = urlParams.searchParams.get("transaction_month");
   const transaction_year = urlParams.searchParams.get("transaction_year");
 
+  console.log("hey");
+
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");

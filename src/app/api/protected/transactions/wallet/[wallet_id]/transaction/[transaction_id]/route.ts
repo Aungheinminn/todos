@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
@@ -49,17 +50,20 @@ export const PUT = async (
       { status: 400 },
     );
   }
-  const { wallet_id, transaction_id } = params;
-  const body = await req.json();
-  const parsedBody = TransactionSchmea.parse(body);
-  const { _id, ...rest } = parsedBody;
 
   try {
+    const { wallet_id, transaction_id } = params;
+    const body = await req.json();
+
+
+    const { _id, ...rest } = body;
+    const parsedBody = TransactionSchmea.parse(rest);
+
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const transaction = await db
       .collection("transactions")
-      .updateOne({ _id: new ObjectId(transaction_id) }, { $set: rest });
+      .updateOne({ _id: new ObjectId(transaction_id) }, { $set: parsedBody });
 
     if (!transaction) {
       return NextResponse.json(
@@ -76,6 +80,12 @@ export const PUT = async (
       { status: 200 },
     );
   } catch (e) {
+    if (e instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: e.errors },
+        { status: 400 },
+      );
+    }
     console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
