@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
-import { DayPicker } from "react-day-picker";
 import {
   AlertDialog,
   AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import Image from "next/image";
@@ -83,6 +84,8 @@ const TransactionMonthPicker: React.FC<TransactionMonthPickerProps> = ({
         ref={calendarRef}
         className="w-fit bg-gray-700 border-0 p-3"
       >
+        <AlertDialogTitle className="hidden"></AlertDialogTitle>
+        <AlertDialogDescription className="hidden"></AlertDialogDescription>
         <div className="flex flex-col gap-y-2">
           <div className="w-full flex justify-center items-center gap-x-1">
             <Image

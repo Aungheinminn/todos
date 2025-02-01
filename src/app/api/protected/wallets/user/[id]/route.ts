@@ -1,3 +1,4 @@
+import { z } from "zod";
 import clientPromise from "@/lib/database";
 import { WalletSchema } from "@/lib/models/wallet.model";
 import { NextRequest, NextResponse } from "next/server";
@@ -46,16 +47,16 @@ export const POST = async (
   if (!params) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
-  const { id } = params;
-  const body = await req.json();
-  const parsedBody = WalletSchema.parse(body);
-
-  const data = {
-    ...parsedBody,
-    createdAt: new Date().toISOString(),
-  };
 
   try {
+    const { id } = params;
+    const body = await req.json();
+    const parsedBody = WalletSchema.parse(body);
+
+    const data = {
+      ...parsedBody,
+      createdAt: new Date().toISOString(),
+    };
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
@@ -109,6 +110,12 @@ export const POST = async (
       );
     }
   } catch (e) {
+    if(e instanceof z.ZodError){
+      return NextResponse.json(
+        { success: false, error: e.errors },
+        { status: 400 },
+      );
+    }
     console.log(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
