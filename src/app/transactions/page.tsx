@@ -39,19 +39,18 @@ const Transactions = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
 
   const { data: currentWallet } = useQuery({
-    queryKey: ["currentWallet", "transactions"],
+    queryKey: ["currentWallet"],
     queryFn: () => getCurrentWallet(currentUser?._id || ""),
     enabled: !!currentUser?._id,
   });
+
   const [date, setDate] = useState({
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear(),
   });
 
-  console.log(currentWallet, "currentWallet");
-
   const { data: transactions } = useQuery({
-    queryKey: ["transactions", date],
+    queryKey: ["transactions", date, currentWallet],
     queryFn: () =>
       getTransactionsByDate(currentWallet._id, date.month, date.year),
     enabled: !!currentWallet,

@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { useWalletMutation } from "@/lib/walletMutation";
 import { useWalletPopupStore } from "@/lib/walletPopupStore";
+import { Button } from "../ui/button";
 
 const ConfirmWalletPopup = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
@@ -43,9 +44,12 @@ const ConfirmWalletPopup = () => {
 
     try {
       walletDatas.process.mutate(newWallet, {
-        onSuccess: () => {
-          setOpen(false);
-          resetWalletDatas();
+        onSuccess: (data: any) => {
+          console.log("after data",data);
+          if (data.success) {
+            setOpen(false);
+            resetWalletDatas();
+          }
         },
         onError: (error: any) => {
           console.log(error);
@@ -84,12 +88,14 @@ const ConfirmWalletPopup = () => {
           />
         </div>
 
-        <DrawerClose
+        <Button
+          disabled={!wallet || !initialAmount}
           onClick={handleCreateWallet}
           className="w-[80%] bg-gray-700 py-1 rounded-2xl hover:bg-sky-400"
         >
           Save
-        </DrawerClose>
+        </Button>
+        <DrawerClose className="hidden"></DrawerClose>
         <div></div>
       </DrawerContent>
     </Drawer>

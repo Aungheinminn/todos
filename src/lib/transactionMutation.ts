@@ -15,8 +15,10 @@ export const useTransactionMutation = () => {
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: "transactions" }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: "transactions" });
+      queryClient.invalidateQueries({ queryKey: "currentWallet" });
+    },
   });
 
   const editMutation = useMutation({
@@ -24,8 +26,10 @@ export const useTransactionMutation = () => {
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: "transactions" }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: "transactions" })
+      queryClient.invalidateQueries({ queryKey: "currentWallet" });
+    }
   });
 
   const deleteMutation = useMutation({
@@ -33,8 +37,10 @@ export const useTransactionMutation = () => {
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: "transactions" }),
+      queryClient.invalidateQueries({ queryKey: "currentWallet" });
+    }
   });
 
   const duplicateMutation = useMutation({
@@ -42,8 +48,10 @@ export const useTransactionMutation = () => {
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("transactions", context.previousItems);
     },
-    onSettled: () =>
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: "transactions" }),
+      queryClient.invalidateQueries({ queryKey: "currentWallet" });
+    }
   });
   return {
     createMutation,
