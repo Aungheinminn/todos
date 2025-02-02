@@ -55,17 +55,41 @@ export const PUT = async (
     const { wallet_id, transaction_id } = params;
     const body = await req.json();
 
-
     const { _id, ...rest } = body;
     const parsedBody = TransactionSchmea.parse(rest);
 
     const client = await clientPromise;
     const db = client.db("remarker_next");
+
+    const currentTransaction = await db.collection("transactions").findOne({
+      _id: new ObjectId(transaction_id),
+      wallet_id: wallet_id,
+    });
+
+    if (!currentTransaction) {
+      return NextResponse.json(
+        { success: false, error: "Error updating transaction" },
+        { status: 404 },
+      );
+    }
+
     const transaction = await db
       .collection("transactions")
       .updateOne({ _id: new ObjectId(transaction_id) }, { $set: parsedBody });
 
-    if (!transaction) {
+    const updatedWalletBalance = await db
+      .collection("wallets")
+      .findOneAndUpdate(
+        { _id: new ObjectId(wallet_id) },
+        {
+          $inc: {
+            balance: currentTransaction.transaction - parsedBody.transaction,
+          },
+        },
+        { returnDocument: "after" },
+      );
+
+    if (!transaction || !updatedWalletBalance) {
       return NextResponse.json(
         { success: false, error: "Error updating transaction" },
         { status: 404 },
@@ -108,11 +132,32 @@ export const DELETE = async (
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
+
+    const currentTransaction = await db.collection("transactions").findOne({
+      _id: new ObjectId(transaction_id),
+      wallet_id: wallet_id,
+    });
+
+    if (!currentTransaction) {
+      return NextResponse.json(
+        { success: false, error: "Error deleting transaction" },
+        { status: 404 },
+      );
+    }
+
     const transaction = await db
       .collection("transactions")
       .deleteOne({ _id: new ObjectId(transaction_id), wallet_id: wallet_id });
 
-    if (!transaction) {
+    const updatedWalletBalance = await db
+      .collection("wallets")
+      .findOneAndUpdate(
+        { _id: new ObjectId(wallet_id) },
+        { $inc: { balance: currentTransaction.transaction } },
+        { returnDocument: "after" },
+      );
+
+    if (!transaction || !updatedWalletBalance) {
       return NextResponse.json(
         { success: false, error: "Error deleting transaction" },
         { status: 404 },

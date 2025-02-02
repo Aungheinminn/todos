@@ -164,6 +164,7 @@ const ConfirmTransactionPopup = () => {
           />
         </div>
         <Button
+          disabled={!amount || !category.name || !wallet || !date}
           className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
           onClick={handleTransaction}
         >

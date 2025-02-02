@@ -64,6 +64,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
     );
   };
 
+
   const handleDelete = () => {
     console.log(wallet);
     setWalletDatas({
