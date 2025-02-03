@@ -7,7 +7,7 @@ type WalletSettingsProps = {
   currentlyShown?: boolean;
   handleClick: () => void;
   handleDelete: () => void;
-  handleSetDefault: () => void;
+  handleEdit: () => void;
   handleViewDetails: () => void;
   handleOpenChange: () => void;
 };
@@ -18,13 +18,12 @@ const WalletSettings: React.FC<WalletSettingsProps> = ({
   currentlyShown,
   handleClick,
   handleDelete,
-  handleSetDefault,
+  handleEdit,
   handleViewDetails,
   handleOpenChange,
 }) => {
-  console.log("isOpen", isOpen);
   return (
-    <Popover modal={true} open={isOpen} onOpenChange={handleOpenChange}>
+    <Popover modal={isOpen} open={isOpen} onOpenChange={handleOpenChange}>
       <PopoverTrigger
         className="w-full"
         disabled={currentlyShown}
@@ -40,10 +39,10 @@ const WalletSettings: React.FC<WalletSettingsProps> = ({
           Delete
         </Button>
         <Button
-          onClick={handleSetDefault}
-          className="bg-green-500 hover:bg-slate-600"
+          onClick={handleEdit}
+          className="bg-yellow-500 hover:bg-slate-600"
         >
-          Set Default
+          Edit
         </Button>
         <Button
           onClick={handleViewDetails}

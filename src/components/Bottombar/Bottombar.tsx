@@ -1,24 +1,20 @@
 "use client";
 import add from "@/assets/add.svg";
 import whiteHouse from "../../assets/white_home.svg";
-import whiteRoutines from "../../assets/white_routines.svg";
 import notifications from "@/assets/notification.svg";
-import item from "../../assets/white_item.svg";
 import wallets from "../../assets/wallet_page_indicator_icon.svg";
 import transactions from "../../assets/transaction_page_indicator_icon.svg";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useNotificationStore } from "@/lib/notificationStore";
-import AddTransactionComponent from "../AddTransactionComponent/AddTransactionComponent";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
 
 const Bottombar = () => {
   const { pendingNotifications } = useNotificationStore((state) => state);
   const path = usePathname();
-  const modifiedPath = path.split("/")[1].toString();
-  const [active, setActive] = useState(path ? modifiedPath : "home");
+  const [active, setActive] = useState(path ? path.split("/")[1].toString() : "home");
   const activeInterface = "bg-[#0ea5e9] rounded-lg";
 
   const handleChange = (current: string) => {
@@ -26,9 +22,20 @@ const Bottombar = () => {
   };
 
   const { setIsOpen, setType } = useTransactionPopupStore((state) => state);
+  console.log()
+
+  useEffect(() => {
+    if (path) {
+      console.log("fetched");
+      setActive(path.split("/")[1].toString());
+    }
+  }, [path]);
 
   return (
-    <div className="w-full flex justify-between items-center bg-gray-800 lg:hidden px-2 h-[50px] border-t border-slate-500">
+    <div
+      onClick={() => console.log("bottombar")}
+      className="z-30 w-full flex justify-between items-center bg-gray-800 lg:hidden px-2 h-[50px] border-t border-slate-500"
+    >
       <Link
         href="/home"
         onClick={() => handleChange("home")}

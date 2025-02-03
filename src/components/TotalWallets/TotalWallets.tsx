@@ -41,6 +41,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
+  console.log("isSettingsOpen", isSettingsOpen);
   const handleSettingsOpenChange = () => {
     setIsSettingsOpen(!isSettingsOpen);
   };
@@ -50,20 +51,9 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
     setIsSettingsOpen(true);
   };
 
-  const handleSetDefault = () => {
-    updateCurrentWalletMutation.mutate(
-      { wallet_id: wallet._id || "", user_id: wallet.user_id },
-      {
-        onSuccess: (data) => {
-          if (data.success) {
-            updateCurrentWallet(data.data);
-            setIsSettingsOpen(false);
-          }
-        },
-      },
-    );
+  const handleEdit = () => {
+    console.log(wallet);
   };
-
 
   const handleDelete = () => {
     console.log(wallet);
@@ -77,8 +67,23 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   };
 
   const handleViewDetails = () => {
-    console.log(wallet);
-    router.push(`/wallet/${wallet._id}`);
+    if (wallet.current) {
+      setIsSettingsOpen(false);
+        router.push(`/transactions`);
+    } else {
+      updateCurrentWalletMutation.mutate(
+        { wallet_id: wallet._id || "", user_id: wallet.user_id },
+        {
+          onSuccess: (data) => {
+            if (data.success) {
+              updateCurrentWallet(data.data);
+              setIsSettingsOpen(false);
+              router.push(`/transactions`);
+            }
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -87,7 +92,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
       currentlyShown={currentlyShown}
       handleClick={handleClick}
       handleDelete={handleDelete}
-      handleSetDefault={handleSetDefault}
+      handleEdit={handleEdit}
       handleViewDetails={handleViewDetails}
       handleOpenChange={handleSettingsOpenChange}
     >
