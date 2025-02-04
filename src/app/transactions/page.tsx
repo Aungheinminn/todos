@@ -26,7 +26,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   return (
     <div className="w-full box-border flex flex-col justify-center items-center gap-y-1 p-2 ">
       <p className="text-sm">Balance</p>
-      <p>K {currentWallet?.balance || "*********"}</p>
+      <p>K {currentWallet ? currentWallet?.balance : "**********"}</p>
       <Button className="w-[100px] flex items-center justify-center gap-x-2">
         <Image className="w-6 h-6" src={wallet} alt="transaction wallet" />
         <p>Total</p>

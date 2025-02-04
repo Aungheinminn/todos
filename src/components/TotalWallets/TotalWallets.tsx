@@ -52,7 +52,17 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   };
 
   const handleEdit = () => {
-    console.log(wallet);
+    setWalletDatas({
+      _id: wallet._id,
+      wallet_name: wallet.wallet_name,
+      user_id: wallet.user_id,
+      createdAt: wallet.createdAt,
+      currency: wallet.currency,
+      balance: wallet.balance,
+      current: wallet.current,
+    });
+    setType("edit");
+    setIsOpen(true);
   };
 
   const handleDelete = () => {
@@ -69,7 +79,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   const handleViewDetails = () => {
     if (wallet.current) {
       setIsSettingsOpen(false);
-        router.push(`/transactions`);
+      router.push(`/transactions`);
     } else {
       updateCurrentWalletMutation.mutate(
         { wallet_id: wallet._id || "", user_id: wallet.user_id },

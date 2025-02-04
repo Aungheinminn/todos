@@ -3,6 +3,7 @@ import {
   createWallet,
   deleteWallet,
   updateCurrentWallet,
+  updateWallet,
 } from "./wallet.service";
 import { WalletType } from "./types/wallet.type";
 export const useWalletMutation = () => {
@@ -41,6 +42,14 @@ export const useWalletMutation = () => {
     },
   });
 
+  const editMutation = useMutation({
+    mutationFn: updateWallet,
+    onError: (error, variables, context: any) => {
+      queryClient.setQueryData("wallets", context.previousItems);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: "wallets" }),
+  });
+
   const deleteMutation = useMutation({
     mutationFn: deleteWallet,
     onSettled: async (data, error, variables, context) => {
@@ -58,7 +67,6 @@ export const useWalletMutation = () => {
       console.log("after delete", data, error, context, variables);
     },
     onError: (error, variables, context: any) => {
-      console.log("error", error);
       queryClient.setQueryData("wallets", context.previousItems);
     },
   });
@@ -66,6 +74,7 @@ export const useWalletMutation = () => {
   return {
     createMutation,
     updateCurrentWalletMutation,
+    editMutation,
     deleteMutation,
   };
 };

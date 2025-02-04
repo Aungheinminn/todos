@@ -94,6 +94,25 @@ export const updateCurrentWallet = async ({
   return res;
 };
 
+export const updateWallet = async (data: WalletType) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/wallets/user/${data.user_id}/wallet/${data._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const deleteWallet = async ({
   id,
   wallet_id,
