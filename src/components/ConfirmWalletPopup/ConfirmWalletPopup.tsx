@@ -27,7 +27,7 @@ const ConfirmWalletPopup = () => {
   const [wallet, setWallet] = useState<string>("");
   const [currency, setCurrency] = useState<string>("MMK");
   const [initialAmount, setInitialAmount] = useState<number | string>("");
-  const { createMutation } = useWalletMutation();
+  const { createMutation, editMutation } = useWalletMutation();
 
   const handleCreateWallet = () => {
     let newWallet;
@@ -40,12 +40,23 @@ const ConfirmWalletPopup = () => {
         current: false,
       };
       walletDatas.process = createMutation;
+    } else if (type === "edit") {
+      newWallet = {
+        _id: walletDatas?._id || "",
+        wallet_name: wallet,
+        user_id: walletDatas?.user_id || "",
+        createdAt: walletDatas?.createdAt ? new Date(walletDatas?.createdAt) : new Date(),
+        currency: currency,
+        balance: Number(initialAmount),
+        current: walletDatas?.current,
+      };
+      walletDatas.process = editMutation;
     }
 
     try {
       walletDatas.process.mutate(newWallet, {
         onSuccess: (data: any) => {
-          console.log("after data",data);
+          console.log("after data", data);
           if (data.success) {
             setOpen(false);
             resetWalletDatas();
