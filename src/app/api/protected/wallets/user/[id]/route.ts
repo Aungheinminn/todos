@@ -55,7 +55,7 @@ export const POST = async (
 
     const data = {
       ...parsedBody,
-      createdAt: new Date().toISOString(),
+      created_at: new Date().toISOString(),
     };
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -110,7 +110,7 @@ export const POST = async (
       );
     }
   } catch (e) {
-    if(e instanceof z.ZodError){
+    if (e instanceof z.ZodError) {
       return NextResponse.json(
         { success: false, error: e.errors },
         { status: 400 },

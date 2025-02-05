@@ -56,7 +56,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
       _id: wallet._id,
       wallet_name: wallet.wallet_name,
       user_id: wallet.user_id,
-      createdAt: wallet.createdAt,
+      created_at: wallet.created_at,
       currency: wallet.currency,
       balance: wallet.balance,
       current: wallet.current,
