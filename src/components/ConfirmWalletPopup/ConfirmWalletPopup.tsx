@@ -45,7 +45,9 @@ const ConfirmWalletPopup = () => {
         _id: walletDatas?._id || "",
         wallet_name: wallet,
         user_id: walletDatas?.user_id || "",
-        createdAt: walletDatas?.createdAt ? new Date(walletDatas?.createdAt) : new Date(),
+        created_at: walletDatas?.created_at
+          ? new Date(walletDatas?.created_at)
+          : new Date(),
         currency: currency,
         balance: Number(initialAmount),
         current: walletDatas?.current,

@@ -7,7 +7,7 @@ interface WalletPopupStore {
     _id?: string;
     wallet_name: string;
     user_id: string;
-    createdAt?: Date;
+    created_at?: Date;
     currency: string;
     balance: number;
     current: boolean;
@@ -26,7 +26,7 @@ export const useWalletPopupStore = create<WalletPopupStore>((set) => ({
     _id: "",
     wallet_name: "",
     user_id: "",
-    createdAt: new Date(),
+    created_at: new Date(),
     currency: "MMK",
     balance: 0,
     current: false,
@@ -40,7 +40,7 @@ export const useWalletPopupStore = create<WalletPopupStore>((set) => ({
         _id: "",
         wallet_name: "",
         user_id: "",
-        createdAt: new Date(),
+        created_at: new Date(),
         currency: "",
         balance: 0,
         current: false,

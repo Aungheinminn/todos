@@ -66,7 +66,7 @@ export const PUT = async (
 
   try {
     const { id, wallet_id } = params;
-    const { _id, createdAt, ...rest } = await req.json();
+    const { _id, created_at, ...rest } = await req.json();
     console.log("rest", rest);
     const parsedBody = WalletSchema.parse(rest);
 
@@ -95,7 +95,7 @@ export const PUT = async (
       {
         $set: {
           ...parsedBody,
-          createdAt: new Date(createdAt),
+          created_at: new Date(created_at),
         },
       },
       { returnDocument: "after" },
