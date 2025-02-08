@@ -153,7 +153,14 @@ export const DELETE = async (
       .collection("wallets")
       .findOneAndUpdate(
         { _id: new ObjectId(wallet_id) },
-        { $inc: { balance: currentTransaction.transaction } },
+        {
+          $inc: {
+            balance:
+              currentTransaction.category === "Other Income" || currentTransaction.category === "Other Expense"
+                ? -currentTransaction.transaction
+                : currentTransaction.transaction,
+          },
+        },
         { returnDocument: "after" },
       );
 

@@ -90,4 +90,14 @@ export const Categories = [
     name: "Other",
     icon: otherIcon,
   },
+  {
+    id: 15,
+    name: "Other Expense",
+    icon: otherIcon,
+  },
+  {
+    id: 15,
+    name: "Other Income",
+    icon: otherIcon,
+  },
 ];

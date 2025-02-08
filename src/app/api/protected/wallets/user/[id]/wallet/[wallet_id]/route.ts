@@ -82,7 +82,10 @@ export const PUT = async (
         wallet_id: wallet_id,
         transaction: parsedBody.balance - wallet?.balance,
         user_id: id,
-        category: "Other",
+        category:
+          parsedBody.balance - wallet?.balance > 0
+            ? "Other Income"
+            : "Other Expense",
         note: "Adjust Balance",
         transaction_day: new Date().getDate(),
         transaction_month: new Date().getMonth() + 1,
