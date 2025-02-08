@@ -63,6 +63,7 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
     });
     setType("edit");
     setIsOpen(true);
+    setIsSettingsOpen(false);
   };
 
   const handleDelete = () => {

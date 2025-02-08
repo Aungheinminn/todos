@@ -84,7 +84,7 @@ const ConfirmWalletPopup = () => {
       open={(type === "create" || type === "edit") && open}
       onOpenChange={setOpen}
     >
-      <DrawerContent className="pointer-events-auto flex flex-col items-center gap-y-4 bg-gray-800">
+      <DrawerContent className="flex flex-col items-center gap-y-4 bg-gray-800">
         <DrawerHeader className="w-full flex justify-between items-center border-b border-b-slate-500">
           <DrawerClose onClick={() => setOpen(false)} className="">
             Cancel
