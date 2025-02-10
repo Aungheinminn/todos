@@ -15,6 +15,8 @@ import TransactionsComponent from "@/components/Transactions/Transactions";
 import { WalletType } from "@/lib/types/wallet.type";
 import { getCurrentWallet } from "@/lib/wallet.service";
 import { useTransactionMutation } from "@/lib/transactionMutation";
+import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLoading";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -24,7 +26,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
   currentWallet,
 }) => {
   return (
-    <div className="w-full box-border flex flex-col justify-center items-center gap-y-1 p-2 ">
+    <div className="w-full box-border flex flex-col justify-center items-center gap-y-1 p-2">
       <p className="text-sm">Balance</p>
       <p>K {currentWallet ? currentWallet?.balance : "**********"}</p>
       <Button className="w-[100px] flex items-center justify-center gap-x-2">
@@ -35,6 +37,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
     </div>
   );
 };
+
 const Transactions = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
 
@@ -49,7 +52,7 @@ const Transactions = () => {
     year: new Date().getFullYear(),
   });
 
-  const { data: transactions } = useQuery({
+  const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
     queryKey: ["transactions", date, currentWallet],
     queryFn: () =>
       getTransactionsByDate(currentWallet._id, date.month, date.year),
@@ -60,14 +63,18 @@ const Transactions = () => {
 
   return (
     <Suspense fallback={<TransactionLoading />}>
-      <div className="h-fit">
+      <ScrollArea className="h-fit">
         <div className="w-full flex flex-col items-center justify-center px-0 mx-0 bg-gray-800 pt-[55px]">
           <TransactionHeader currentWallet={currentWallet} />
           <TransactionMonthPicker date={date} setDate={setDate} />
         </div>
 
-        <TransactionsComponent transactions={transactions} />
-      </div>
+        {isTransactionsLoading ? (
+          <TransactionsLoading />
+        ) : (
+          <TransactionsComponent transactions={transactions} />
+        )}
+      </ScrollArea>
     </Suspense>
   );
 };
