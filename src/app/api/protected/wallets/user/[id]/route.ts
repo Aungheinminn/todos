@@ -1,7 +1,9 @@
+import { ObjectId } from "mongodb";
 import { z } from "zod";
 import clientPromise from "@/lib/database";
 import { WalletSchema } from "@/lib/models/wallet.model";
 import { NextRequest, NextResponse } from "next/server";
+import { Collection } from "mongodb";
 
 export const GET = async (
   req: NextRequest,
@@ -75,8 +77,10 @@ export const POST = async (
     const currentWallet = await db
       .collection("wallets")
       .findOne({ current: true, user_id: id });
+
+    let wallet;
     if (!currentWallet) {
-      const wallet = await db.collection("wallets").insertOne({
+      wallet = await db.collection("wallets").insertOne({
         ...data,
         current: true,
       });
@@ -93,7 +97,7 @@ export const POST = async (
         { status: 200 },
       );
     } else {
-      const wallet = await db.collection("wallets").insertOne({
+      wallet = await db.collection("wallets").insertOne({
         ...data,
         current: false,
       });
@@ -103,6 +107,17 @@ export const POST = async (
           { status: 400 },
         );
       }
+
+      await db.collection("transactions").insertOne({
+        wallet_id: wallet.insertedId.toString(),
+        transaction: data.balance,
+        user_id: id,
+        category: "Other Income",
+        note: "Initial Balance",
+        transaction_day: new Date().getDate(),
+        transaction_month: new Date().getMonth() + 1,
+        transaction_year: new Date().getFullYear(),
+      });
 
       return NextResponse.json(
         { success: true, message: "Wallet successfully created", data: wallet },
