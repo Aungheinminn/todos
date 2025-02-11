@@ -6,11 +6,73 @@ type BudgetPopupStore = {
   budgetDatas: {
     name: string;
     user_id: string;
-    wallet_id: string;
+    wallet: {
+      id: string;
+      wallet_name: string;
+    };
     budget: string;
+    category: {
+      id: number;
+      name: string;
+      icon: string;
+    };
+    range: string;
+    start_date: number;
+    end_date: number;
+    created_at?: Date;
+    process: any;
   };
+  setIsOpen: (data: boolean) => void;
+  setType: (data: string) => void;
+  setBudgetDatas: (data: any) => void;
+  resetBudgetDatas: () => void;
 };
 
 export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
-
+  isOpen: false,
+  type: "",
+  budgetDatas: {
+    name: "",
+    user_id: "",
+    wallet: {
+      id: "",
+      wallet_name: "",
+    },
+    budget: "",
+    category: {
+      id: 0,
+      name: "",
+      icon: "",
+    },
+    range: "",
+    start_date: 1,
+    end_date: 1,
+    created_at: new Date(),
+    process: () => {},
+  },
+  setIsOpen: (data: boolean) => set({ isOpen: data }),
+  setType: (data: string) => set({ type: data }),
+  setBudgetDatas: (data: any) => set({ budgetDatas: data }),
+  resetBudgetDatas: () =>
+    set({
+      budgetDatas: {
+        name: "",
+        user_id: "",
+        wallet: {
+          id: "",
+          wallet_name: "",
+        },
+        budget: "",
+        category: {
+          id: 0,
+          name: "",
+          icon: "",
+        },
+        range: "",
+        start_date: 1,
+        end_date: 1,
+        created_at: new Date(),
+        process: () => {},
+      },
+    }),
 }));
