@@ -9,6 +9,7 @@ import ConfirmWalletPopup from "../ConfirmWalletPopup/ConfirmWalletPopup";
 import DeleteTransactionPopup from "../DeleteTransactionPopup/DeleteTransactionPopup";
 import DeleteWalletPopup from "../DeleteWalletPopup/DeleteWalletPopup";
 import ConfirmBudgetPopup from "../ConfirmBudgetPopup/ConfrimBudgetPopup";
+import DeleteBudgetPopup from "../DeleteBudgetPopup/DeleteBudgetPopup";
 
 type ReactQueryProviderProps = {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({
       <ConfirmBudgetPopup />
       <DeleteTransactionPopup />
       <DeleteWalletPopup />
+      <DeleteBudgetPopup />
       <DuplicateTransactionPopup />
       <Wrapper router={router}>{children}</Wrapper>
     </QueryClientProvider>
