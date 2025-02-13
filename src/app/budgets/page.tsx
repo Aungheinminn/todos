@@ -30,7 +30,7 @@ const BudgetHeader: React.FC<BudgetHeaderProps> = ({ onOpen }) => {
 };
 
 const Budgets = () => {
-  const { isOpen, setIsOpen, setType } = useBudgetPopupStore((state) => state);
+  const { setIsOpen, setType } = useBudgetPopupStore((state) => state);
   const handleOpen = () => {
     setIsOpen(true);
     setType("create");
@@ -40,8 +40,7 @@ const Budgets = () => {
       <ScrollArea className="h-fit">
         <BudgetHeader onOpen={handleOpen} />
         <div className="px-1">
-
-        <BudgetCard />
+          <BudgetCard />
         </div>
       </ScrollArea>
     </Suspense>
