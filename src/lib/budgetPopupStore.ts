@@ -17,8 +17,8 @@ type BudgetPopupStore = {
       icon: string;
     };
     range: string;
-    start_date: number;
-    end_date: number;
+    start_date: Date;
+    end_date: Date;
     created_at?: Date;
     process: any;
   };
@@ -45,8 +45,8 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
       icon: "",
     },
     range: "",
-    start_date: 1,
-    end_date: 1,
+    start_date: new Date(),
+    end_date: new Date(),
     created_at: new Date(),
     process: () => {},
   },
@@ -69,8 +69,8 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
           icon: "",
         },
         range: "",
-        start_date: 1,
-        end_date: 1,
+        start_date: new Date(),
+        end_date: new Date(),
         created_at: new Date(),
         process: () => {},
       },

@@ -17,6 +17,7 @@ import { getWallets } from "@/lib/wallet.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import WalletSelection from "../WalletSelection/WalletSelection";
 import { useWalletStore } from "@/lib/walletStore";
+import BudgetDurationSelection from "../BudgeDurationSelection/BudgetDurationSelection";
 
 const ConfirmBudgetPopup = () => {
   const {
@@ -47,7 +48,13 @@ const ConfirmBudgetPopup = () => {
     icon: "",
   });
   const [amount, setAmount] = useState<number | string>("");
-  const [range, setRange] = useState<string>("");
+  const [date, setDate] = useState<{
+    startDate: Date;
+    endDate: Date;
+  }>({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
   const [wallet, setWallet] = useState<{
     id: string;
@@ -72,7 +79,10 @@ const ConfirmBudgetPopup = () => {
       wallet_name:
         budgetDatas.wallet.wallet_name || currentWallet?.wallet_name || "",
     });
-    setRange(budgetDatas.range);
+    setDate({
+      startDate: budgetDatas.start_date,
+      endDate: budgetDatas.end_date,
+    });
   }, [currentWallet, budgetDatas]);
 
   return (
@@ -93,6 +103,7 @@ const ConfirmBudgetPopup = () => {
         <div className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 `}>
           <AmountInput amount={amount} setAmount={setAmount} />
           <CategorySelection category={category} setCategory={setCategory} />
+          <BudgetDurationSelection date={date} setDate={setDate} />
           <WalletSelection
             wallets={wallets}
             seletedWallet={wallet}
@@ -107,7 +118,7 @@ const ConfirmBudgetPopup = () => {
           Save
         </Button>
         <div></div>
-      </DrawerContent>{" "}
+      </DrawerContent>
     </Drawer>
   );
 };
