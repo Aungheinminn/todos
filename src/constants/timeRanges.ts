@@ -1,49 +1,32 @@
-export const TimeRanges = [
+import { TimeRangeConstantType } from "@/lib/types/timeRangeConstant.type";
+import { getThisMonth } from "@/lib/utils/getThisMonth";
+import { getThisQuarter } from "@/lib/utils/getThisQuarter";
+import { getThisWeek } from "@/lib/utils/getThisWeek";
+import { getThisYear } from "@/lib/utils/getThisYear";
+
+export const TimeRanges: TimeRangeConstantType[] = [
   {
     name: "This week",
-    range: [
-      {
-        start_date: new Date().getDate(),
-        start_month: new Date().getMonth() + 1,
-      },
-      {
-        end_date: new Date().getDate() + 6,
-        end_month: new Date().getMonth() + 1,
-      },
-    ],
+    value: "week",
+    startDate: getThisWeek().startOfWeek,
+    endDate: getThisWeek().endOfWeek,
   },
   {
     name: "This month",
-    range: [
-      {
-        start_date: 1,
-        start_month: new Date().getMonth() + 1,
-      },
-      {
-        end_date: new Date().setFullYear(
-          new Date().getFullYear(),
-          new Date().getMonth() + 1,
-          0,
-        ),
-        end_month: new Date().getMonth() + 2,
-      },
-    ],
+    value: "month",
+    startDate: getThisMonth().startOfMonth,
+    endDate: getThisMonth().endOfMonth,
   },
   {
-    name: "This quater",
-    range: [
-      {
-        start_date: 1,
-        start_month: new Date().getMonth() + 1,
-      },
-      {
-        end_date: new Date().setFullYear(
-          new Date().getFullYear(),
-          new Date().getMonth() + 3,
-          0,
-        ),
-        end_month: new Date().getMonth() + 4,
-      },
-    ]
-  }
+    name: "This quarter",
+    value: "quarter",
+    startDate: getThisQuarter().startOfQuarter,
+    endDate: getThisQuarter().endOfQuarter,
+  },
+  {
+    name: "This year",
+    value: "year",
+    startDate: getThisYear().startOfYear,
+    endDate: getThisYear().endOfYear,
+  },
 ];
