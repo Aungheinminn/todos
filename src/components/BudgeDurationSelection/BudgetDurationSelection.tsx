@@ -18,6 +18,7 @@ import leftArrow from "@/assets/chevron_left.svg";
 import { TimeRangeConstantType } from "@/lib/types/timeRangeConstant.type";
 import { TimeRanges } from "@/constants/timeRanges";
 import { getDate } from "@/lib/utils/getDate";
+import { endOfWeek } from "date-fns";
 
 type BudgetDurationSelectionProps = {
   date: {
@@ -32,10 +33,21 @@ type BudgetDurationSelectionProps = {
   >;
 };
 
+const getBudgetPlaceholder = (date: {
+  startDate: Date;
+  endDate: Date;
+}): string => {
+	if(!date.startDate || !date.endDate) return "Select Duration";
+  const startDate = getDate(date.startDate);
+  const endDate = getDate(date.endDate);
+  return `${startDate.day}/${startDate.month} - ${endDate.day}/${endDate.month}`;
+};
+
 const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
   date,
   setDate,
 }) => {
+	console.log(date);
   const [open, setOpen] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isCustomSelection, setIsCustomSelection] = useState<boolean>(false);
@@ -44,16 +56,24 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
   const handleDateCategory = (category: string) => {
     if (category === "week") {
       const { startOfWeek, endOfWeek } = getThisWeek();
-      setDate({ startDate: startOfWeek, endDate: endOfWeek });
+			const newStartDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
+			const newEndDate = new Date(endOfWeek.getFullYear(), endOfWeek.getMonth(), endOfWeek.getDate());
+			setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "month") {
       const { startOfMonth, endOfMonth } = getThisMonth();
-      setDate({ startDate: startOfMonth, endDate: endOfMonth });
+			const newStartDate = new Date(startOfMonth.getFullYear(), startOfMonth.getMonth(), startOfMonth.getDate());
+			const newEndDate = new Date(endOfMonth.getFullYear(), endOfMonth.getMonth(), endOfMonth.getDate());
+      setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "quarter") {
       const { startOfQuarter, endOfQuarter } = getThisQuarter();
-      setDate({ startDate: startOfQuarter, endDate: endOfQuarter });
+			const newStartDate = new Date(startOfQuarter.getFullYear(), startOfQuarter.getMonth(), startOfQuarter.getDate());
+			const newEndDate = new Date(endOfQuarter.getFullYear(), endOfQuarter.getMonth(), endOfQuarter.getDate());
+      setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "year") {
       const { startOfYear, endOfYear } = getThisYear();
-      setDate({ startDate: startOfYear, endDate: endOfYear });
+			const newStartDate = new Date(startOfYear.getFullYear(), startOfYear.getMonth(), startOfYear.getDate());
+			const newEndDate = new Date(endOfYear.getFullYear(), endOfYear.getMonth(), endOfYear.getDate());
+      setDate({ startDate: newStartDate, endDate: newEndDate });
     }
   };
 
@@ -72,7 +92,7 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
       <AlertDialogTrigger className="w-full flex justify-between items-center gap-x-8 py-1 px-4">
         <Image className="w-6 h-6 mb-3" src={calendarIcon} alt="calendar" />
         <div className="w-full flex justify-between items-center gap-x-2 border-b border-b-slate-500 ml-1 pb-3">
-          <p className="text-base">Select Duration</p>
+          <p className="text-base">{getBudgetPlaceholder(date)}</p>
           <Image className="w-4 h-4" src={chevronRight} alt="chevron right" />
         </div>
       </AlertDialogTrigger>
@@ -116,7 +136,7 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
                 day_selected: "bg-green-500 text-white font-light",
               }}
               mode="single"
-              selected={date.startDate}
+              selected={timeRange === "start" ? date.startDate : date.endDate}
               onDayClick={handleSelectDate}
             />
           </div>
