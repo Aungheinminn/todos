@@ -1,3 +1,4 @@
+import Link from "next/link";
 import BudgetRange from "../BudgetRange.tsx/BudgetRange";
 import {
   Accordion,
@@ -19,10 +20,13 @@ const BudgetCard = () => {
               <p className="text-md max-w-[100px] truncate">BudgetType</p>
               <p className="text-sm text-slate-400">Amount</p>
             </div>
-            <div className="flex justify-end items-start gap-x-1 mt-5">
+            <div className="flex justify-start items-center mt-5 gap-x-2">
+              <Link className="transition-all text-sm bg-sky-500 py-[2px] px-2 rounded-md hover:bg-blue-500" href="/home">View</Link>
+            <div className="flex justify-end items-start gap-x-1">
               <p className="max-w-[50px] truncate text-green-500">20000</p>
               <p className="text-red-400">/</p>
               <p className="max-w-[50px] truncate text-red-500">100000</p>
+            </div>
             </div>
           </div>
         </AccordionTrigger>

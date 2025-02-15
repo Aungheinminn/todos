@@ -49,8 +49,8 @@ const ConfirmBudgetPopup = () => {
   });
   const [amount, setAmount] = useState<number | string>("");
   const [date, setDate] = useState<{
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string;
+    endDate: Date | string;
   }>({
     startDate: new Date(),
     endDate: new Date(),
@@ -96,7 +96,7 @@ const ConfirmBudgetPopup = () => {
             Cancel
           </DrawerClose>
           <DrawerTitle className="font-medium">
-            {type === "create" ? "Add" : "Edit"} transaction
+            {type === "create" ? "Add" : "Edit"} Budget
           </DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
