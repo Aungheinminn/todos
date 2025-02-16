@@ -22,13 +22,13 @@ import { endOfWeek } from "date-fns";
 
 type BudgetDurationSelectionProps = {
   date: {
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string;
+    endDate: Date | string;
   };
   setDate: React.Dispatch<
     React.SetStateAction<{
-      startDate: Date;
-      endDate: Date;
+      startDate: Date | string;
+      endDate: Date | string;
     }>
   >;
 };
@@ -37,7 +37,7 @@ const getBudgetPlaceholder = (date: {
   startDate: Date;
   endDate: Date;
 }): string => {
-	if(!date.startDate || !date.endDate) return "Select Duration";
+  if (!date.startDate || !date.endDate) return "Select Duration";
   const startDate = getDate(date.startDate);
   const endDate = getDate(date.endDate);
   return `${startDate.day}/${startDate.month} - ${endDate.day}/${endDate.month}`;
@@ -47,7 +47,7 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
   date,
   setDate,
 }) => {
-	console.log(date);
+  console.log(date);
   const [open, setOpen] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isCustomSelection, setIsCustomSelection] = useState<boolean>(false);
@@ -56,23 +56,55 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
   const handleDateCategory = (category: string) => {
     if (category === "week") {
       const { startOfWeek, endOfWeek } = getThisWeek();
-			const newStartDate = new Date(startOfWeek.getFullYear(), startOfWeek.getMonth(), startOfWeek.getDate());
-			const newEndDate = new Date(endOfWeek.getFullYear(), endOfWeek.getMonth(), endOfWeek.getDate());
-			setDate({ startDate: newStartDate, endDate: newEndDate });
+      const newStartDate = new Date(
+        startOfWeek.getFullYear(),
+        startOfWeek.getMonth(),
+        startOfWeek.getDate(),
+      );
+      const newEndDate = new Date(
+        endOfWeek.getFullYear(),
+        endOfWeek.getMonth(),
+        endOfWeek.getDate(),
+      );
+      setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "month") {
       const { startOfMonth, endOfMonth } = getThisMonth();
-			const newStartDate = new Date(startOfMonth.getFullYear(), startOfMonth.getMonth(), startOfMonth.getDate());
-			const newEndDate = new Date(endOfMonth.getFullYear(), endOfMonth.getMonth(), endOfMonth.getDate());
+      const newStartDate = new Date(
+        startOfMonth.getFullYear(),
+        startOfMonth.getMonth(),
+        startOfMonth.getDate(),
+      );
+      const newEndDate = new Date(
+        endOfMonth.getFullYear(),
+        endOfMonth.getMonth(),
+        endOfMonth.getDate(),
+      );
       setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "quarter") {
       const { startOfQuarter, endOfQuarter } = getThisQuarter();
-			const newStartDate = new Date(startOfQuarter.getFullYear(), startOfQuarter.getMonth(), startOfQuarter.getDate());
-			const newEndDate = new Date(endOfQuarter.getFullYear(), endOfQuarter.getMonth(), endOfQuarter.getDate());
+      const newStartDate = new Date(
+        startOfQuarter.getFullYear(),
+        startOfQuarter.getMonth(),
+        startOfQuarter.getDate(),
+      );
+      const newEndDate = new Date(
+        endOfQuarter.getFullYear(),
+        endOfQuarter.getMonth(),
+        endOfQuarter.getDate(),
+      );
       setDate({ startDate: newStartDate, endDate: newEndDate });
     } else if (category === "year") {
       const { startOfYear, endOfYear } = getThisYear();
-			const newStartDate = new Date(startOfYear.getFullYear(), startOfYear.getMonth(), startOfYear.getDate());
-			const newEndDate = new Date(endOfYear.getFullYear(), endOfYear.getMonth(), endOfYear.getDate());
+      const newStartDate = new Date(
+        startOfYear.getFullYear(),
+        startOfYear.getMonth(),
+        startOfYear.getDate(),
+      );
+      const newEndDate = new Date(
+        endOfYear.getFullYear(),
+        endOfYear.getMonth(),
+        endOfYear.getDate(),
+      );
       setDate({ startDate: newStartDate, endDate: newEndDate });
     }
   };
