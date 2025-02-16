@@ -4,7 +4,7 @@ type BudgetPopupStore = {
   isOpen: boolean;
   type: string;
   budgetDatas: {
-    name: string;
+    id?: string;
     user_id: string;
     wallet: {
       id: string;
@@ -16,7 +16,6 @@ type BudgetPopupStore = {
       name: string;
       icon: string;
     };
-    range: string;
     start_date: Date | string;
     end_date: Date | string;
     created_at?: Date;
@@ -32,7 +31,7 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
   isOpen: false,
   type: "",
   budgetDatas: {
-    name: "",
+    id: "",
     user_id: "",
     wallet: {
       id: "",
@@ -44,7 +43,6 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
       name: "",
       icon: "",
     },
-    range: "",
     start_date: "",
     end_date: "",
     created_at: new Date(),
@@ -56,7 +54,7 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
   resetBudgetDatas: () =>
     set({
       budgetDatas: {
-        name: "",
+        id: "",
         user_id: "",
         wallet: {
           id: "",
@@ -68,7 +66,6 @@ export const useBudgetPopupStore = create<BudgetPopupStore>((set) => ({
           name: "",
           icon: "",
         },
-        range: "",
         start_date: "",
         end_date: "",
         created_at: new Date(),

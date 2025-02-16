@@ -7,7 +7,6 @@ import wallet from "@/assets/wallet_2.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
-import BudgetRange from "@/components/BudgetRange.tsx/BudgetRange";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
 
 type BudgetHeaderProps = {
@@ -30,10 +29,13 @@ const BudgetHeader: React.FC<BudgetHeaderProps> = ({ onOpen }) => {
 };
 
 const Budgets = () => {
-  const { setIsOpen, setType } = useBudgetPopupStore((state) => state);
+  const { setIsOpen, setType, budgetDatas } = useBudgetPopupStore(
+    (state) => state,
+  );
   const handleOpen = () => {
     setIsOpen(true);
     setType("create");
+    budgetDatas.process;
   };
   return (
     <Suspense fallback={<BudgetsLoading />}>

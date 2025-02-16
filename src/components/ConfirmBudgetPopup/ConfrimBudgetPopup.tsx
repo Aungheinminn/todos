@@ -10,7 +10,6 @@ import {
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import AmountInput from "../AmountInput/AmountInput";
 import CategorySelection from "../CategorySelection/CategorySelection";
-import WalletSettings from "../WalletSettings/WalletSettings";
 import { Button } from "../ui/button";
 import { useQuery } from "react-query";
 import { getWallets } from "@/lib/wallet.service";
@@ -70,6 +69,42 @@ const ConfirmBudgetPopup = () => {
     setType("");
   };
 
+  const handleBudget = () => {
+    let budgetData;
+    if (type === "create") {
+      budgetData = {
+        user_id: currentUser?._id || "",
+        wallet_id: currentWallet?._id || "",
+        budget: amount,
+        category: category.name,
+        start_date: date.startDate,
+        end_date: date.endDate,
+      };
+    } else if (type === "edit") {
+      budgetData = {
+        _id: budgetDatas?.id || "",
+        user_id: budgetDatas?.user_id || currentUser?._id || "",
+        wallet_id: wallet.id || currentWallet?._id || "",
+        budget: amount,
+        category: category.name,
+        start_date: date.startDate,
+        end_date: date.endDate,
+      };
+    }
+    budgetDatas.process(budgetData, {
+      onSuccess: (data: any) => {
+        if (data.success) {
+          setOpen(false);
+          resetBudgetDatas();
+          setType("");
+        }
+      },
+      onError: (error: any) => {
+        console.log(error);
+      },
+    });
+  };
+
   useEffect(() => {
     if (!budgetDatas) return;
     setCategory(budgetDatas.category);
@@ -111,9 +146,9 @@ const ConfirmBudgetPopup = () => {
           />
         </div>
         <Button
-          // disabled={!amount || !category.name || !wallet || !date}
+          disabled={!amount || !category.name || !wallet || !date}
           className="bg-gray-700 hover:bg-sky-600 w-[80%] py-2 rounded-2xl text-sm"
-          // onClick={handleTransaction}
+          onClick={handleBudget}
         >
           Save
         </Button>
