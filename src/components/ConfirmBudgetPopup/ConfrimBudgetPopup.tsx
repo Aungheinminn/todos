@@ -75,23 +75,23 @@ const ConfirmBudgetPopup = () => {
       budgetData = {
         user_id: currentUser?._id || "",
         wallet_id: currentWallet?._id || "",
-        budget: amount,
+        budget: Number(amount),
         category: category.name,
-        start_date: date.startDate,
-        end_date: date.endDate,
+        start_date: new Date(new Date(date.startDate).setHours(0, 0, 0, 0)),
+        end_date: new Date(new Date(date.endDate).setHours(0, 0, 0, 0)),
       };
     } else if (type === "edit") {
       budgetData = {
         _id: budgetDatas?.id || "",
         user_id: budgetDatas?.user_id || currentUser?._id || "",
         wallet_id: wallet.id || currentWallet?._id || "",
-        budget: amount,
+        budget: Number(amount),
         category: category.name,
-        start_date: date.startDate,
-        end_date: date.endDate,
+        start_date: new Date(date.startDate).setHours(0, 0, 0, 0),
+        end_date: new Date(date.endDate).setHours(0, 0, 0, 0),
       };
     }
-    budgetDatas.process(budgetData, {
+    budgetDatas.process.mutate(budgetData, {
       onSuccess: (data: any) => {
         if (data.success) {
           setOpen(false);

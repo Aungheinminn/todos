@@ -43,7 +43,7 @@ export const POST = async (
     );
   } catch (e) {
     if (e instanceof z.ZodError) {
-      NextResponse.json(
+      return NextResponse.json(
         { success: false, error: e.errors },
         {
           status: 400,
