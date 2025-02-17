@@ -13,7 +13,7 @@ export const createBudget = async (data: BudgetType) => {
       },
     );
     const res = await response.json();
-    return res
+    return res;
   } catch (e) {
     console.error(e);
   }

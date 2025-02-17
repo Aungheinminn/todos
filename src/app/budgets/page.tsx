@@ -8,6 +8,7 @@ import caretDown from "@/assets/caret_down.svg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
+import { useBudgetMutation } from "@/lib/budgetMutation";
 
 type BudgetHeaderProps = {
   onOpen: () => void;
@@ -32,10 +33,11 @@ const Budgets = () => {
   const { setIsOpen, setType, budgetDatas } = useBudgetPopupStore(
     (state) => state,
   );
+  const { createMutation } = useBudgetMutation();
   const handleOpen = () => {
     setIsOpen(true);
     setType("create");
-    budgetDatas.process;
+    budgetDatas.process = createMutation;
   };
   return (
     <Suspense fallback={<BudgetsLoading />}>

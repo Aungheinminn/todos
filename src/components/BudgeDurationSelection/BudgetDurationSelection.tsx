@@ -34,12 +34,12 @@ type BudgetDurationSelectionProps = {
 };
 
 const getBudgetPlaceholder = (date: {
-  startDate: Date;
-  endDate: Date;
+  startDate: Date | string;
+  endDate: Date | string;
 }): string => {
   if (!date.startDate || !date.endDate) return "Select Duration";
-  const startDate = getDate(date.startDate);
-  const endDate = getDate(date.endDate);
+  const startDate = getDate(new Date(date.startDate));
+  const endDate = getDate(new Date(date.endDate));
   return `${startDate.day}/${startDate.month} - ${endDate.day}/${endDate.month}`;
 };
 
@@ -107,6 +107,8 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
       );
       setDate({ startDate: newStartDate, endDate: newEndDate });
     }
+
+      setOpen(false);
   };
 
   const handleSelectDate = (day: Date) => {
@@ -133,7 +135,7 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
         className="w-fit h-fit bg-gray-700 border-0 p-0"
       >
         {isCustomSelection ? (
-          <div className="w-full h-[380px] flex flex-col items-start gap-y-1 p-1">
+          <div className="w-full h-[450px] flex flex-col items-start gap-y-1 p-1">
             <div className="w-full pt-1">
               <Button
                 onClick={() => setIsCustomSelection(false)}
@@ -168,7 +170,7 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
                 day_selected: "bg-green-500 text-white font-light",
               }}
               mode="single"
-              selected={timeRange === "start" ? date.startDate : date.endDate}
+              selected={timeRange === "start" ? new Date(date.startDate) : new Date(date.endDate)}
               onDayClick={handleSelectDate}
             />
           </div>
