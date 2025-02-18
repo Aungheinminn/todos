@@ -81,9 +81,7 @@ const ConfirmTransactionPopup = () => {
         user_id: currentUser?._id || "",
         category: category.name,
         note,
-        transaction_day: getDate(date).day,
-        transaction_month: getDate(date).month,
-        transaction_year: getDate(date).year,
+        created_at: date,
       };
       transactionDatas.process = createMutation;
     } else if (type === "edit") {
@@ -94,9 +92,7 @@ const ConfirmTransactionPopup = () => {
         user_id: currentUser?._id || "",
         category: category.name,
         note,
-        transaction_day: getDate(date).day,
-        transaction_month: getDate(date).month,
-        transaction_year: getDate(date).year,
+           created_at: date,
       };
     }
     try {

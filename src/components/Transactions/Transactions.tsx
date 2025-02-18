@@ -18,11 +18,12 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
     return (
       transactions &&
       transactions.reduce((groups, transaction) => {
-        const { transaction_day } = transaction;
-        if (!groups[transaction_day]) {
-          groups[transaction_day] = [];
+        const { created_at } = transaction;
+          const getCreatedAtDate = new Date(created_at).getDate();
+        if (!groups[getCreatedAtDate]) {
+          groups[getCreatedAtDate] = [];
         }
-        groups[transaction_day].push(transaction);
+        groups[getCreatedAtDate].push(transaction);
         return groups;
       }, {} as GroupedTransactions)
     );

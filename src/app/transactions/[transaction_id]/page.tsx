@@ -11,7 +11,10 @@ import { TransactionType } from "@/lib/types/transaction.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useQuery } from "react-query";
-import { duplicateTransaction, getTransactionById } from "@/lib/transaction.service";
+import {
+  duplicateTransaction,
+  getTransactionById,
+} from "@/lib/transaction.service";
 import { useWalletStore } from "@/lib/walletStore";
 import { getWalletById } from "@/lib/wallet.service";
 import { useCurrentUserStore } from "@/lib/userStore";
@@ -54,13 +57,7 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({
   transaction,
   isLoading,
 }) => {
-  const date =
-    transaction &&
-    new Date(
-      transaction.transaction_year,
-      transaction.transaction_month - 1,
-      transaction.transaction_day,
-    );
+  const date = transaction && new Date(transaction.created_at);
   return (
     <div className="w-full flex justify-center items-center bg-gray-700 py-4">
       {isLoading || !wallet || !transaction ? (
@@ -171,11 +168,7 @@ const Transaction = () => {
           ?.icon,
       },
       note: transaction.note,
-      date: new Date(
-        transaction.transaction_year,
-        transaction.transaction_month - 1,
-        transaction.transaction_day,
-      ),
+      date: new Date(transaction.created_at),
       wallet: {
         id: transaction.wallet_id,
         wallet_name: wallet.wallet_name,
@@ -198,11 +191,7 @@ const Transaction = () => {
           ?.icon,
       },
       note: transaction.note,
-      date: new Date(
-        transaction.transaction_year,
-        transaction.transaction_month - 1,
-        transaction.transaction_day,
-      ),
+      date: new Date(transaction.created_at),
       wallet: {
         id: transaction.wallet_id,
         wallet_name: wallet.wallet_name,

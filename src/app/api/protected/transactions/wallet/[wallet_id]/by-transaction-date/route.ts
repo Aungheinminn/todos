@@ -1,5 +1,6 @@
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
+
 export const GET = async (
   req: NextRequest,
   { params }: { params: { wallet_id: string } },
@@ -11,8 +12,16 @@ export const GET = async (
   const urlParams = new URL(req.url);
   const transaction_month = urlParams.searchParams.get("transaction_month");
   const transaction_year = urlParams.searchParams.get("transaction_year");
-
-  console.log("hey");
+  const startDate = new Date(
+    Number(transaction_year),
+    Number(transaction_month) - 2,
+    1,
+  );
+  const endDate = new Date(
+    Number(transaction_year),
+    Number(transaction_month),
+    1,
+  );
 
   try {
     const client = await clientPromise;
@@ -21,11 +30,15 @@ export const GET = async (
       .collection("transactions")
       .find({
         wallet_id: wallet_id,
-        transaction_month: Number(transaction_month),
-        transaction_year: Number(transaction_year),
+        created_at: {
+          $gte: new Date(startDate).toISOString(),
+          $lt: new Date(endDate).toISOString(),
+        },
       })
-      .sort({ transaction_day: -1 })
+      .sort({ created_at: -1 })
       .toArray();
+
+    console.log("transactions", transactions);
 
     if (!transactions) {
       return NextResponse.json(

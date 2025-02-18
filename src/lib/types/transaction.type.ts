@@ -5,7 +5,5 @@ export type TransactionType = {
   user_id: string;
   category: string;
   note: string;
-  transaction_day: number;
-  transaction_month: number;
-  transaction_year: number;
+  created_at: string | Date;
 };

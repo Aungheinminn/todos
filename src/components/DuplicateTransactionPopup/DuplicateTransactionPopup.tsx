@@ -38,9 +38,7 @@ const DuplicateTransactionPopup = () => {
       wallet_id: wallet.id,
       transaction: Number(amount),
       category: category.name,
-      transaction_day: getDate(currentDate).day,
-      transaction_month: getDate(currentDate).month,
-      transaction_year: getDate(currentDate).year,
+      created_at: currentDate,
     };
     try {
       transactionDatas.process.mutate(data, {
