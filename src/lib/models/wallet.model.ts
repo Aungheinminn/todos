@@ -9,4 +9,4 @@ export const WalletSchema = z.object({
   currency: z.string().min(1),
   balance: z.number(),
   current: z.boolean(),
-});
+}).strict();

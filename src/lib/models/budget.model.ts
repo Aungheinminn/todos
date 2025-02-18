@@ -10,4 +10,4 @@ export const BudgetSchema = z.object({
   start_date: z.string().min(1),
   end_date: z.string().min(1),
   createdAt: z.string().optional(),
-});
+}).strict();
