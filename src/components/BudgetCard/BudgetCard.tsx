@@ -6,8 +6,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { BudgetType } from "@/lib/types/budget.type";
+import Image from "next/image";
+import { Categories } from "@/constants/categories";
 
-const BudgetCard = () => {
+type BudgetCardProps = {
+  budget: BudgetType;
+};
+
+const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   return (
     <Accordion collapsible type="single" className="w-full">
       <AccordionItem
@@ -17,16 +24,35 @@ const BudgetCard = () => {
         <AccordionTrigger className="w-full hover:no-underline flex items-center justify-between gap-x-4 px-2">
           <div className="w-full flex items-start justify-between">
             <div className="flex flex-col justify-start items-start">
-              <p className="text-md max-w-[100px] truncate">BudgetType</p>
-              <p className="text-sm text-slate-400">Amount</p>
+              <div className="flex justify-start items-center gap-x-2">
+                <Image
+                  src={
+                    Categories.find((cate) => cate.name === budget.category)
+                      ?.icon
+                  }
+                  className="w-6 h-6"
+                  alt="transportation"
+                />
+                <p className="text-md max-w-[180px] truncate">
+                  {budget.category}
+                </p>
+              </div>
+              <p className="text-sm text-slate-400 ml-8 max-w-[150px] truncate">
+                {budget.budget}
+              </p>
             </div>
             <div className="flex justify-start items-center mt-5 gap-x-2">
-              <Link className="transition-all text-sm bg-sky-500 py-[2px] px-2 rounded-md hover:bg-blue-500" href="/home">View</Link>
-            <div className="flex justify-end items-start gap-x-1">
-              <p className="max-w-[50px] truncate text-green-500">20000</p>
-              <p className="text-red-400">/</p>
-              <p className="max-w-[50px] truncate text-red-500">100000</p>
-            </div>
+              <Link
+                className="transition-all text-sm bg-sky-500 py-[2px] px-4 rounded-md hover:bg-blue-500"
+                href={`/budget/${budget._id || ""}`}
+              >
+                View
+              </Link>
+              {/* <div className="flex justify-end items-start gap-x-1">
+                <p className="max-w-[50px] truncate text-green-500">20000</p>
+                <p className="text-red-400">/</p>
+                <p className="max-w-[50px] truncate text-red-500">100000</p>
+              </div> */}
             </div>
           </div>
         </AccordionTrigger>
@@ -34,8 +60,8 @@ const BudgetCard = () => {
           <hr className="w-[96%]" />
           <div className="w-[95%] bg-gray-900 flex flex-col items-center justify-center py-2 px-3 rounded-lg">
             <BudgetRange
-              min={new Date("Wed Feb 12 2025 22:23:24 GMT+0630 (Myanmar Time)")}
-              max={new Date("Tue Feb 18 2025 22:23:24 GMT+0630 (Myanmar Time)")}
+              min={new Date(budget.start_date || "")}
+              max={new Date(budget.end_date || "")}
             />
           </div>
         </AccordionContent>

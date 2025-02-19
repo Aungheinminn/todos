@@ -12,15 +12,40 @@ export const GET = async (
     });
   }
   try {
+    const { wallet_id } = params;
     const reqParams = new URL(req.url).searchParams;
     const startDate = reqParams.get("startDate");
     const endDate = reqParams.get("endDate");
     const client = await clientPromise;
     const db = client.db("remarker_next");
-    // const transactions = await db.collection("transactions").find({
-    // })
+    const transactions = await db.collection("transactions").find({
+      wallet_id: wallet_id,
+      created_at: {
+        $gte: new Date(startDate),
+        $lt: new Date(endDate),
+      },
+    });
+    if (!transactions) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Transactions not found",
+        },
+        { status: 404 },
+      );
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        data: transactions,
+      },
+      { status: 200 },
+    );
   } catch (e) {
     console.log(e);
-    return NextResponse.json({ success: false, error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 };
