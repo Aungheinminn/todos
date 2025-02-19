@@ -4,12 +4,14 @@ export const useBudgetMutation = () => {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: createBudget,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: "budgets" });
+    },
     onError: (error, variables, context: any) => {
       queryClient.setQueryData("budgets", context.previousItems);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: "budgets" }),
   });
   return {
-    createMutation
+    createMutation,
   };
 };
