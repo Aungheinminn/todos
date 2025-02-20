@@ -61,3 +61,20 @@ export const getActiveBudgets = async (wallet_id: string) => {
     console.error(e);
   }
 };
+
+export const deleteBudget = async ({ id, wallet_id }: { id: string; wallet_id: string }) => {
+ try{
+    const response = await fetch(
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    return response.json();
+  } catch (e) {
+    console.error(e);
+  }
+}
