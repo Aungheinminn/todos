@@ -4,10 +4,12 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
+import { DialogDescription } from "../ui/dialog";
 
 const DeleteBudgetPopup = () => {
   const router = useRouter();
@@ -19,8 +21,7 @@ const DeleteBudgetPopup = () => {
     resetBudgetDatas,
   } = useBudgetPopupStore((state) => state);
 
-  const handleDeleteTransaction = () => {
-  };
+  const handleDeleteTransaction = () => {};
 
   const handleCancel = () => {
     setOpen(false);
@@ -31,9 +32,10 @@ const DeleteBudgetPopup = () => {
       <DrawerContent className="w-full flex flex-col items-center gap-y-2 pb-3 bg-transparent border-0">
         <div className="w-[98%] flex flex-col items-center bg-gray-700 rounded-lg">
           <DrawerHeader className="hidden"></DrawerHeader>
-          <p className="w-full text-center text-sm text-slate-400 border border-slate-500 border-t-0 border-x-0 py-2">
-            Delete this transaction?
-          </p>
+          <DrawerTitle className="w-full text-center text-sm text-slate-400 border border-slate-500 border-t-0 border-x-0 py-2">
+            Delete this Budget?
+          </DrawerTitle>
+          <DialogDescription className="hidden"></DialogDescription>
           <Button
             className="w-full hover:bg-transparent bg-transparent text-red-500 text-base"
             onClick={handleDeleteTransaction}

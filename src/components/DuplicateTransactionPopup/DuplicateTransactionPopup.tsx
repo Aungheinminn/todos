@@ -5,6 +5,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerDescription
 } from "@/components/ui/drawer";
 import { Categories } from "@/constants/categories";
 import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
@@ -68,6 +69,7 @@ const DuplicateTransactionPopup = () => {
             Duplicate Transaction
           </DrawerTitle>
         </DrawerHeader>
+        <DrawerDescription className="hidden"></DrawerDescription>
         <div className="w-[96%] flex justify-between items-start bg-gray-700 py-3 px-4 rounded-2xl">
           <div className="w-full flex justify-start items-start gap-x-4">
             <Image

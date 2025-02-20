@@ -6,6 +6,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
+  DrawerDescription
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 import AmountInput from "../AmountInput/AmountInput";
@@ -92,7 +93,7 @@ const ConfirmTransactionPopup = () => {
         user_id: currentUser?._id || "",
         category: category.name,
         note,
-           created_at: date,
+        created_at: date,
       };
     }
     try {
@@ -148,6 +149,7 @@ const ConfirmTransactionPopup = () => {
           </DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
+        <DrawerDescription className="hidden"></DrawerDescription>
         <div className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 `}>
           <AmountInput amount={amount} setAmount={setAmount} />
           <CategorySelection category={category} setCategory={setCategory} />

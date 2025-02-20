@@ -44,7 +44,7 @@ const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
             <div className="flex justify-start items-center mt-5 gap-x-2">
               <Link
                 className="transition-all text-sm bg-sky-500 py-[2px] px-4 rounded-md hover:bg-blue-500"
-                href={`/budget/${budget._id || ""}`}
+                href={`/budgets/${budget._id || ""}`}
               >
                 View
               </Link>
