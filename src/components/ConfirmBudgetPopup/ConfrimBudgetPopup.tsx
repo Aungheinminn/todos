@@ -17,6 +17,7 @@ import { useCurrentUserStore } from "@/lib/userStore";
 import WalletSelection from "../WalletSelection/WalletSelection";
 import { useWalletStore } from "@/lib/walletStore";
 import BudgetDurationSelection from "../BudgeDurationSelection/BudgetDurationSelection";
+import { DialogDescription } from "../ui/dialog";
 
 const ConfirmBudgetPopup = () => {
   const {
@@ -135,6 +136,7 @@ const ConfirmBudgetPopup = () => {
           </DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
+        <DialogDescription className="hidden"></DialogDescription>
         <div className={`w-full flex flex-col bg-gray-700 gap-y-3 py-3 `}>
           <AmountInput amount={amount} setAmount={setAmount} />
           <CategorySelection category={category} setCategory={setCategory} />

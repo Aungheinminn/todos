@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
@@ -149,7 +150,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
       <DialogTrigger className="hidden"></DialogTrigger>
       <div className="w-[95%] bg-gray-700 rounded-xl py-1 flex flex-col items-center hover:no-underline ">
         <div className="w-full flex justify-between items-center border-b border-b-slate-600 py-3">
-          <p className="text-sm text-white pl-3">My Wallets</p>
+          <DialogDescription className="text-sm text-white pl-3">My Wallets</DialogDescription>
           <button
             onClick={handleOpenChange}
             className="text-sm text-green-300 pr-3"

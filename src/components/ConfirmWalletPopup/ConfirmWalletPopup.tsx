@@ -9,6 +9,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerClose,
+  DrawerDescription,
 } from "../ui/drawer";
 import { useEffect, useState } from "react";
 import { useWalletMutation } from "@/lib/walletMutation";
@@ -92,6 +93,7 @@ const ConfirmWalletPopup = () => {
           <DrawerTitle className="font-medium">Add wallet</DrawerTitle>
           <p className="opacity-0">cancel</p>
         </DrawerHeader>
+        <DrawerDescription className="hidden"></DrawerDescription>
         <div className="w-full flex flex-col border-y border-y-slate-500">
           <WalletInput wallet={wallet} setWallet={setWallet} />
           <CurrencyInput currency={currency} setCurrency={setCurrency} />
