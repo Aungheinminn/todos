@@ -6,7 +6,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription
+  DrawerDescription,
 } from "@/components/ui/drawer";
 import { useEffect, useState } from "react";
 import AmountInput from "../AmountInput/AmountInput";

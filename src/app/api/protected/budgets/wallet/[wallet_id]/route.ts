@@ -2,6 +2,7 @@ import { z } from "zod";
 import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/database";
 import { BudgetSchema } from "@/lib/models/budget.model";
+
 export const POST = async (
   req: NextRequest,
   {

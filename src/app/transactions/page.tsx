@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import wallet from "@/assets/wallet_2.svg";
@@ -7,14 +7,12 @@ import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionLoading from "./loading";
 import { useCurrentUserStore } from "@/lib/userStore";
-import { useWalletStore } from "@/lib/walletStore";
 import { useQuery } from "react-query";
 import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
 import { WalletType } from "@/lib/types/wallet.type";
 import { getCurrentWallet } from "@/lib/wallet.service";
-import { useTransactionMutation } from "@/lib/transactionMutation";
 import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLoading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
