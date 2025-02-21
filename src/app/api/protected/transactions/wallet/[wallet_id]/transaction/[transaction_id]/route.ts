@@ -156,7 +156,8 @@ export const DELETE = async (
         {
           $inc: {
             balance:
-              currentTransaction.category === "Other Income" || currentTransaction.category === "Other Expense"
+              currentTransaction.category === "Other Income" ||
+              currentTransaction.category === "Other Expense"
                 ? -currentTransaction.transaction
                 : currentTransaction.transaction,
           },

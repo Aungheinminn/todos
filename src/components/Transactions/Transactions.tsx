@@ -5,6 +5,7 @@ import { ScrollArea } from "../ui/scroll-area";
 
 type TransactionsProps = {
   transactions: TransactionType[];
+  height?: string;
 };
 
 interface GroupedTransactions {
@@ -13,23 +14,26 @@ interface GroupedTransactions {
 
 const TransactionsComponent: React.FC<TransactionsProps> = ({
   transactions,
+  height,
 }) => {
   const transactionsByDate = useMemo(() => {
     return (
       transactions &&
       transactions.reduce((groups, transaction) => {
         const { created_at } = transaction;
-          const getCreatedAtDate = new Date(created_at).getDate();
+        const getCreatedAtDate = new Date(created_at).getDate();
         if (!groups[getCreatedAtDate]) {
           groups[getCreatedAtDate] = [];
         }
+
         groups[getCreatedAtDate].push(transaction);
         return groups;
       }, {} as GroupedTransactions)
     );
   }, [transactions]);
+  console.log("transactionsByDate", transactionsByDate);
   return (
-    <ScrollArea className="h-[calc(100vh-211px)]">
+    <ScrollArea style={{ height: height || "calc(100vh - 211px)" }}>
       <div className="flex flex-col justify-start bg-gray-800 gap-y-3 p-1 pb-14">
         {transactionsByDate &&
           Object.entries(transactionsByDate)

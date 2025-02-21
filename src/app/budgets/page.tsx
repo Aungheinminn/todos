@@ -77,7 +77,7 @@ const Budgets = () => {
     <Suspense fallback={<BudgetsLoading />}>
       <BudgetHeader onOpen={handleOpen} />
       {isActiveBudgetLoading ? (
-         <BudgetBodyLoading />
+        <BudgetBodyLoading />
       ) : (
         <BudgetBody activeBudgets={activeBudgets || []} />
       )}

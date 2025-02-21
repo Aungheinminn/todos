@@ -21,16 +21,18 @@ export const createBudget = async (data: BudgetType) => {
 
 export const getBudgetTransactions = async ({
   wallet_id,
+  category,
   startDate,
   endDate,
 }: {
   wallet_id: string;
+  category: string;
   startDate: string | Date;
   endDate: string | Date;
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/transactions?startDate=${startDate}&endDate=${endDate}`,
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${category}&startDate=${startDate}&endDate=${endDate}`,
       {
         method: "GET",
         headers: {
@@ -38,7 +40,8 @@ export const getBudgetTransactions = async ({
         },
       },
     );
-    return response.json();
+    const res = await response.json();
+    return res.data;
   } catch (e) {
     console.error(e);
   }
@@ -62,8 +65,14 @@ export const getActiveBudgets = async (wallet_id: string) => {
   }
 };
 
-export const deleteBudget = async ({ id, wallet_id }: { id: string; wallet_id: string }) => {
- try{
+export const deleteBudget = async ({
+  id,
+  wallet_id,
+}: {
+  id: string;
+  wallet_id: string;
+}) => {
+  try {
     const response = await fetch(
       `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}`,
       {
@@ -77,4 +86,28 @@ export const deleteBudget = async ({ id, wallet_id }: { id: string; wallet_id: s
   } catch (e) {
     console.error(e);
   }
-}
+};
+
+export const getBudget = async ({
+  id,
+  wallet_id,
+}: {
+  id: string;
+  wallet_id: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
