@@ -25,6 +25,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import CurrentBudgetUsage from "@/components/CurrentBudgetUsage/CurrentBudgetUsage";
 
 type BudgetHeaderProps = {
   handleEditBudget: () => void;
@@ -38,7 +39,9 @@ type BudgetDetailsProps = {
   handleDeleteBudget: () => void;
 };
 
-type BudgetBodyProps = {
+type BudgetBodyProps = {};
+
+type BudgetFooterProps = {
   transactions: TransactionType[];
   isBudgetLoading: boolean;
   isTransactionsLoading: boolean;
@@ -104,7 +107,17 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
   );
 };
 
-const BudgetBody: React.FC<BudgetBodyProps> = ({
+const BudgetBody: React.FC<BudgetBodyProps> = () => {
+  return (
+    <div className="w-full flex flex-col md:flex-row gap-1">
+      <CurrentBudgetUsage />
+
+        <div className="w-full">sadf</div>
+    </div>
+  );
+};
+
+const BudgetFooter: React.FC<BudgetFooterProps> = ({
   transactions,
   isBudgetLoading,
   isTransactionsLoading,
@@ -193,7 +206,8 @@ const Budget = () => {
           handleEndBudget={handleEnd}
           handleDeleteBudget={handleDelete}
         />
-        <BudgetBody
+        <BudgetBody />
+        <BudgetFooter
           transactions={relatedTransactions}
           isBudgetLoading={isBudgetLoading}
           isTransactionsLoading={isRelatedTransactionsLoading}

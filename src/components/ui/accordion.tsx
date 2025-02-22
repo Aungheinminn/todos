@@ -17,11 +17,10 @@ const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   // React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>,
   AccordionItemProps
->(({ className, ...props }, ref) => (
+>(({ className, removeBorder, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    removeBorder
-    className={cn(`${props.removeBorder || "border-b"}`, className)}
+    className={cn(`${removeBorder ? "border-none" : "border-b"}`, className)}
     {...props}
   />
 ));
