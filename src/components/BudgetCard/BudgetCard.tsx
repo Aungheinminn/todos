@@ -17,10 +17,7 @@ type BudgetCardProps = {
 const BudgetCard: React.FC<BudgetCardProps> = ({ budget }) => {
   return (
     <Accordion collapsible type="single" className="w-full">
-      <AccordionItem
-        value="item-1"
-        className="w-full bg-gray-600 rounded-lg border-none"
-      >
+      <AccordionItem removeBorder value="item-1" className="w-full bg-gray-600 rounded-lg">
         <AccordionTrigger className="w-full hover:no-underline flex items-center justify-between gap-x-4 px-2">
           <div className="w-full flex items-start justify-between">
             <div className="flex flex-col justify-start items-start">

@@ -46,7 +46,7 @@ type BudgetBodyProps = {
 
 const BudgetHeader: React.FC<BudgetHeaderProps> = ({ handleEditBudget }) => {
   return (
-    <div className="w-full flex justify-between items-center px-2 py-2 mb-2 border-t border-slate-400">
+    <div className="w-full flex justify-between items-center px-2 py-2 mb-2">
       <Link href={"/budgets"} className="flex justify-start items-center">
         <Image className="h-4 w-4" src={chevronLeft} alt="chevron left" />
         <p className="text-base font-normal">Budget</p>
@@ -111,7 +111,7 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
 }) => {
   return (
     <Accordion collapsible type="single" className="w-full">
-      <AccordionItem value="transactions">
+      <AccordionItem removeBorder value="transactions">
         <AccordionTrigger className="w-full hover:no-underline flex items-center justify-between gap-x-4 px-2 border-none outline-none">
           Related Transactions
         </AccordionTrigger>
@@ -119,7 +119,9 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
           {isBudgetLoading || isTransactionsLoading ? (
             <TransactionsLoading />
           ) : !transactions || transactions.length === 0 ? (
-            <p className="w-full text-center text-sm text-white">No transactions</p>
+            <p className="w-full text-center text-sm text-white">
+              No transactions
+            </p>
           ) : (
             <TransactionsComponent transactions={transactions} height="h-fit" />
           )}
@@ -150,7 +152,7 @@ const Budget = () => {
 
   const { data: relatedTransactions, isLoading: isRelatedTransactionsLoading } =
     useQuery({
-      queryKey: ["relatedTransactions"],
+      queryKey: ["transactions"],
       queryFn: () =>
         getBudgetTransactions({
           wallet_id: budget.wallet_id,
@@ -182,7 +184,7 @@ const Budget = () => {
   };
   return (
     <Suspense fallback={<BudgetLoading />}>
-      <div className="w-full h-[calc(100vh-105px)] flex flex-col items-center pt-[55px] px-1 gap-y-2">
+      <div className="w-full flex flex-col items-center py-[55px] px-1 gap-y-2">
         <BudgetHeader handleEditBudget={handleEdit} />
         <BudgetDetails
           budget={budget}
