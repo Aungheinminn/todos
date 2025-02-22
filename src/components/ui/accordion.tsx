@@ -8,13 +8,20 @@ import { cn } from "@/lib/utils";
 
 const Accordion = AccordionPrimitive.Root;
 
+interface AccordionItemProps
+  extends React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item> {
+  removeBorder?: boolean;
+}
+
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
+  // React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>,
+  AccordionItemProps
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn("border-b", className)}
+    removeBorder
+    className={cn(`${props.removeBorder || "border-b"}`, className)}
     {...props}
   />
 ));
@@ -39,7 +46,9 @@ const AccordionTrigger = React.forwardRef<
       {...props}
     >
       {children}
-      <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${disabled_cheveron && "hidden"}`} />
+      <ChevronDown
+        className={`h-4 w-4 shrink-0 transition-transform duration-200 ${disabled_cheveron && "hidden"}`}
+      />
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));

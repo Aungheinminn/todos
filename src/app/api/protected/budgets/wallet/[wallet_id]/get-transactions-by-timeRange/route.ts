@@ -19,6 +19,8 @@ export const GET = async (
     const startDate = reqParams.get("startDate");
     const endDate = reqParams.get("endDate");
 
+    console.log(category, startDate, endDate);
+
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
@@ -29,7 +31,7 @@ export const GET = async (
         category: category,
         created_at: {
           $gte: startDate,
-          $lt: endDate,
+          $lte: endDate,
         },
       })
       .toArray();

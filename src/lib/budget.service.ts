@@ -32,7 +32,7 @@ export const getBudgetTransactions = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${category}&startDate=${startDate}&endDate=${endDate}`,
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}`,
       {
         method: "GET",
         headers: {
