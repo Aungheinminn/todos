@@ -39,7 +39,12 @@ type BudgetDetailsProps = {
   handleDeleteBudget: () => void;
 };
 
-type BudgetBodyProps = {};
+type BudgetBodyProps = {
+  budget: BudgetType;
+  relatedTransactions: TransactionType[];
+  isBudgetLoading: boolean;
+  isRelatedTransactionsLoading: boolean;
+};
 
 type BudgetFooterProps = {
   transactions: TransactionType[];
@@ -107,12 +112,32 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
   );
 };
 
-const BudgetBody: React.FC<BudgetBodyProps> = () => {
-  return (
-    <div className="w-full flex flex-col md:flex-row gap-1">
-      <CurrentBudgetUsage />
+const BudgetBody: React.FC<BudgetBodyProps> = ({
+  budget,
+  relatedTransactions,
+  isBudgetLoading,
+  isRelatedTransactionsLoading,
+}) => {
+  const totalUsedTransactions =
+    relatedTransactions &&
+    relatedTransactions.reduce(
+      (acc, current) => Number(acc) + Number(current.transaction),
+      0 as number,
+    );
 
-        <div className="w-full">sadf</div>
+  if (!budget || !relatedTransactions || isBudgetLoading || isRelatedTransactionsLoading) {
+    return (
+      <div className="w-full h-[200px] flex flex-col md:flex-row gap-1">
+        <Skeleton className="w-full h-full bg-gray-700 rounded-md" />
+        <Skeleton className="w-full h-full bg-gray-700 rounded-md" />
+      </div>
+    );
+  }
+  return (
+    <div className="w-full h-[200px] flex flex-col md:flex-row gap-1">
+      <CurrentBudgetUsage total={budget.budget} used={totalUsedTransactions} />
+
+      <div className="w-full">sadf</div>
     </div>
   );
 };
@@ -176,8 +201,6 @@ const Budget = () => {
       enabled: !!budget,
     });
 
-  console.log("budget", budget, relatedTransactions);
-
   const handleEdit = () => {
     console.log("hi edit");
   };
@@ -206,7 +229,12 @@ const Budget = () => {
           handleEndBudget={handleEnd}
           handleDeleteBudget={handleDelete}
         />
-        <BudgetBody />
+        <BudgetBody
+          budget={budget}
+          relatedTransactions={relatedTransactions}
+          isBudgetLoading={isBudgetLoading}
+          isRelatedTransactionsLoading={isRelatedTransactionsLoading}
+        />
         <BudgetFooter
           transactions={relatedTransactions}
           isBudgetLoading={isBudgetLoading}
