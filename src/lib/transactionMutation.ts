@@ -17,6 +17,7 @@ export const useTransactionMutation = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: "transactions" });
+      queryClient.invalidateQueries({ queryKey: "top-usage-transactions" });
       queryClient.invalidateQueries({ queryKey: "currentWallet" });
     },
   });
