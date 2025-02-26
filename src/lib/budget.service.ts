@@ -47,6 +47,34 @@ export const getBudgetTransactions = async ({
   }
 };
 
+export const getTopUsageBudgetTransactions = async ({
+  wallet_id,
+  category,
+  startDate,
+  endDate,
+}: {
+  wallet_id: string;
+  category: string;
+  startDate: string | Date;
+  endDate: string | Date;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-top-usage-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const getActiveBudgets = async (wallet_id: string) => {
   try {
     const response = await fetch(

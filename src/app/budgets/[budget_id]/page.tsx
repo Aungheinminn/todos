@@ -7,7 +7,11 @@ import BudgetLoading from "./loading";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import { useWalletStore } from "@/lib/walletStore";
 import { useQuery } from "react-query";
-import { getBudget, getBudgetTransactions } from "@/lib/budget.service";
+import {
+  getBudget,
+  getBudgetTransactions,
+  getTopUsageBudgetTransactions,
+} from "@/lib/budget.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { BudgetType } from "@/lib/types/budget.type";
 import chevronLeft from "@/assets/chevron_left.svg";
@@ -26,6 +30,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import CurrentBudgetUsage from "@/components/CurrentBudgetUsage/CurrentBudgetUsage";
+import TopUsageTransactionsCard from "@/components/TopUsageTransactionsCard/TopUsageTransactionsCard";
 
 type BudgetHeaderProps = {
   handleEditBudget: () => void;
@@ -42,8 +47,10 @@ type BudgetDetailsProps = {
 type BudgetBodyProps = {
   budget: BudgetType;
   relatedTransactions: TransactionType[];
+  topUsageTransactions: TransactionType[];
   isBudgetLoading: boolean;
   isRelatedTransactionsLoading: boolean;
+  isTopUsageTransactionsLoading: boolean;
 };
 
 type BudgetFooterProps = {
@@ -115,8 +122,10 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
 const BudgetBody: React.FC<BudgetBodyProps> = ({
   budget,
   relatedTransactions,
+  topUsageTransactions,
   isBudgetLoading,
   isRelatedTransactionsLoading,
+  isTopUsageTransactionsLoading,
 }) => {
   const totalUsedTransactions =
     relatedTransactions &&
@@ -125,7 +134,14 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
       0 as number,
     );
 
-  if (!budget || !relatedTransactions || isBudgetLoading || isRelatedTransactionsLoading) {
+  if (
+    !budget ||
+    !relatedTransactions ||
+    !topUsageTransactions ||
+    isBudgetLoading ||
+    isRelatedTransactionsLoading ||
+    isTopUsageTransactionsLoading
+  ) {
     return (
       <div className="w-full h-[200px] flex flex-col md:flex-row gap-1">
         <Skeleton className="w-full h-full bg-gray-700 rounded-md" />
@@ -134,10 +150,9 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
     );
   }
   return (
-    <div className="w-full h-[200px] flex flex-col md:flex-row gap-1">
+    <div className="w-full h-full md:h-[200px] flex flex-col md:flex-row gap-1">
       <CurrentBudgetUsage total={budget.budget} used={totalUsedTransactions} />
-
-      <div className="w-full">sadf</div>
+      <TopUsageTransactionsCard transactions={topUsageTransactions} />
     </div>
   );
 };
@@ -201,6 +216,21 @@ const Budget = () => {
       enabled: !!budget,
     });
 
+  const {
+    data: topUsageTransactions,
+    isLoading: isTopUsageTransactionsLoading,
+  } = useQuery({
+    queryKey: ["top-usage-transactions"],
+    queryFn: () =>
+      getTopUsageBudgetTransactions({
+        wallet_id: budget.wallet_id,
+        category: budget.category,
+        startDate: budget.start_date,
+        endDate: budget.end_date,
+      }),
+    enabled: !!budget,
+  });
+
   const handleEdit = () => {
     console.log("hi edit");
   };
@@ -232,8 +262,10 @@ const Budget = () => {
         <BudgetBody
           budget={budget}
           relatedTransactions={relatedTransactions}
+          topUsageTransactions={topUsageTransactions}
           isBudgetLoading={isBudgetLoading}
           isRelatedTransactionsLoading={isRelatedTransactionsLoading}
+          isTopUsageTransactionsLoading={isTopUsageTransactionsLoading}
         />
         <BudgetFooter
           transactions={relatedTransactions}
