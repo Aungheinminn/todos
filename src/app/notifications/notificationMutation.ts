@@ -1,5 +1,5 @@
 import { deleteNotification } from "@/lib/notifications.service";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 export const NotificationMutationProvider = () => {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation({
@@ -21,7 +21,7 @@ export const NotificationMutationProvider = () => {
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: "notifications" }),
   });
-	return {
-		deleteMutation
-	}
+  return {
+    deleteMutation,
+  };
 };

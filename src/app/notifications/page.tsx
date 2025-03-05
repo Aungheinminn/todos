@@ -1,6 +1,6 @@
 "use client";
 import { getCurrentUser } from "@/lib/users.service";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { useState, useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
@@ -19,21 +19,21 @@ const Notifications = () => {
 
   const { deleteMutation } = NotificationMutationProvider();
 
-  useQuery("currentUser", getCurrentUser, {
-    onSuccess: (data) => {
-      updateCurrentUser(data.data.currentUser);
-    },
-  });
-
-  const { data: notifications, isLoading: isNotificationsLoading } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: () => markAllAsSeen(currentUser?._id || ""),
-    enabled: !!currentUser?._id,
-    onSuccess: () => {
-      resetPendingNotifications();
-    },
-  });
-
+  // useQuery("currentUser", getCurrentUser, {
+  //   onSuccess: (data) => {
+  //     updateCurrentUser(data.data.currentUser);
+  //   },
+  // });
+  //
+  // const { data: notifications, isLoading: isNotificationsLoading } = useQuery({
+  //   queryKey: ["notifications"],
+  //   queryFn: () => markAllAsSeen(currentUser?._id || ""),
+  //   enabled: !!currentUser?._id,
+  //   onSuccess: () => {
+  //     resetPendingNotifications();
+  //   },
+  // });
+  //
   const handleDeleteNotification = async (id: string) => {
     try {
       deleteMutation.mutate(id);

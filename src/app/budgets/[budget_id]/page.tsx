@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import BudgetLoading from "./loading";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import { useWalletStore } from "@/lib/walletStore";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getBudget,
   getBudgetTransactions,

@@ -11,7 +11,7 @@ import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import AmountInput from "../AmountInput/AmountInput";
 import CategorySelection from "../CategorySelection/CategorySelection";
 import { Button } from "../ui/button";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getWallets } from "@/lib/wallet.service";
 import { useCurrentUserStore } from "@/lib/userStore";
 import WalletSelection from "../WalletSelection/WalletSelection";

@@ -10,19 +10,22 @@ export const GET = async (
   }
   const { wallet_id } = params;
   const urlParams = new URL(req.url);
+  // const limit = urlParams.searchParams.get("limit");
   const transaction_month = urlParams.searchParams.get("transaction_month");
   const transaction_year = urlParams.searchParams.get("transaction_year");
+
   const startDate = new Date(
     Number(transaction_year),
-    Number(transaction_month) - 2,
+    Number(transaction_month) - 1,
     1,
   );
   const endDate = new Date(
     Number(transaction_year),
     Number(transaction_month),
-    1,
+    0,
   );
 
+  console.log("startDate", startDate, endDate);
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -31,10 +34,11 @@ export const GET = async (
       .find({
         wallet_id: wallet_id,
         created_at: {
-          $gte: new Date(startDate).toISOString(),
-          $lt: new Date(endDate).toISOString(),
+          $gt: new Date(startDate).toISOString(),
+          $lte: new Date(endDate).toISOString(),
         },
       })
+      // .limit(Number(limit))
       .sort({ created_at: -1 })
       .toArray();
 

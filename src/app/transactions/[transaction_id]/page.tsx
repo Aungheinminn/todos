@@ -10,7 +10,7 @@ import walletIcon from "@/assets/wallet.svg";
 import { TransactionType } from "@/lib/types/transaction.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   duplicateTransaction,
   getTransactionById,
