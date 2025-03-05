@@ -31,6 +31,7 @@ export const getTransactionsByDate = async (
   wallet_id: string,
   month: number,
   year: number,
+  limit: number = 1,
 ) => {
   try {
     const response = await fetch(

@@ -11,7 +11,10 @@ export const useCurrentUserStore = create<CurrentUserStore>()(
   persist(
     (set) => ({
       currentUser: null,
-      updateCurrentUser: (current: UserType) => set({ currentUser: current }),
+      updateCurrentUser: (current: UserType) => {
+        console.log(current, "it is called");
+        set({ currentUser: current });
+      },
     }),
     {
       name: "current-user-storage",
@@ -19,4 +22,3 @@ export const useCurrentUserStore = create<CurrentUserStore>()(
     },
   ),
 );
-

@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
 import { useBudgetMutation } from "@/lib/budgetMutation";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getActiveBudgets } from "@/lib/budget.service";
 import { BudgetType } from "@/lib/types/budget.type";
 import BudgetsLoading from "./loading";
@@ -56,6 +56,7 @@ const Budgets = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
 
+  console.log(currentUser, "current user");
   const { data: activeBudgets, isLoading: isActiveBudgetLoading } = useQuery({
     queryFn: () => getActiveBudgets(currentWallet?._id || ""),
     queryKey: ["budgets", currentWallet],

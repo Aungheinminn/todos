@@ -65,11 +65,11 @@ const PreviousHome = () => {
   });
   const [routinesSearchKey, setRoutinesSearchKey] = useState<string>("");
   const [selectedRoutines, setSelectedRoutines] = useState<RoutineType[]>([]);
-  useQuery("currentUser", getCurrentUser, {
-    onSuccess: (data) => {
-      updateCurrentUser(data.data.currentUser);
-    },
-  });
+  // useQuery("currentUser", getCurrentUser, {
+  //   onSuccess: (data) => {
+  //     updateCurrentUser(data.data.currentUser);
+  //   },
+  // });
   console.log("current", currentUser);
 
   useQuery({

@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCurrentUserStore } from "@/lib/userStore";
 import { getCurrentUser } from "@/lib/users.service";
@@ -14,11 +14,6 @@ const Settings = () => {
     (state) => state,
   );
 
-  useQuery("currentUser", getCurrentUser, {
-    onSuccess: (data) => {
-      updateCurrentUser(data.data.currentUser);
-    },
-  });
   return (
     <div className="text-black w-full flex flex-col justify-start items-start gap-y-2">
       <div className="w-full text-start p-3 px-2 bg-gray-800">

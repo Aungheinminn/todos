@@ -7,7 +7,7 @@ import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionLoading from "./loading";
 import { useCurrentUserStore } from "@/lib/userStore";
-import { useQuery } from "react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
@@ -50,6 +50,13 @@ const Transactions = () => {
     year: new Date().getFullYear(),
   });
 
+  // const { data: infT, isLoading: isInfTL } = useInfiniteQuery({
+  //   queryKey: ["transactions", date, currentWallet],
+  //   queryFn: ({ pageParam = 3 }) =>
+  //     getTransactionsByDate(currentWallet._id, date.month, date.year, pageParam),
+  //   enabled: !!currentWallet,
+  // });
+
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
     queryKey: ["transactions", date, currentWallet],
     queryFn: () =>
@@ -57,8 +64,7 @@ const Transactions = () => {
     enabled: !!currentWallet,
   });
 
-  console.log(transactions, date, currentWallet, currentUser);
-
+  console.log("transactions", transactions);
   return (
     <Suspense fallback={<TransactionLoading />}>
       <ScrollArea className="h-fit">
@@ -70,8 +76,10 @@ const Transactions = () => {
         {isTransactionsLoading ? (
           <TransactionsLoading />
         ) : (
-          <TransactionsComponent transactions={transactions} />
+          transactions &&
+            <TransactionsComponent transactions={transactions} />
         )}
+
       </ScrollArea>
     </Suspense>
   );

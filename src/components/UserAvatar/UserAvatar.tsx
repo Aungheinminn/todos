@@ -13,6 +13,7 @@ import {
 import { logoutUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useWalletStore } from "@/lib/walletStore";
 
 const UserAvatar = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
@@ -23,6 +24,8 @@ const UserAvatar = () => {
     try {
       const res = await logoutUser();
       if (res.success) {
+        useCurrentUserStore.persist.clearStorage();
+        useWalletStore.persist.clearStorage();
         router.push("/login");
       }
       return res;

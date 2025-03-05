@@ -12,11 +12,12 @@ export const useWalletStore = create<WalletStore>()(
     (set) => ({
       currentWallet: null,
       updateCurrentWallet: (currentWallet) => set({ currentWallet }),
-    }), {
+    }),
+    {
       name: "current-wallet-storage",
       partialize: (state) => ({
-        currentWallet: state.currentWallet
+        currentWallet: state.currentWallet,
       }),
-    }
-  )
-)
+    },
+  ),
+);

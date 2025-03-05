@@ -1,5 +1,5 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Wrapper from "@/components/Wrapper/Wrapper";
 import { usePathname } from "next/navigation";

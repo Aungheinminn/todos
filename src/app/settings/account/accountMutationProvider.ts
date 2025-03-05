@@ -3,7 +3,7 @@ import {
   declineLinking,
   postLinkedUser,
 } from "@/lib/linkedUsers.service";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export const AccountMutationProvider = () => {
   const createMutation = useMutation({

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import back from "@/assets/arrow_left_black.svg";
@@ -109,11 +109,6 @@ const Account = () => {
     errorMessage,
     setErrorMessage,
   } = useLinkingInfo();
-  useQuery("currentUser", getCurrentUser, {
-    onSuccess: (data) => {
-      updateCurrentUser(data.data.currentUser);
-    },
-  });
 
   const { data: linkedUsers } = useQuery({
     queryKey: ["linkedUsers"],
