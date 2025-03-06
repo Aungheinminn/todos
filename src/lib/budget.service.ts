@@ -24,15 +24,17 @@ export const getBudgetTransactions = async ({
   category,
   startDate,
   endDate,
+  limit = 5,
 }: {
   wallet_id: string;
   category: string;
   startDate: string | Date;
   endDate: string | Date;
+  limit: number;
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}`,
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}&limit=${limit}`,
       {
         method: "GET",
         headers: {

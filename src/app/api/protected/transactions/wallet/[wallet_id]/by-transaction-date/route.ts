@@ -10,7 +10,7 @@ export const GET = async (
   }
   const { wallet_id } = params;
   const urlParams = new URL(req.url);
-  // const limit = urlParams.searchParams.get("limit");
+  const limit = urlParams.searchParams.get("limit");
   const transaction_month = urlParams.searchParams.get("transaction_month");
   const transaction_year = urlParams.searchParams.get("transaction_year");
 
@@ -38,7 +38,7 @@ export const GET = async (
           $lte: new Date(endDate).toISOString(),
         },
       })
-      // .limit(Number(limit))
+      .limit(Number(limit))
       .sort({ created_at: -1 })
       .toArray();
 
