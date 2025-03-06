@@ -18,6 +18,7 @@ export const GET = async (
     const category = reqParams.get("category");
     const startDate = reqParams.get("startDate");
     const endDate = reqParams.get("endDate");
+    const limit = reqParams.get("limit");
 
     console.log(category, startDate, endDate);
 
@@ -34,6 +35,7 @@ export const GET = async (
           $lte: endDate,
         },
       })
+      .limit(Number(limit))
       .toArray();
     if (!transactions) {
       return NextResponse.json(

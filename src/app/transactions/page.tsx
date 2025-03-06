@@ -38,6 +38,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 
 const Transactions = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
+  const [limit, setLimit] = useState<number>(10);
 
   const { data: currentWallet } = useQuery({
     queryKey: ["currentWallet"],
@@ -50,20 +51,14 @@ const Transactions = () => {
     year: new Date().getFullYear(),
   });
 
-  // const { data: infT, isLoading: isInfTL } = useInfiniteQuery({
-  //   queryKey: ["transactions", date, currentWallet],
-  //   queryFn: ({ pageParam = 3 }) =>
-  //     getTransactionsByDate(currentWallet._id, date.month, date.year, pageParam),
-  //   enabled: !!currentWallet,
-  // });
-
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
-    queryKey: ["transactions", date, currentWallet],
+    queryKey: ["transactions", date, currentWallet, limit],
     queryFn: () =>
-      getTransactionsByDate(currentWallet._id, date.month, date.year),
+      getTransactionsByDate(currentWallet._id, date.month, date.year, limit),
     enabled: !!currentWallet,
   });
 
+  console.log("currentWallet", currentWallet);
   console.log("transactions", transactions);
   return (
     <Suspense fallback={<TransactionLoading />}>
@@ -72,14 +67,17 @@ const Transactions = () => {
           <TransactionHeader currentWallet={currentWallet} />
           <TransactionMonthPicker date={date} setDate={setDate} />
         </div>
-
         {isTransactionsLoading ? (
           <TransactionsLoading />
         ) : (
-          transactions &&
-            <TransactionsComponent transactions={transactions} />
+          transactions && (
+            <TransactionsComponent
+              limit={limit}
+              setLimit={setLimit}
+              transactions={transactions}
+            />
+          )
         )}
-
       </ScrollArea>
     </Suspense>
   );

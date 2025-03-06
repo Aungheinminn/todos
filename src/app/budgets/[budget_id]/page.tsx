@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import BudgetLoading from "./loading";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import { useWalletStore } from "@/lib/walletStore";
@@ -54,6 +54,8 @@ type BudgetBodyProps = {
 };
 
 type BudgetFooterProps = {
+  limit: number;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
   transactions: TransactionType[];
   isBudgetLoading: boolean;
   isTransactionsLoading: boolean;
@@ -158,6 +160,8 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
 };
 
 const BudgetFooter: React.FC<BudgetFooterProps> = ({
+  limit,
+  setLimit,
   transactions,
   isBudgetLoading,
   isTransactionsLoading,
@@ -176,7 +180,12 @@ const BudgetFooter: React.FC<BudgetFooterProps> = ({
               No transactions
             </p>
           ) : (
-            <TransactionsComponent transactions={transactions} height="h-fit" />
+            <TransactionsComponent
+              limit={limit}
+              setLimit={setLimit}
+              transactions={transactions}
+              height="h-fit"
+            />
           )}
         </AccordionContent>
       </AccordionItem>
@@ -193,6 +202,8 @@ const Budget = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
 
+  const [limit, setLimit] = useState<number>(10);
+
   const { data: budget, isLoading: isBudgetLoading } = useQuery({
     queryKey: ["budget"],
     queryFn: () =>
@@ -205,13 +216,14 @@ const Budget = () => {
 
   const { data: relatedTransactions, isLoading: isRelatedTransactionsLoading } =
     useQuery({
-      queryKey: ["transactions"],
+      queryKey: ["transactions", limit],
       queryFn: () =>
         getBudgetTransactions({
           wallet_id: budget.wallet_id,
           category: budget.category,
           startDate: budget.start_date,
           endDate: budget.end_date,
+          limit: limit,
         }),
       enabled: !!budget,
     });
@@ -268,6 +280,8 @@ const Budget = () => {
           isTopUsageTransactionsLoading={isTopUsageTransactionsLoading}
         />
         <BudgetFooter
+          limit={limit}
+          setLimit={setLimit}
           transactions={relatedTransactions}
           isBudgetLoading={isBudgetLoading}
           isTransactionsLoading={isRelatedTransactionsLoading}

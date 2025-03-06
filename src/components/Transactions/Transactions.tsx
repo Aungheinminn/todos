@@ -2,8 +2,11 @@ import { TransactionType } from "@/lib/types/transaction.type";
 import TransactionGroup from "../TransactionsGroup/TransactionGroup";
 import { useMemo } from "react";
 import { ScrollArea } from "../ui/scroll-area";
+import { Button } from "@/components/ui/button";
 
 type TransactionsProps = {
+  limit: number;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
   transactions: TransactionType[];
   height?: string;
 };
@@ -13,9 +16,12 @@ interface GroupedTransactions {
 }
 
 const TransactionsComponent: React.FC<TransactionsProps> = ({
+  limit,
+  setLimit,
   transactions,
   height,
 }) => {
+  console.log("transactions", transactions.length, limit);
   const transactionsByDate = useMemo(() => {
     return (
       transactions &&
@@ -31,10 +37,9 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
       }, {} as GroupedTransactions)
     );
   }, [transactions]);
-  console.log("transactionsByDate", transactionsByDate);
   return (
     <ScrollArea style={{ height: height || "calc(100vh - 211px)" }}>
-      <div className="flex flex-col justify-start bg-gray-800 gap-y-3 p-1 pb-14">
+      <div className="flex flex-col justify-start items-center bg-gray-800 gap-y-3 p-1 pb-14">
         {transactionsByDate &&
           Object.entries(transactionsByDate)
             .reverse()
@@ -49,6 +54,14 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
                 transactions={transaction}
               />
             ))}
+
+        <Button
+          disabled={transactions.length < limit}
+          className="w-[100px] rounded-xl bg-gray-700"
+          onClick={() => setLimit(limit + 5)}
+        >
+          Load more
+        </Button>
       </div>
     </ScrollArea>
   );

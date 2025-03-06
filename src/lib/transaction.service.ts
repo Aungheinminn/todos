@@ -31,11 +31,11 @@ export const getTransactionsByDate = async (
   wallet_id: string,
   month: number,
   year: number,
-  limit: number = 1,
+  limit: number = 5,
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/by-transaction-date/?transaction_month=${month}&transaction_year=${year}`,
+      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/by-transaction-date/?limit=${limit}&transaction_month=${month}&transaction_year=${year}`,
       {
         method: "GET",
         headers: {
