@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/accordion";
 import CurrentBudgetUsage from "@/components/CurrentBudgetUsage/CurrentBudgetUsage";
 import TopUsageTransactionsCard from "@/components/TopUsageTransactionsCard/TopUsageTransactionsCard";
+import { useBudgetMutation } from "@/lib/budgetMutation";
 
 type BudgetHeaderProps = {
   handleEditBudget: () => void;
@@ -201,11 +202,12 @@ const Budget = () => {
   );
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
+  const { deleteMutation, editMutation } = useBudgetMutation();
 
   const [limit, setLimit] = useState<number>(10);
 
   const { data: budget, isLoading: isBudgetLoading } = useQuery({
-    queryKey: ["budget"],
+    queryKey: ["budgets"],
     queryFn: () =>
       getBudget({
         id: budget_id.toString() || "",
@@ -216,7 +218,7 @@ const Budget = () => {
 
   const { data: relatedTransactions, isLoading: isRelatedTransactionsLoading } =
     useQuery({
-      queryKey: ["transactions", limit],
+      queryKey: ["transactions", limit, budget],
       queryFn: () =>
         getBudgetTransactions({
           wallet_id: budget.wallet_id,
@@ -232,7 +234,7 @@ const Budget = () => {
     data: topUsageTransactions,
     isLoading: isTopUsageTransactionsLoading,
   } = useQuery({
-    queryKey: ["top-usage-transactions"],
+    queryKey: ["top-usage-transactions", budget],
     queryFn: () =>
       getTopUsageBudgetTransactions({
         wallet_id: budget.wallet_id,
@@ -244,7 +246,24 @@ const Budget = () => {
   });
 
   const handleEdit = () => {
-    console.log("hi edit");
+    setType("edit");
+    setIsOpen(true);
+    setBudgetDatas({
+      id: budget._id,
+      budget: budget.budget,
+      category: {
+        id: 1,
+        name: budget.category,
+        icon: Categories.find((cate) => cate.name === budget.category)?.icon,
+      },
+      start_date: budget.start_date,
+      end_date: budget.end_date,
+      process: editMutation,
+      wallet: {
+        id: budget.wallet_id,
+        wallet_name: currentWallet?.wallet_name,
+      },
+    });
   };
 
   const handleEnd = () => {
@@ -255,9 +274,12 @@ const Budget = () => {
     setType("delete");
     setIsOpen(true);
     setBudgetDatas({
-      _id: router.budget_id,
-      process: () => {},
-      wallet: "dsa",
+      id: budget._id,
+      process: deleteMutation,
+      wallet: {
+        id: budget.wallet_id,
+        wallet_name: currentWallet?.wallet_name,
+      },
     });
   };
   return (

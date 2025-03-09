@@ -88,8 +88,8 @@ const ConfirmBudgetPopup = () => {
         wallet_id: wallet.id || currentWallet?._id || "",
         budget: Number(amount),
         category: category.name,
-        start_date: new Date(date.startDate).setHours(0, 0, 0, 0),
-        end_date: new Date(date.endDate).setHours(0, 0, 0, 0),
+        start_date: new Date(new Date(date.startDate).setHours(0, 0, 0, 0)),
+        end_date: new Date(new Date(date.endDate).setHours(0, 0, 0, 0)),
       };
     }
     budgetDatas.process.mutate(budgetData, {

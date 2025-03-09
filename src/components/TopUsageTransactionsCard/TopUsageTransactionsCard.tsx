@@ -37,7 +37,7 @@ const TopUsageTransactionsCard: React.FC<TopUsageTransactionsCardProps> = ({
 }) => {
   return (
     <div className="w-full flex flex-col gap-y-1 bg-gray-700 rounded-md p-1">
-      <p className="text-sm text-white px-2">Top Usages</p>
+      <p className="text-sm text-white px-2">{transactions.length > 0 ? "Top Usage" : "No Top Usage"}</p>
       {transactions.map((transaction) => (
         <TopUsageTransactionCard
           key={transaction._id}
