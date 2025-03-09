@@ -118,6 +118,26 @@ export const deleteBudget = async ({
   }
 };
 
+export const updateBudget = async(
+  data: BudgetType,
+) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/budgets/wallet/${data.wallet_id}/budget/${data._id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    );
+    return response.json();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 export const getBudget = async ({
   id,
   wallet_id,

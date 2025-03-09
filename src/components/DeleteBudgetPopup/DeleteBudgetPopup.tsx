@@ -21,7 +21,30 @@ const DeleteBudgetPopup = () => {
     resetBudgetDatas,
   } = useBudgetPopupStore((state) => state);
 
-  const handleDeleteTransaction = () => {};
+  const handleDeleteBudget = () => {
+    try {
+      budgetDatas.process.mutate(
+        {
+          id: budgetDatas?.id || "",
+          wallet_id: budgetDatas?.wallet?.id || "",
+        },
+        {
+          onSuccess: (data: any) => {
+            if (data.success) {
+              setOpen(false);
+              resetBudgetDatas();
+              router.push("/budgets");
+            }
+          },
+          onError: (error: any) => {
+            console.error(error);
+          },
+        },
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleCancel = () => {
     setOpen(false);
@@ -38,7 +61,7 @@ const DeleteBudgetPopup = () => {
           <DialogDescription className="hidden"></DialogDescription>
           <Button
             className="w-full hover:bg-transparent bg-transparent text-red-500 text-base"
-            onClick={handleDeleteTransaction}
+            onClick={handleDeleteBudget}
           >
             Delete
           </Button>
