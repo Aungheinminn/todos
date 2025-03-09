@@ -32,6 +32,7 @@ import {
 import CurrentBudgetUsage from "@/components/CurrentBudgetUsage/CurrentBudgetUsage";
 import TopUsageTransactionsCard from "@/components/TopUsageTransactionsCard/TopUsageTransactionsCard";
 import { useBudgetMutation } from "@/lib/budgetMutation";
+import { useRouter } from "next/navigation";
 
 type BudgetHeaderProps = {
   handleEditBudget: () => void;
@@ -41,6 +42,7 @@ type BudgetDetailsProps = {
   budget: BudgetType;
   wallet: WalletType;
   isLoading: boolean;
+  isEndingPending: boolean;
   handleEndBudget: () => void;
   handleDeleteBudget: () => void;
 };
@@ -78,6 +80,7 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
   budget,
   wallet,
   isLoading,
+  isEndingPending,
   handleEndBudget,
   handleDeleteBudget,
 }) => {
@@ -106,8 +109,12 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
           <Image className="h-5 w-5" src={walletIcon} alt="calender" />
           <p className="text-sm text-white">{wallet?.wallet_name || ""}</p>
         </div>
-        <Button onClick={handleEndBudget} className="h-[30px]">
-          End this Budget
+        <Button
+          disabled={budget.status === "ended" || isEndingPending}
+          onClick={handleEndBudget}
+          className="h-[30px]"
+        >
+          {budget.status === "active" ? "End this Budget" : "Already Ended"}
         </Button>
       </div>
       <div className="w-full flex justify-end items-center mt-1">
@@ -202,7 +209,8 @@ const Budget = () => {
   );
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
-  const { deleteMutation, editMutation } = useBudgetMutation();
+  const { deleteMutation, editMutation, endMutation } = useBudgetMutation();
+  const navigate = useRouter();
 
   const [limit, setLimit] = useState<number>(10);
 
@@ -267,7 +275,23 @@ const Budget = () => {
   };
 
   const handleEnd = () => {
-    console.log("hi end");
+    try {
+      endMutation.mutate(
+        {
+          id: budget._id,
+          wallet_id: budget.wallet_id,
+        },
+        {
+          onSuccess: (data: any) => {
+            if (data.success) {
+              navigate.push("/budgets");
+            }
+          },
+        },
+      );
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleDelete = () => {
@@ -290,6 +314,7 @@ const Budget = () => {
           budget={budget}
           isLoading={isBudgetLoading}
           wallet={currentWallet || ({} as WalletType)}
+          isEndingPending={endMutation.isPending}
           handleEndBudget={handleEnd}
           handleDeleteBudget={handleDelete}
         />
