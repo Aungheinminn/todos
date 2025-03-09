@@ -118,9 +118,7 @@ export const deleteBudget = async ({
   }
 };
 
-export const updateBudget = async(
-  data: BudgetType,
-) => {
+export const updateBudget = async (data: BudgetType) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/budgets/wallet/${data.wallet_id}/budget/${data._id}`,
@@ -130,6 +128,29 @@ export const updateBudget = async(
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+      },
+    );
+    return response.json();
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const endBudget = async ({
+  id,
+  wallet_id,
+}: {
+  id: string;
+  wallet_id: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}/end-budget`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
     );
     return response.json();

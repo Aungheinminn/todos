@@ -208,7 +208,7 @@ const Transaction = () => {
       _id: transaction._id,
       wallet: {
         id: transaction.wallet_id,
-        wallet_name: wallet.wallet_name,
+        wallet_name: wallet.wallet_name || "",
       },
       category: {
         id: transaction.category_id,
