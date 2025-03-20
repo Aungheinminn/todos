@@ -35,6 +35,18 @@ export const GET = async (
           $lte: endDate,
         },
       })
+      .toArray();
+
+    const limitedTransactions = await db
+      .collection("transactions")
+      .find({
+        wallet_id: wallet_id,
+        category: category,
+        created_at: {
+          $gte: startDate,
+          $lte: endDate,
+        },
+      })
       .limit(Number(limit))
       .toArray();
     if (!transactions) {
@@ -49,7 +61,10 @@ export const GET = async (
     return NextResponse.json(
       {
         success: true,
-        data: transactions,
+        data: {
+          transactions: limitedTransactions,
+          total: transactions.length,
+        },
       },
       { status: 200 },
     );

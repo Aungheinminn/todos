@@ -74,7 +74,8 @@ const Transactions = () => {
             <TransactionsComponent
               limit={limit}
               setLimit={setLimit}
-              transactions={transactions}
+              transactions={transactions.transactions}
+                total={transactions.total}
             />
           )
         )}

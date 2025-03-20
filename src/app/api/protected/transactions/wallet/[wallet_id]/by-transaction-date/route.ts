@@ -38,6 +38,17 @@ export const GET = async (
           $lte: new Date(endDate).toISOString(),
         },
       })
+      .toArray();
+
+    const limitedTransactions = await db
+      .collection("transactions")
+      .find({
+        wallet_id: wallet_id,
+        created_at: {
+          $gt: new Date(startDate).toISOString(),
+          $lte: new Date(endDate).toISOString(),
+        },
+      })
       .limit(Number(limit))
       .sort({ created_at: -1 })
       .toArray();
@@ -51,7 +62,10 @@ export const GET = async (
       );
     }
     return NextResponse.json(
-      { success: true, data: transactions },
+      { success: true, data: {
+        transactions: limitedTransactions,
+        total: transactions.length
+      } },
       { status: 200 },
     );
   } catch (e) {

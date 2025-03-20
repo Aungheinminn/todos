@@ -49,7 +49,10 @@ type BudgetDetailsProps = {
 
 type BudgetBodyProps = {
   budget: BudgetType;
-  relatedTransactions: TransactionType[];
+  relatedTransactions: {
+    transactions: TransactionType[];
+    total: number;
+  };
   topUsageTransactions: TransactionType[];
   isBudgetLoading: boolean;
   isRelatedTransactionsLoading: boolean;
@@ -59,7 +62,10 @@ type BudgetBodyProps = {
 type BudgetFooterProps = {
   limit: number;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
-  transactions: TransactionType[];
+  transactions: {
+    transactions: TransactionType[];
+    total: number;
+  };
   isBudgetLoading: boolean;
   isTransactionsLoading: boolean;
 };
@@ -139,7 +145,7 @@ const BudgetBody: React.FC<BudgetBodyProps> = ({
 }) => {
   const totalUsedTransactions =
     relatedTransactions &&
-    relatedTransactions.reduce(
+    relatedTransactions.transactions.reduce(
       (acc, current) => Number(acc) + Number(current.transaction),
       0 as number,
     );
@@ -183,7 +189,7 @@ const BudgetFooter: React.FC<BudgetFooterProps> = ({
         <AccordionContent className="overflow-hidden">
           {isBudgetLoading || isTransactionsLoading ? (
             <TransactionsLoading />
-          ) : !transactions || transactions.length === 0 ? (
+          ) : !transactions || transactions.transactions.length === 0 ? (
             <p className="w-full text-center text-sm text-white">
               No transactions
             </p>
@@ -191,7 +197,8 @@ const BudgetFooter: React.FC<BudgetFooterProps> = ({
             <TransactionsComponent
               limit={limit}
               setLimit={setLimit}
-              transactions={transactions}
+              transactions={transactions.transactions}
+              total={transactions.total}
               height="h-fit"
             />
           )}

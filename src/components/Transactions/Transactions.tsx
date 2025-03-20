@@ -8,6 +8,7 @@ type TransactionsProps = {
   limit: number;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   transactions: TransactionType[];
+  total: number;
   height?: string;
 };
 
@@ -19,6 +20,7 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
   limit,
   setLimit,
   transactions,
+  total,
   height,
 }) => {
   console.log("transactions", transactions.length, limit);
@@ -56,7 +58,7 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
             ))}
 
         <Button
-          disabled={transactions.length < limit}
+          disabled={limit > total}
           className="w-[100px] rounded-xl bg-gray-700"
           onClick={() => setLimit(limit + 5)}
         >
