@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import wallet from "@/assets/wallet_2.svg";
+import box from "@/assets/box.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
@@ -15,6 +16,7 @@ import { getActiveBudgets } from "@/lib/budget.service";
 import { BudgetType } from "@/lib/types/budget.type";
 import BudgetsLoading from "./loading";
 import BudgetBodyLoading from "@/components/BudgetBodyLoading/BudgetBodyLoading";
+import Link from "next/link";
 
 type BudgetHeaderProps = {
   onOpen: () => void;
@@ -33,8 +35,13 @@ const BudgetHeader: React.FC<BudgetHeaderProps> = ({ onOpen }) => {
         <p>Total</p>
         <Image className="w-4" src={caretDown} alt="caret down" />
       </Button>
-
+      <div className="flex justify-center items-center gap-x-1">
       <Button onClick={onOpen}>Create Budget</Button>
+        <Link className="bg-primary hover:bg-primary/90 p-2 rounded-md" href={'/endedBudgets'}>
+          <Image className="w-6 h-6" src={box} alt="box" />
+        </Link>
+      </div>
+
     </div>
   );
 };
