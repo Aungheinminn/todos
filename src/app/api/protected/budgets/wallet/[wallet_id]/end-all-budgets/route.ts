@@ -13,7 +13,9 @@ export const PUT = async (
   }
 
   try {
-    const now = new Date();
+    const now = new Date().toISOString();
+
+    console.log("now", now, typeof now);
 
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -21,7 +23,7 @@ export const PUT = async (
     const updatedBudgets = await db
       .collection("budgets")
       .updateMany(
-        { wallet_id: params.wallet_id, end_date: { $gt: now } },
+        { wallet_id: params.wallet_id, end_date: { $lt: now } },
         { $set: { status: "ended" } },
       );
 

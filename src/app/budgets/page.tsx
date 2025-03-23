@@ -12,7 +12,7 @@ import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
 import { useBudgetMutation } from "@/lib/budgetMutation";
 import { useQuery } from "@tanstack/react-query";
-import { getActiveBudgets } from "@/lib/budget.service";
+import { endAllBudgets, getActiveBudgets } from "@/lib/budget.service";
 import { BudgetType } from "@/lib/types/budget.type";
 import BudgetsLoading from "./loading";
 import BudgetBodyLoading from "@/components/BudgetBodyLoading/BudgetBodyLoading";
@@ -36,12 +36,14 @@ const BudgetHeader: React.FC<BudgetHeaderProps> = ({ onOpen }) => {
         <Image className="w-4" src={caretDown} alt="caret down" />
       </Button>
       <div className="flex justify-center items-center gap-x-1">
-      <Button onClick={onOpen}>Create Budget</Button>
-        <Link className="bg-primary hover:bg-primary/90 p-2 rounded-md" href={'/endedBudgets'}>
+        <Button onClick={onOpen}>Create Budget</Button>
+        <Link
+          className="bg-primary hover:bg-primary/90 p-2 rounded-md"
+          href={"/endedBudgets"}
+        >
           <Image className="w-6 h-6" src={box} alt="box" />
         </Link>
       </div>
-
     </div>
   );
 };
@@ -63,11 +65,18 @@ const Budgets = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
 
-  console.log(currentUser, "current user");
+  const { isSuccess } = useQuery({
+    queryFn: () => endAllBudgets(currentWallet?._id || ""),
+    queryKey: ["end-all-budgets", currentWallet],
+    enabled: !!currentWallet || !!currentUser,
+  });
+
+  console.log(isSuccess);
+
   const { data: activeBudgets, isLoading: isActiveBudgetLoading } = useQuery({
     queryFn: () => getActiveBudgets(currentWallet?._id || ""),
-    queryKey: ["budgets", currentWallet],
-    enabled: !!currentWallet || !!currentUser,
+    queryKey: ["budgets", currentWallet, isSuccess],
+    enabled: isSuccess,
   });
 
   console.log(activeBudgets);
