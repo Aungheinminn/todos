@@ -4,7 +4,7 @@ import {
   deleteTransaction,
   duplicateTransaction,
   updateTransaction,
-} from "./transaction.service";
+} from "@/lib/services/transaction.service";
 
 export const useTransactionMutation = () => {
   const queryClient = useQueryClient();

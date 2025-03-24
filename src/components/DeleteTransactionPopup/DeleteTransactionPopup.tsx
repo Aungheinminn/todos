@@ -7,7 +7,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 

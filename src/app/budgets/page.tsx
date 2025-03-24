@@ -1,6 +1,6 @@
 "use client";
-import { useWalletStore } from "@/lib/walletStore";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import wallet from "@/assets/wallet_2.svg";
 import box from "@/assets/box.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
+import { useBudgetPopupStore } from "@/lib/stores/budgetPopupStore";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
 import { useBudgetMutation } from "@/lib/budgetMutation";
 import { useQuery } from "@tanstack/react-query";

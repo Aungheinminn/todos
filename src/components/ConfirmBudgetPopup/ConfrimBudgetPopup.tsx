@@ -7,15 +7,15 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
+import { useBudgetPopupStore } from "@/lib/stores/budgetPopupStore";
 import AmountInput from "../AmountInput/AmountInput";
 import CategorySelection from "../CategorySelection/CategorySelection";
 import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getWallets } from "@/lib/wallet.service";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import WalletSelection from "../WalletSelection/WalletSelection";
-import { useWalletStore } from "@/lib/walletStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 import BudgetDurationSelection from "../BudgeDurationSelection/BudgetDurationSelection";
 import { DialogDescription } from "../ui/dialog";
 

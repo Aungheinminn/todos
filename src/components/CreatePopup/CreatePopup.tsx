@@ -9,7 +9,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import React, { SetStateAction, useState } from "react";
-import { useCreatePopupStore } from "@/lib/popupStore";
+import { useCreatePopupStore } from "@/lib/stores/popupStore";
 import { PlanType } from "@/lib/types/plan.type";
 import SelectComponent from "../Select/Select";
 

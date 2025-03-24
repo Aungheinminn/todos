@@ -1,5 +1,5 @@
 "use client";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { getCurrentUser } from "@/lib/users.service";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useEffect } from "react";
@@ -8,7 +8,7 @@ import HomeLoading from "./loading";
 import TotalWallets from "@/components/TotalWallets/TotalWallets";
 import { getCurrentWallet, getWallets } from "@/lib/wallet.service";
 import Balance from "@/components/Balance/Balance";
-import { useWalletStore } from "@/lib/walletStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(

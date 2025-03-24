@@ -1,5 +1,5 @@
 "use client";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import CurrencyInput from "../CurrencyInput/CurrencyInput";
 import InitialAmountInput from "../InitialAmountInput/InitialAmountInput";
 import WalletInput from "../WalletInput/WalletInput";
@@ -13,7 +13,7 @@ import {
 } from "../ui/drawer";
 import { useEffect, useState } from "react";
 import { useWalletMutation } from "@/lib/walletMutation";
-import { useWalletPopupStore } from "@/lib/walletPopupStore";
+import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
 import { Button } from "../ui/button";
 
 const ConfirmWalletPopup = () => {

@@ -12,11 +12,11 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { RoutineType } from "@/lib/types/routine.type";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import React, { SetStateAction, useEffect, useState } from "react";
 import { Dropdown } from "react-day-picker";
 import DropdownComponent from "../DropdownComponent/DropdownComponent";
-import { useEditPopupStore } from "@/lib/popupStore";
+import { useEditPopupStore } from "@/lib/stores/popupStore";
 
 type PopupComponentProps = {
     title?: string;

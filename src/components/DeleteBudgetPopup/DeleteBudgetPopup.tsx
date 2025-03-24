@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
+import { useBudgetPopupStore } from "@/lib/stores/budgetPopupStore";
 import { DialogDescription } from "../ui/dialog";
 
 const DeleteBudgetPopup = () => {

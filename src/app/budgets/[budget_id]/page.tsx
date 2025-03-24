@@ -4,15 +4,15 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import BudgetLoading from "./loading";
-import { useBudgetPopupStore } from "@/lib/budgetPopupStore";
-import { useWalletStore } from "@/lib/walletStore";
+import { useBudgetPopupStore } from "@/lib/stores/budgetPopupStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 import { useQuery } from "@tanstack/react-query";
 import {
   getBudget,
   getBudgetTransactions,
   getTopUsageBudgetTransactions,
 } from "@/lib/budget.service";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { BudgetType } from "@/lib/types/budget.type";
 import chevronLeft from "@/assets/chevron_left.svg";
 import { Categories } from "@/constants/categories";

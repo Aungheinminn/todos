@@ -12,7 +12,7 @@ import deleteIcon from "@/assets/remove.svg";
 import hoverMore from "@/assets/hover_more.svg";
 import { PlanType } from "@/lib/types/plan.type";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { useDeletePopupStore, useEditPopupStore } from "@/lib/popupStore";
+import { useDeletePopupStore, useEditPopupStore } from "@/lib/stores/popupStore";
 
 const PopoverComponent = ({
   plan,

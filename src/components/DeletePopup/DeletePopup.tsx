@@ -1,5 +1,5 @@
 "use client"
-import { useDeletePopupStore } from "@/lib/popupStore"
+import { useDeletePopupStore } from "@/lib/stores/popupStore"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogFooter, AlertDialogTitle } from "../ui/alert-dialog"
 
 const DeletePopup = () => {

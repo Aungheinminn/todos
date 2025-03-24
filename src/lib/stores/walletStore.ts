@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { WalletType } from "./types/wallet.type";
+import { WalletType } from "../types/wallet.type";
 
 interface WalletStore {
   currentWallet: WalletType | null;

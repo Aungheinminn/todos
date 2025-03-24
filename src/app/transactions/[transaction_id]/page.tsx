@@ -15,12 +15,12 @@ import {
   duplicateTransaction,
   getTransactionById,
 } from "@/lib/transaction.service";
-import { useWalletStore } from "@/lib/walletStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 import { getWalletById } from "@/lib/wallet.service";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { WalletType } from "@/lib/types/wallet.type";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
 import { useTransactionMutation } from "@/lib/transactionMutation";
 
 type TransactionHeaderProps = {

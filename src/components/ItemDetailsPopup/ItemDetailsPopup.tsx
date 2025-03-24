@@ -1,5 +1,5 @@
 "use client";
-import { useItemDetailsPopupStore } from "@/lib/popupStore";
+import { useItemDetailsPopupStore } from "@/lib/stores/popupStore";
 import {
   AlertDialog,
   AlertDialogCancel,
