@@ -3,7 +3,7 @@ import {
   deleteBudget,
   endBudget,
   updateBudget,
-} from "@/lib/budget.service";
+} from "@/lib/services/budget.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 export const useBudgetMutation = () => {
   const queryClient = useQueryClient();

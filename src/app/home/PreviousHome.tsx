@@ -4,7 +4,7 @@ import { DayPicker } from "react-day-picker";
 import { getItemDetails, getItems } from "@/lib/items.service";
 import { useQuery } from "react-query";
 import { getCurrentUser } from "@/lib/users.service";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import Badge from "@/components/Badge/Badge";
 import "react-day-picker/dist/style.css";
 import HomeLoading from "./loading";
@@ -16,10 +16,10 @@ import { PlanType } from "@/lib/types/plan.type";
 import { RoutineType } from "@/lib/types/routine.type";
 import { ItemMutationProvider } from "./itemMutationProvider";
 import DrawerComponent from "@/components/DrawerComponent/DrawerComponent";
-import { useItemDetailsPopupStore } from "@/lib/popupStore";
+import { useItemDetailsPopupStore } from "@/lib/stores/popupStore";
 import { Socket } from "@/lib/singleton/socketService";
 import { getUnseenNotifications } from "@/lib/notifications.service";
-import { useNotificationStore } from "@/lib/notificationStore";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
 
 const PreviousHome = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(

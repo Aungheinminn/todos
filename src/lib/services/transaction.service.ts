@@ -1,4 +1,4 @@
-import { TransactionType } from "./types/transaction.type";
+import { TransactionType } from "@/lib/types/transaction.type";
 
 export const getTransactionsByWallet = async (wallet_id: string) => {
   try {

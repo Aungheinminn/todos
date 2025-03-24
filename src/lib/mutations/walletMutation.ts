@@ -4,7 +4,7 @@ import {
   deleteWallet,
   updateCurrentWallet,
   updateWallet,
-} from "./wallet.service";
+} from "@/lib/services/wallet.service";
 export const useWalletMutation = () => {
   const queryClient = useQueryClient();
   const createMutation = useMutation({

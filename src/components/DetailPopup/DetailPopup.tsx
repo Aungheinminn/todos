@@ -1,5 +1,5 @@
 "use client";
-import { usePopupStore } from "@/lib/popupStore";
+import { usePopupStore } from "@/lib/stores/popupStore";
 import {
   Dialog,
   DialogContent,

@@ -6,7 +6,7 @@ import wallet from "@/assets/wallet_2.svg";
 import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionLoading from "./loading";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { getTransactionsByDate } from "@/lib/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";

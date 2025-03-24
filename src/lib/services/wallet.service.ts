@@ -1,4 +1,4 @@
-import { WalletType } from "./types/wallet.type";
+import { WalletType } from "@/lib/types/wallet.type";
 
 export const createWallet = async (data: WalletType) => {
   try {

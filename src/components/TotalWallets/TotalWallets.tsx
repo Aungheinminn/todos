@@ -1,4 +1,4 @@
-import { useWalletStore } from "@/lib/walletStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 import Image from "next/image";
 import walletIcon from "@/assets/wallet.svg";
 import add from "@/assets/add_wallet.svg";
@@ -17,8 +17,8 @@ import { useWalletMutation } from "@/lib/walletMutation";
 import WalletSettings from "../WalletSettings/WalletSettings";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
-import { useWalletPopupStore } from "@/lib/walletPopupStore";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 
 type TotalWalletsProps = {
   wallets: WalletType[];

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserType } from "./types/user.type";
+import { UserType } from "../types/user.type";
 import { persist } from "zustand/middleware";
 
 interface CurrentUserStore {

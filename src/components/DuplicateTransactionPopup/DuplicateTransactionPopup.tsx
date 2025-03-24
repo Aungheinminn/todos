@@ -8,13 +8,13 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { Categories } from "@/constants/categories";
-import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
 import Image from "next/image";
 import Calendar from "../Calendar/Calendar";
 import { Button } from "../ui/button";
 import { getDate } from "@/lib/utils/getDate";
 import { useRouter } from "next/navigation";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 
 const DuplicateTransactionPopup = () => {
   const router = useRouter();

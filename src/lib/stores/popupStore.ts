@@ -1,6 +1,6 @@
 import { create } from "zustand";
-import { PlanType } from "./types/plan.type";
-import { RoutineType } from "./types/routine.type";
+import { PlanType } from "../types/plan.type";
+import { RoutineType } from "../types/routine.type";
 
 interface DetailPopupStore {
   isOpen: boolean;
@@ -115,7 +115,7 @@ export const useItemDetailsPopupStore = create<ItemDetailsPopupStore>(
     closePopup: () => set({ isOpen: false }),
     popupData: {
       date: "",
-      plan: "",
+      plan: {} as PlanType,
       routines: [],
       user_id: "",
     },

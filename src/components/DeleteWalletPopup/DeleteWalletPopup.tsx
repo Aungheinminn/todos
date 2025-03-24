@@ -8,7 +8,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
-import { useWalletPopupStore } from "@/lib/walletPopupStore";
+import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
 
 const DeleteWalletPopup = () => {
   const {

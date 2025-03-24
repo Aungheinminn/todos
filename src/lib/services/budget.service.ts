@@ -1,4 +1,4 @@
-import { BudgetType } from "./types/budget.type";
+import { BudgetType } from "../types/budget.type";
 
 export const createBudget = async (data: BudgetType) => {
   try {

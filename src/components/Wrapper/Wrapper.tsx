@@ -3,7 +3,7 @@ import { useState } from "react";
 import { MobileNavbar, WebNavbar } from "../Navbar/Navbar";
 import Bottombar from "../Bottombar/Bottombar";
 import { redirect } from "next/navigation";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 
 type WrapperProps = {
   children: React.ReactNode;

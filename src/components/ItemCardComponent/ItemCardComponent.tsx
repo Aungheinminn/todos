@@ -2,7 +2,7 @@ import Image from "next/image";
 import dash from "@/assets/dash.svg";
 import planIcon from "@/assets/plan.svg";
 import { RoutineType } from "@/lib/types/routine.type";
-import { useDeletePopupStore } from "@/lib/popupStore";
+import { useDeletePopupStore } from "@/lib/stores/popupStore";
 import { PlanType } from "@/lib/types/plan.type";
 import { redirect, useRouter } from "next/navigation";
 

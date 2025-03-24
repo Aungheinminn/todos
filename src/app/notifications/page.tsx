@@ -1,10 +1,10 @@
 "use client";
 import { getCurrentUser } from "@/lib/users.service";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useState, useEffect } from "react";
 import { Socket } from "@/lib/singleton/socketService";
-import { useNotificationStore } from "@/lib/notificationStore";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
 import { markAllAsSeen } from "@/lib/notifications.service";
 import NoticationsHandler from "@/components/NotificationsHandler/NotificationsHandler";
 import { NotificationMutationProvider } from "./notificationMutation";

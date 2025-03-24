@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import logout from "@/assets/signout_black.svg";
@@ -13,7 +13,7 @@ import {
 import { logoutUser } from "@/lib/users.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useWalletStore } from "@/lib/walletStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 
 const UserAvatar = () => {
   const { currentUser } = useCurrentUserStore((state) => state);

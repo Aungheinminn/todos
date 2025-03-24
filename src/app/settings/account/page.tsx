@@ -6,7 +6,7 @@ import Link from "next/link";
 import back from "@/assets/arrow_left_black.svg";
 import { Button } from "@/components/ui/button";
 import AccountSwitcher from "@/components/AccountSwitcher/AccountSwitcher";
-import { useCurrentUserStore } from "@/lib/userStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { getCurrentUser } from "@/lib/users.service";
 import { UserType } from "@/lib/types/user.type";
 import { getLinkedUsers } from "@/lib/linkedUsers.service";

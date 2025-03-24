@@ -1,5 +1,5 @@
-import { decryptPassword, encryptPassword } from "./hash.service";
-import { CredentialModel, UserModel } from "./models/user.model";
+import { decryptPassword, encryptPassword } from "@/lib/services/hash.service";
+import { CredentialModel, UserModel } from "@/lib/models/user.model";
 
 export const createUser = async (datas: UserModel) => {
   try {

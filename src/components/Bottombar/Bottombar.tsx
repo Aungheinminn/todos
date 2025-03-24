@@ -9,8 +9,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useNotificationStore } from "@/lib/notificationStore";
-import { useTransactionPopupStore } from "@/lib/transactionPopupStore";
+import { useNotificationStore } from "@/lib/stores/notificationStore";
+import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
 
 const Bottombar = () => {
   const { pendingNotifications } = useNotificationStore((state) => state);
