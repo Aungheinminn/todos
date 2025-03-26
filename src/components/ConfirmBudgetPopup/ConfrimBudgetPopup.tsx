@@ -12,7 +12,7 @@ import AmountInput from "../AmountInput/AmountInput";
 import CategorySelection from "../CategorySelection/CategorySelection";
 import { Button } from "../ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { getWallets } from "@/lib/wallet.service";
+import { getWallets } from "@/lib/services/wallet.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import WalletSelection from "../WalletSelection/WalletSelection";
 import { useWalletStore } from "@/lib/stores/walletStore";

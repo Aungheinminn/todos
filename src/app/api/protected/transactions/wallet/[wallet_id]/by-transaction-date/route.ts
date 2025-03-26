@@ -25,7 +25,6 @@ export const GET = async (
     0,
   );
 
-  console.log("startDate", startDate, endDate);
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
@@ -52,8 +51,6 @@ export const GET = async (
       .limit(Number(limit))
       .sort({ created_at: -1 })
       .toArray();
-
-    console.log("transactions", transactions);
 
     if (!transactions) {
       return NextResponse.json(

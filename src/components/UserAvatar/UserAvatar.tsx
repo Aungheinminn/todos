@@ -10,7 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { logoutUser } from "@/lib/users.service";
+import { logoutUser } from "@/lib/services/users.service";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useWalletStore } from "@/lib/stores/walletStore";

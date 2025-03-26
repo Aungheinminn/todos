@@ -13,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { useWalletMutation } from "@/lib/walletMutation";
+import { useWalletMutation } from "@/lib/mutations/walletMutation";
 import WalletSettings from "../WalletSettings/WalletSettings";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";

@@ -1,12 +1,12 @@
 "use client";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
-import { getCurrentUser } from "@/lib/users.service";
+import { getCurrentUser } from "@/lib/services/users.service";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useEffect } from "react";
 import "react-day-picker/dist/style.css";
 import HomeLoading from "./loading";
 import TotalWallets from "@/components/TotalWallets/TotalWallets";
-import { getCurrentWallet, getWallets } from "@/lib/wallet.service";
+import { getCurrentWallet, getWallets } from "@/lib/services/wallet.service";
 import Balance from "@/components/Balance/Balance";
 import { useWalletStore } from "@/lib/stores/walletStore";
 
@@ -29,11 +29,12 @@ const Home = () => {
 
   console.log("currentUserQuery", currentUserQuery);
 
-  const { data: currentWalletQuery, isLoading: isCurrentWalletLoading } = useQuery({
-    queryKey: ["currentWallet"],
-    queryFn: () => getCurrentWallet(currentUser?._id || ""),
-    enabled: !!currentUser?._id,
-  });
+  const { data: currentWalletQuery, isLoading: isCurrentWalletLoading } =
+    useQuery({
+      queryKey: ["currentWallet"],
+      queryFn: () => getCurrentWallet(currentUser?._id || ""),
+      enabled: !!currentUser?._id,
+    });
 
   const { data: wallets } = useQuery({
     queryKey: ["wallets"],

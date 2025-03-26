@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useState } from "react";
-import { loginUser } from "@/lib/users.service";
+import { loginUser } from "@/lib/services/users.service";
 import { useRouter } from "next/navigation";
 import LoginLoading from "./loading";
 import Image from "next/image";
