@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import wallet from "@/assets/wallet_2.svg";
@@ -7,14 +7,15 @@ import caretDown from "@/assets/caret_down.svg";
 import { Suspense } from "react";
 import TransactionLoading from "./loading";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { getTransactionsByDate } from "@/lib/transaction.service";
+import { useQuery } from "@tanstack/react-query";
+import { getTransactionsByDate } from "@/lib/services/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
 import { WalletType } from "@/lib/types/wallet.type";
-import { getCurrentWallet } from "@/lib/wallet.service";
+import { getCurrentWallet } from "@/lib/services/wallet.service";
 import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLoading";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Socket } from "@/lib/singleton/socketService";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -39,6 +40,15 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 const Transactions = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
   const [limit, setLimit] = useState<number>(10);
+  const socket = Socket.getInstance();
+
+  useEffect(() => {
+
+    socket.connect(currentUser?._id || "");
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket])
 
   const { data: currentWallet } = useQuery({
     queryKey: ["currentWallet"],
@@ -75,7 +85,7 @@ const Transactions = () => {
               limit={limit}
               setLimit={setLimit}
               transactions={transactions.transactions}
-                total={transactions.total}
+              total={transactions.total}
             />
           )
         )}

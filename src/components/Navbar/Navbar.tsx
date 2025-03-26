@@ -19,7 +19,7 @@ export const MobileNavbar: React.FC<MobileNavbarProps> = ({
 
 export const WebNavbar = () => {
   return (
-    <div className="w-full flex justify-between items-center hidden lg:flex">
+    <div className="w-full justify-between items-center hidden lg:flex">
       <h1>Logo</h1>
       <UserAvatar />
     </div>

@@ -1,5 +1,5 @@
 import clientPromise from "@/lib/database";
-import { decryptPassword } from "@/lib/hash.service";
+import { decryptPassword } from "@/lib/services/hash.service";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { env } from "@/env";

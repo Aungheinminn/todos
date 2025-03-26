@@ -5,39 +5,40 @@ export class Socket {
   private socket: any;
 
   private constructor() {
-    this.socket = io();
+    if (Socket.instance) {
+      throw new Error(
+        "Singleton is limited to one instance. Use getInstance instead",
+      );
+    }
+    this.socket = io({
+      autoConnect: false,
+    });
   }
 
   public static getInstance() {
     if (!Socket.instance) {
       Socket.instance = new Socket();
-    } else {
-      return Socket.instance;
     }
+    return Socket.instance;
   }
 
-  connect(name: string) {
-    this.socket.on("connect", () => {
-      console.log(name, "socket is connected");
+  connect(id: string) {
+    this.socket.auth = {
+      id,
+    };
+    this.socket.connect();
+  }
+
+  receive(wallet_id: string) {
+    this.socket.on(wallet_id, (data: any) => {
+      console.log(wallet_id, data, "socket data");
     });
   }
 
-  join(channel: string) {
-    console.log("join", channel);
-    this.socket.emit("join", channel);
-  }
-
-  getNotifications(callback: (data: any) => void, channel?: string) {
-    this.socket.on("notifications", (data: any) => {
-      console.log(`Notification received: from ${channel}`, data);
-      callback(data);
-    });
-  }
-
-  getLinkingStatus(callback: (data: any) => void) {
-    this.socket.on("linkingStatus", (data: any) => {
-      console.log("Notification received:", data);
-      callback(data);
+  emit(name: string, data: any) {
+    this.socket.emit(name, {
+      to: name,
+      data,
     });
   }
 

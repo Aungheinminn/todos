@@ -1,5 +1,6 @@
 import { createServer } from "node:http";
 import next from "next";
+import SocketService from "./src/lib/singleton/serverSocket"
 import { Server } from "socket.io";
 
 const dev = process.env.NODE_ENV !== "production";
@@ -12,33 +13,11 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  const io = new Server(httpServer, {
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"],
-    },
-  });
+  SocketService.getInstance().init(httpServer);
+  SocketService.getInstance().connect();
 
   console.log("it started");
   // Make io accessible globally
-  global.io = io;
-
-  io.on("connection", (socket) => {
-    console.log("Client connected:", socket.id);
-    socket.onAny((event, ...args) => {
-      console.log(event, args);
-    });
-
-    socket.on("join",  (userId) => {
-      console.log("joined", "userId", userId);
-         socket.join(userId);
-
-    });
-
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
-    });
-  });
 
   httpServer
     .once("error", (err) => {

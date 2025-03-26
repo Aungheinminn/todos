@@ -1,6 +1,6 @@
 'use client';
 import Loading from "@/components/Loading/Loading";
-import { createUser } from "@/lib/users.service";
+import { createUser } from "@/lib/services/users.service";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
 import SignupLoading from "./loading";

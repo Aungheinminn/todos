@@ -12,7 +12,7 @@ import {
   DrawerDescription,
 } from "../ui/drawer";
 import { useEffect, useState } from "react";
-import { useWalletMutation } from "@/lib/walletMutation";
+import { useWalletMutation } from "@/lib/mutations/walletMutation";
 import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
 import { Button } from "../ui/button";
 
