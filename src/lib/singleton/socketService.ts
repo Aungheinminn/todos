@@ -22,27 +22,27 @@ export class Socket {
     return Socket.instance;
   }
 
-  connect(id: string) {
+  public connect(id: string) {
     this.socket.auth = {
       id,
     };
     this.socket.connect();
   }
 
-  receive(wallet_id: string) {
+  public receive(wallet_id: string) {
     this.socket.on(wallet_id, (data: any) => {
       console.log(wallet_id, data, "socket data");
     });
   }
 
-  emit(name: string, data: any) {
+  public emit(name: string, data: any) {
     this.socket.emit(name, {
       to: name,
       data,
     });
   }
 
-  disconnect() {
+  public disconnect() {
     this.socket.on("disconnect", () => {
       console.log("socket is disconnected");
     });

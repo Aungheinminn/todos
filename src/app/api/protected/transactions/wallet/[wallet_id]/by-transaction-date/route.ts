@@ -59,10 +59,13 @@ export const GET = async (
       );
     }
     return NextResponse.json(
-      { success: true, data: {
-        transactions: limitedTransactions,
-        total: transactions.length
-      } },
+      {
+        success: true,
+        data: {
+          transactions: limitedTransactions,
+          total: transactions.length,
+        },
+      },
       { status: 200 },
     );
   } catch (e) {

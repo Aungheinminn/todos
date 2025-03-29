@@ -42,14 +42,6 @@ const Transactions = () => {
   const [limit, setLimit] = useState<number>(10);
   const socket = Socket.getInstance();
 
-  useEffect(() => {
-
-    socket.connect(currentUser?._id || "");
-    return () => {
-      socket.disconnect();
-    };
-  }, [socket])
-
   const { data: currentWallet } = useQuery({
     queryKey: ["currentWallet"],
     queryFn: () => getCurrentWallet(currentUser?._id || ""),
@@ -70,6 +62,15 @@ const Transactions = () => {
 
   console.log("currentWallet", currentWallet);
   console.log("transactions", transactions);
+
+  useEffect(() => {
+    socket.connect(currentWallet?._id || "");
+
+    socket.receive(currentWallet?._id || "");
+    return () => {
+      socket.disconnect();
+    };
+  }, [socket, currentWallet]);
   return (
     <Suspense fallback={<TransactionLoading />}>
       <ScrollArea className="h-fit">

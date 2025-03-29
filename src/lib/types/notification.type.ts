@@ -6,7 +6,6 @@ export type NotificationType = {
     email: string;
     username: string;
   };
-  notiStatus: string;
   status: string;
   from: {
     id: string;
