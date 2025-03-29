@@ -9,6 +9,7 @@ import TotalWallets from "@/components/TotalWallets/TotalWallets";
 import { getCurrentWallet, getWallets } from "@/lib/services/wallet.service";
 import Balance from "@/components/Balance/Balance";
 import { useWalletStore } from "@/lib/stores/walletStore";
+import Link from "next/link";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -22,9 +23,6 @@ const Home = () => {
   const { data: currentUserQuery } = useQuery({
     queryKey: ["currentUser"],
     queryFn: () => getCurrentUser(),
-    // select: (data) => {
-    //   updateCurrentUser(data.data.currentUser);
-    // },
   });
 
   console.log("currentUserQuery", currentUserQuery);
@@ -65,6 +63,7 @@ const Home = () => {
 
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />
+        <Link href='/shared-wallet-infos'>Shared Wallet Invitations</Link>
       </div>
     </Suspense>
   );

@@ -77,4 +77,3 @@ export const getCurrentUser = async () => {
     console.log(e);
   }
 };
-
