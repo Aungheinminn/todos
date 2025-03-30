@@ -6,4 +6,5 @@ export type WalletType = {
   currency: string;
   balance: string | number;
   current?: boolean;
+  shared_user_ids?: string[];
 };
