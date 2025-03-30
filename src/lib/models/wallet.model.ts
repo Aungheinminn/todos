@@ -10,5 +10,6 @@ export const WalletSchema = z
     currency: z.string().min(1),
     balance: z.number(),
     current: z.boolean(),
+    shared_user_ids: z.array(z.string()).default([]).optional(),
   })
   .strict();
