@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ObjectId } from "mongodb";
 
-export const NotificationSchema = z.object({
+export const SharedWalletRequestSchema = z.object({
     _id: z.instanceof(ObjectId).optional(),
   status: z.string(),
   wallet_id: z.string(),
