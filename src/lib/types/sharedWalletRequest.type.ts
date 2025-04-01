@@ -1,4 +1,4 @@
-export type NotificationType = {
+export type SharedWalletRequestType = {
   _id?: string;
   status: string;
   wallet_id: string;
