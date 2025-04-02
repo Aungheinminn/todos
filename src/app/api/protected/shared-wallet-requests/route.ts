@@ -14,9 +14,7 @@ export const POST = async (req: NextRequest) => {
     for (const request in sharedWalletRequests) {
       const parsedBody = SharedWalletRequestSchema.parse(request);
 
-      await db
-	.collection("shared_wallet_requests")
-	.insertOne(parsedBody);
+      await db.collection("shared_wallet_requests").insertOne(parsedBody);
     }
 
     return NextResponse.json(

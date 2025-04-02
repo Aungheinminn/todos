@@ -12,16 +12,15 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import {
-  duplicateTransaction,
   getTransactionById,
-} from "@/lib/transaction.service";
+} from "@/lib/services/transaction.service";
 import { useWalletStore } from "@/lib/stores/walletStore";
-import { getWalletById } from "@/lib/wallet.service";
+import { getWalletById } from "@/lib/services/wallet.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { WalletType } from "@/lib/types/wallet.type";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
-import { useTransactionMutation } from "@/lib/transactionMutation";
+import { useTransactionMutation } from "@/lib/mutations/transactionMutation";
 
 type TransactionHeaderProps = {
   handleEdit: () => void;
@@ -136,11 +135,7 @@ const Transaction = () => {
   );
   const { data: transaction, isLoading: isTransactionLoading } = useQuery({
     queryKey: ["transaction", editMutation.isSuccess],
-    queryFn: () =>
-      getTransactionById(
-        currentWallet?._id || "",
-        transaction_id.toString() || "",
-      ),
+    queryFn: () => getTransactionById(transaction_id.toString() || ""),
     enabled: !!currentWallet?._id,
   });
 
