@@ -59,7 +59,7 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
 
         <Button
           disabled={limit > total}
-          className="w-[100px] rounded-xl bg-gray-700"
+          className={`w-[100px] rounded-xl bg-gray-700 ${total === 0 && "hidden"}`}
           onClick={() => setLimit(limit + 5)}
         >
           Load more

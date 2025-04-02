@@ -12,13 +12,10 @@ export const getTransactionsByWallet = async (wallet_id: string) => {
   }
 };
 
-export const getTransactionById = async (
-  wallet_id: string,
-  transaction_id: string,
-) => {
+export const getTransactionById = async (transaction_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/transaction/${transaction_id}`,
+      `http://localhost:3000/api/protected/transactions/transaction/${transaction_id}`,
     );
     const res = await response.json();
     return res.data;
@@ -91,7 +88,7 @@ export const duplicateTransaction = async (data: TransactionType) => {
 export const updateTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/transaction/${data._id}`,
+      `http://localhost:3000/api/protected/transactions/transaction/${data._id}`,
       {
         method: "PUT",
         headers: {

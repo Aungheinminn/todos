@@ -6,21 +6,21 @@ import { TransactionSchmea } from "@/lib/models/transaction.model";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; transaction_id: string } },
+  { params }: { params: { transaction_id: string } },
 ) => {
-  if (!params.wallet_id || !params.transaction_id) {
+  if (!params.transaction_id) {
     return NextResponse.json(
       { success: false, error: "wallet_id is required" },
       { status: 400 },
     );
   }
-  const { wallet_id, transaction_id } = params;
+  const { transaction_id } = params;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const transaction = await db
       .collection("transactions")
-      .findOne({ _id: new ObjectId(transaction_id), wallet_id: wallet_id });
+      .findOne({ _id: new ObjectId(transaction_id) });
     if (!transaction) {
       return NextResponse.json(
         { success: false, error: "Transaction not found" },
@@ -42,9 +42,9 @@ export const GET = async (
 
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; transaction_id: string } },
+  { params }: { params: { transaction_id: string } },
 ) => {
-  if (!params.wallet_id || !params.transaction_id) {
+  if (!params.transaction_id) {
     return NextResponse.json(
       { success: false, error: "wallet_id is required" },
       { status: 400 },
@@ -52,7 +52,7 @@ export const PUT = async (
   }
 
   try {
-    const { wallet_id, transaction_id } = params;
+    const { transaction_id } = params;
     const body = await req.json();
 
     const { _id, ...rest } = body;
@@ -63,7 +63,6 @@ export const PUT = async (
 
     const currentTransaction = await db.collection("transactions").findOne({
       _id: new ObjectId(transaction_id),
-      wallet_id: wallet_id,
     });
 
     if (!currentTransaction) {
@@ -80,7 +79,7 @@ export const PUT = async (
     const updatedWalletBalance = await db
       .collection("wallets")
       .findOneAndUpdate(
-        { _id: new ObjectId(wallet_id) },
+        { _id: ObjectId.createFromHexString(currentTransaction.wallet_id) },
         {
           $inc: {
             balance: currentTransaction.transaction - parsedBody.transaction,
@@ -95,9 +94,9 @@ export const PUT = async (
         { status: 404 },
       );
     }
-    const updatedTransaction = await db
-      .collection("transactions")
-      .findOne({ _id: new ObjectId(transaction_id), wallet_id: wallet_id });
+    const updatedTransaction = await db.collection("transactions").findOne({
+      _id: new ObjectId(transaction_id),
+    });
 
     return NextResponse.json(
       { success: true, data: updatedTransaction },
