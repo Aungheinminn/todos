@@ -10,7 +10,7 @@ export const middleware = async (req: NextRequest) => {
   if (!token?.value) {
     console.log("No token found in cookies");
     // return NextResponse.redirect('/login');
-    const modifiedUrl = req.url.replace("/api/protected/", "/");
+    // const modifiedUrl = req.url.replace("/api/protected/", "/");
 
     // return NextResponse.redirect(new URL('/api/users/signOut', modifiedUrl));
     return NextResponse.redirect(new URL("/unauthorized", req.url));

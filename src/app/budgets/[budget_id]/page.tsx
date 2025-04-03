@@ -11,7 +11,7 @@ import {
   getBudget,
   getBudgetTransactions,
   getTopUsageBudgetTransactions,
-} from "@/lib/budget.service";
+} from "@/lib/services/budget.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { BudgetType } from "@/lib/types/budget.type";
 import chevronLeft from "@/assets/chevron_left.svg";
@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/accordion";
 import CurrentBudgetUsage from "@/components/CurrentBudgetUsage/CurrentBudgetUsage";
 import TopUsageTransactionsCard from "@/components/TopUsageTransactionsCard/TopUsageTransactionsCard";
-import { useBudgetMutation } from "@/lib/budgetMutation";
+import { useBudgetMutation } from "@/lib/mutations/budgetMutation";
 import { useRouter } from "next/navigation";
 
 type BudgetHeaderProps = {
@@ -226,7 +226,6 @@ const Budget = () => {
     queryFn: () =>
       getBudget({
         id: budget_id.toString() || "",
-        wallet_id: currentWallet?._id || "",
       }),
     enabled: !!currentUser && !!currentWallet && !!budget_id,
   });
@@ -286,7 +285,6 @@ const Budget = () => {
       endMutation.mutate(
         {
           id: budget._id,
-          wallet_id: budget.wallet_id,
         },
         {
           onSuccess: (data: any) => {

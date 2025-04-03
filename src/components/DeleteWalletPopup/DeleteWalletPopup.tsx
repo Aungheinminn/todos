@@ -25,7 +25,6 @@ const DeleteWalletPopup = () => {
       walletDatas.process.mutate(
         {
           wallet_id: walletDatas?._id || "",
-          id: walletDatas?.user_id || "",
         },
         {
           onSuccess: (data: any) => {

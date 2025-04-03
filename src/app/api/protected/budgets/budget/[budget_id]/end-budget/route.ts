@@ -6,7 +6,7 @@ export const PUT = async (
   {
     params,
   }: {
-    params: { wallet_id: string; budget_id: string };
+    params: { budget_id: string };
   },
 ) => {
   if (!params) {
@@ -17,14 +17,14 @@ export const PUT = async (
   }
 
   try {
-    const { wallet_id, budget_id } = params;
+    const { budget_id } = params;
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const updatedBudget = await db
       .collection("budgets")
       .findOneAndUpdate(
-        { _id: new ObjectId(budget_id), wallet_id: wallet_id },
+        { _id: new ObjectId(budget_id) },
         { $set: { status: "ended" } },
         { returnDocument: "after" },
       );

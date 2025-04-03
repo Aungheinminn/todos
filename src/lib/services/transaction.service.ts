@@ -104,16 +104,15 @@ export const updateTransaction = async (data: TransactionType) => {
   }
 };
 
-export const deleteTransaction = async (data: TransactionType) => {
+export const deleteTransaction = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/transaction/${data._id}`,
+      `http://localhost:3000/api/protected/transactions/transaction/${id}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
       },
     );
     const res = await response.json();

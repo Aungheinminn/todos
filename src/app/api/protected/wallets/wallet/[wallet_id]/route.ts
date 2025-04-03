@@ -10,7 +10,6 @@ export const GET = async (
     params,
   }: {
     params: {
-      id: string;
       wallet_id: string;
     };
   },
@@ -21,14 +20,14 @@ export const GET = async (
       { status: 400 },
     );
   }
-  const { id, wallet_id } = params;
+  const { wallet_id } = params;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const wallet = await db
       .collection("wallets")
-      .findOne({ _id: new ObjectId(wallet_id), user_id: id });
+      .findOne({ _id: new ObjectId(wallet_id) });
 
     if (!wallet) {
       return NextResponse.json(
@@ -52,7 +51,6 @@ export const PUT = async (
     params,
   }: {
     params: {
-      id: string;
       wallet_id: string;
     };
   },
@@ -65,7 +63,7 @@ export const PUT = async (
   }
 
   try {
-    const { id, wallet_id } = params;
+    const { wallet_id } = params;
     const { _id, created_at, ...rest } = await req.json();
     console.log("rest", rest);
     const parsedBody = WalletSchema.parse(rest);
@@ -75,13 +73,13 @@ export const PUT = async (
 
     const wallet = await db
       .collection("wallets")
-      .findOne({ _id: new ObjectId(wallet_id), user_id: id });
+      .findOne({ _id: new ObjectId(wallet_id) });
 
     if (wallet?.balance !== parsedBody.balance) {
       await db.collection("transactions").insertOne({
         wallet_id: wallet_id,
         transaction: parsedBody.balance - wallet?.balance,
-        user_id: id,
+        user_id: parsedBody.user_id,
         category:
           parsedBody.balance - wallet?.balance > 0
             ? "Other Income"
@@ -94,7 +92,7 @@ export const PUT = async (
     }
 
     const updatedWallet = await db.collection("wallets").findOneAndUpdate(
-      { _id: new ObjectId(wallet_id), user_id: id },
+      { _id: new ObjectId(wallet_id) },
       {
         $set: {
           ...parsedBody,
@@ -136,7 +134,6 @@ export const DELETE = async (
     params,
   }: {
     params: {
-      id: string;
       wallet_id: string;
     };
   },
@@ -147,14 +144,14 @@ export const DELETE = async (
       { status: 400 },
     );
   }
-  const { id, wallet_id } = params;
+  const { wallet_id } = params;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const isCurrentWallet = await db
       .collection("wallets")
-      .findOne({ _id: new ObjectId(wallet_id), user_id: id, current: true });
+      .findOne({ _id: new ObjectId(wallet_id), current: true });
 
     if (isCurrentWallet) {
       return NextResponse.json(
@@ -165,7 +162,7 @@ export const DELETE = async (
 
     const wallet = await db
       .collection("wallets")
-      .deleteOne({ _id: new ObjectId(wallet_id), user_id: id });
+      .deleteOne({ _id: new ObjectId(wallet_id) });
 
     const deleteRelatedTransactions = await db
       .collection("transactions")

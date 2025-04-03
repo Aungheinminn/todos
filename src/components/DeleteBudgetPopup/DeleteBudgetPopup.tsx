@@ -26,7 +26,6 @@ const DeleteBudgetPopup = () => {
       budgetDatas.process.mutate(
         {
           id: budgetDatas?.id || "",
-          wallet_id: budgetDatas?.wallet?.id || "",
         },
         {
           onSuccess: (data: any) => {
