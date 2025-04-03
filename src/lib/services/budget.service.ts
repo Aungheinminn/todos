@@ -95,16 +95,10 @@ export const getActiveBudgets = async (wallet_id: string) => {
   }
 };
 
-export const deleteBudget = async ({
-  id,
-  wallet_id,
-}: {
-  id: string;
-  wallet_id: string;
-}) => {
+export const deleteBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}`,
+      `http://localhost:3000/api/protected/budgets/budget/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -121,7 +115,7 @@ export const deleteBudget = async ({
 export const updateBudget = async (data: BudgetType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${data.wallet_id}/budget/${data._id}`,
+      `http://localhost:3000/api/protected/budgets/budget/${data._id}`,
       {
         method: "PUT",
         headers: {
@@ -141,11 +135,10 @@ export const endBudget = async ({
   wallet_id,
 }: {
   id: string;
-  wallet_id: string;
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}/end-budget`,
+      `http://localhost:3000/api/protected/budgets/budget/${id}/end-budget`,
       {
         method: "PUT",
         headers: {
@@ -159,16 +152,10 @@ export const endBudget = async ({
   }
 };
 
-export const getBudget = async ({
-  id,
-  wallet_id,
-}: {
-  id: string;
-  wallet_id: string;
-}) => {
+export const getBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/budget/${id}`,
+      `http://localhost:3000/api/protected/budgets/wallet/budget/${id}`,
       {
         method: "GET",
         headers: {

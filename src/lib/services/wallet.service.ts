@@ -36,10 +36,10 @@ export const getWallets = async (id: string) => {
   }
 };
 
-export const getWalletById = async (id: string, wallet_id: string) => {
+export const getWalletById = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/wallets/user/${id}/wallet/${wallet_id}`,
+      `http://localhost:3000/api/protected/wallets/wallet/${wallet_id}`,
       {
         method: "GET",
         headers: {
@@ -97,7 +97,7 @@ export const updateCurrentWallet = async ({
 export const updateWallet = async (data: WalletType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/wallets/user/${data.user_id}/wallet/${data._id}`,
+      `http://localhost:3000/api/protected/wallets/wallet/${data._id}`,
       {
         method: "PUT",
         headers: {
@@ -114,15 +114,13 @@ export const updateWallet = async (data: WalletType) => {
 };
 
 export const deleteWallet = async ({
-  id,
   wallet_id,
 }: {
-  id: string;
   wallet_id: string;
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/wallets/user/${id}/wallet/${wallet_id}`,
+      `http://localhost:3000/api/protected/wallets/wallet/${wallet_id}`,
       {
         method: "DELETE",
         headers: {

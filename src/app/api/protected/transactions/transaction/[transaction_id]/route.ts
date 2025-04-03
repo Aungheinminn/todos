@@ -119,22 +119,21 @@ export const PUT = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; transaction_id: string } },
+  { params }: { params: { transaction_id: string } },
 ) => {
-  if (!params.wallet_id || !params.transaction_id) {
+  if (!params.transaction_id) {
     return NextResponse.json(
       { success: false, error: "wallet_id is required" },
       { status: 400 },
     );
   }
-  const { wallet_id, transaction_id } = params;
+  const { transaction_id } = params;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const currentTransaction = await db.collection("transactions").findOne({
       _id: new ObjectId(transaction_id),
-      wallet_id: wallet_id,
     });
 
     if (!currentTransaction) {
@@ -146,12 +145,12 @@ export const DELETE = async (
 
     const transaction = await db
       .collection("transactions")
-      .deleteOne({ _id: new ObjectId(transaction_id), wallet_id: wallet_id });
+      .deleteOne({ _id: new ObjectId(transaction_id) });
 
     const updatedWalletBalance = await db
       .collection("wallets")
       .findOneAndUpdate(
-        { _id: new ObjectId(wallet_id) },
+        { _id: ObjectId.createFromHexString(currentTransaction.wallet_id) },
         {
           $inc: {
             balance:

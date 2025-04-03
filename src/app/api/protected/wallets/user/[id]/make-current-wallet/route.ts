@@ -32,11 +32,14 @@ export const PUT = async (
 
     await db
       .collection("wallets")
-      .updateOne({ _id: new ObjectId(wallet_id) }, { $set: { current: true } });
+      .updateOne(
+        { _id: ObjectId.createFromHexString(wallet_id) },
+        { $set: { current: true } },
+      );
 
     const currentWallet = await db
       .collection("wallets")
-      .findOne({ _id: new ObjectId(wallet_id), current: true });
+      .findOne({ _id: ObjectId.createFromHexString(wallet_id), current: true });
 
     if (!currentWallet) {
       return NextResponse.json(

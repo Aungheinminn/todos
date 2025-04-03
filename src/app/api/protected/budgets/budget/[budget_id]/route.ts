@@ -6,7 +6,7 @@ import { z, ZodError } from "zod";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; budget_id: string } },
+  { params }: { params: { budget_id: string } },
 ) => {
   if (!params) {
     return NextResponse.json(
@@ -15,12 +15,12 @@ export const GET = async (
     );
   }
   try {
-    const { wallet_id, budget_id } = params;
+    const { budget_id } = params;
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const budget = await db
       .collection("budgets")
-      .findOne({ _id: new ObjectId(budget_id), wallet_id: wallet_id });
+      .findOne({ _id: new ObjectId(budget_id) });
 
     if (!budget) {
       return NextResponse.json(
@@ -41,7 +41,7 @@ export const GET = async (
 
 export const PUT = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; budget_id: string } },
+  { params }: { params: { budget_id: string } },
 ) => {
   if (!params) {
     return NextResponse.json(
@@ -51,7 +51,7 @@ export const PUT = async (
   }
 
   try {
-    const { wallet_id, budget_id } = params;
+    const { budget_id } = params;
     const body = await req.json();
 
     const { _id, ...rest } = body;
@@ -63,7 +63,7 @@ export const PUT = async (
     const updatedBudget = await db
       .collection("budgets")
       .findOneAndUpdate(
-        { _id: new ObjectId(budget_id), wallet_id: wallet_id },
+        { _id: new ObjectId(budget_id) },
         { $set: parsedBody },
         { returnDocument: "after" },
       );
@@ -93,7 +93,7 @@ export const PUT = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { wallet_id: string; budget_id: string } },
+  { params }: { params: { budget_id: string } },
 ) => {
   if (!params) {
     return NextResponse.json(
@@ -101,13 +101,13 @@ export const DELETE = async (
       { status: 400 },
     );
   }
-  const { wallet_id, budget_id } = params;
+  const { budget_id } = params;
   try {
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const budget = await db
       .collection("budgets")
-      .findOneAndDelete({ _id: new ObjectId(budget_id), wallet_id: wallet_id });
+      .findOneAndDelete({ _id: new ObjectId(budget_id) });
 
     if (!budget) {
       return NextResponse.json(
