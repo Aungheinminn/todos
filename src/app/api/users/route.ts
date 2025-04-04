@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/database";
 import { UserSchema } from "@/lib/models/user.model";
 import { verify } from "crypto";
-import { encryptPassword } from "@/lib/hash.service";
+import { encryptPassword } from "@/lib/services/hash.service";
 
 
 export const POST = async (req: NextRequest) => {

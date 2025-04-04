@@ -10,9 +10,9 @@ import caretDown from "@/assets/caret_down.svg";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useBudgetPopupStore } from "@/lib/stores/budgetPopupStore";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
-import { useBudgetMutation } from "@/lib/budgetMutation";
+import { useBudgetMutation } from "@/lib/mutations/budgetMutation";
 import { useQuery } from "@tanstack/react-query";
-import { endAllBudgets, getActiveBudgets } from "@/lib/budget.service";
+import { endAllBudgets, getActiveBudgets } from "@/lib/services/budget.service";
 import { BudgetType } from "@/lib/types/budget.type";
 import BudgetsLoading from "./loading";
 import BudgetBodyLoading from "@/components/BudgetBodyLoading/BudgetBodyLoading";
@@ -71,15 +71,14 @@ const Budgets = () => {
     enabled: !!currentWallet || !!currentUser,
   });
 
-  console.log(isSuccess);
 
+  console.log(currentWallet);
   const { data: activeBudgets, isLoading: isActiveBudgetLoading } = useQuery({
     queryFn: () => getActiveBudgets(currentWallet?._id || ""),
     queryKey: ["budgets", currentWallet, isSuccess],
     enabled: isSuccess,
   });
 
-  console.log(activeBudgets);
 
   const { setIsOpen, setType, budgetDatas } = useBudgetPopupStore(
     (state) => state,

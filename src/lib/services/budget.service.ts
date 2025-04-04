@@ -3,7 +3,7 @@ import { BudgetType } from "../types/budget.type";
 export const createBudget = async (data: BudgetType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${data.wallet_id}`,
+      `http://localhost:3000/api/protected/budgets`,
       {
         method: "POST",
         headers: {
@@ -130,12 +130,7 @@ export const updateBudget = async (data: BudgetType) => {
   }
 };
 
-export const endBudget = async ({
-  id,
-  wallet_id,
-}: {
-  id: string;
-}) => {
+export const endBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/budgets/budget/${id}/end-budget`,

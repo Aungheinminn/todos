@@ -16,6 +16,7 @@ import { getCurrentWallet } from "@/lib/services/wallet.service";
 import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLoading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Socket } from "@/lib/singleton/socketService";
+import AddSharedWalletUsers from "@/components/AddSharedWalletUsers/AddSharedWalletUsers";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -33,6 +34,7 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         <p>Total</p>
         <Image className="w-4" src={caretDown} alt="caret down" />
       </Button>
+      <AddSharedWalletUsers valid={true} wallet={currentWallet} />
     </div>
   );
 };
