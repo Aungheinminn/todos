@@ -10,7 +10,7 @@ export const createUser = async (datas: UserModel) => {
       },
       body: JSON.stringify(datas),
     });
-    return res;
+    return res.json();
   } catch (e) {
     console.log(e);
   }
@@ -50,19 +50,8 @@ export const logoutUser = async () => {
   }
 };
 
-export const getUsers = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/users", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return res.json();
-  } catch (e) {
-    console.log(e);
-  }
-};
+
+// Apis Below this need to be authenticated
 
 export const getCurrentUser = async () => {
   try {

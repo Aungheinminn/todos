@@ -25,8 +25,6 @@ const Home = () => {
     queryFn: () => getCurrentUser(),
   });
 
-  console.log("currentUserQuery", currentUserQuery);
-
   const { data: currentWalletQuery, isLoading: isCurrentWalletLoading } =
     useQuery({
       queryKey: ["currentWallet"],
@@ -63,7 +61,7 @@ const Home = () => {
 
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />
-        <Link href='/shared-wallet-infos'>Shared Wallet Invitations</Link>
+        <Link href="/shared-wallet-infos">Shared Wallet Invitations</Link>
       </div>
     </Suspense>
   );

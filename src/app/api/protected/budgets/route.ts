@@ -5,20 +5,7 @@ import { BudgetSchema } from "@/lib/models/budget.model";
 
 export const POST = async (
   req: NextRequest,
-  {
-    params,
-  }: {
-    params: {
-      wallet_id: string;
-    };
-  },
 ) => {
-  if (!params.wallet_id) {
-    return NextResponse.json(
-      { success: false, error: "wallet_id is required" },
-      { status: 400 },
-    );
-  }
   try {
     const body = await req.json();
     const parsedBody = BudgetSchema.parse(body);
@@ -29,12 +16,6 @@ export const POST = async (
       wallet_id: parsedBody.wallet_id,
       budget: parsedBody.budget,
       category: parsedBody.category,
-      // start_date: {
-      //   $eq: new Date(parsedBody.start_date),
-      // },
-      // end_date: {
-      //   $eq: new Date(parsedBody.end_date),
-      // },
     });
 
     if (

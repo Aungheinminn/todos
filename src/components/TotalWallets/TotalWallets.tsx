@@ -18,7 +18,6 @@ import WalletSettings from "../WalletSettings/WalletSettings";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
 import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
-import { useCurrentUserStore } from "@/lib/stores/userStore";
 
 type TotalWalletsProps = {
   wallets: WalletType[];
@@ -171,7 +170,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
         className="bg-gray-700 px-1 flex flex-col gap-y-1 rounded-xl"
       >
         <DialogTitle className="text-base text-white px-3">Wallets</DialogTitle>
-        {wallets
+        { wallets && wallets.length > 0
           ? wallets.map((wallet) => (
               <WalletComponent
                 currentlyShown={false}
@@ -179,7 +178,7 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
                 wallet={wallet}
               />
             ))
-          : ""}
+          : <p className="px-3 text-slate-300">No wallets, try adding one</p>}
 
         <div
           onClick={handleCreateWallet}

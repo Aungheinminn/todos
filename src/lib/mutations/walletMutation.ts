@@ -10,9 +10,14 @@ export const useWalletMutation = () => {
   const createMutation = useMutation({
     mutationFn: createWallet,
     onError: (error, variables, context: any) => {
+
       queryClient.setQueryData(["wallets"], context.previousItems);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["wallets"] }),
+    onSettled: () => {
+
+      queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+queryClient.invalidateQueries({ queryKey: ["wallets"] })
+    } 
   });
 
   const updateCurrentWalletMutation = useMutation({
