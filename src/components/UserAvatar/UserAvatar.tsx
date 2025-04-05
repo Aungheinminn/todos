@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { logoutUser } from "@/lib/services/users.service";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import Link from "next/link";
 import { useWalletStore } from "@/lib/stores/walletStore";
 
@@ -24,8 +24,12 @@ const UserAvatar = () => {
     try {
       const res = await logoutUser();
       if (res.success) {
+        useCurrentUserStore.getState().reset();
+        useWalletStore.getState().reset();
+
         useCurrentUserStore.persist.clearStorage();
         useWalletStore.persist.clearStorage();
+
         router.push("/login");
       }
       return res;
@@ -47,7 +51,9 @@ const UserAvatar = () => {
       >
         <Avatar className="cursor-pointer w-8 h-8 flex items-center justify-center bg-white">
           <AvatarFallback className="text-black">
-            {currentUser?.username.slice(0, 2).toUpperCase()}
+            {currentUser && currentUser.username
+              ? currentUser.username.slice(0, 2).toUpperCase()
+              : "NA"}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

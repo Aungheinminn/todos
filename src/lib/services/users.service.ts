@@ -50,7 +50,6 @@ export const logoutUser = async () => {
   }
 };
 
-
 // Apis Below this need to be authenticated
 
 export const getCurrentUser = async () => {
@@ -62,6 +61,31 @@ export const getCurrentUser = async () => {
       },
     });
     return res.json();
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const getUserByRefId = async (id: string) => {
+  try {
+    const response = await fetch(
+      `https://localhost:3000/api/protected/users/ref/${id}/getUserByRefId`,
+    );
+
+    const res = await response.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const createRefId = async (id: string) => {
+  try {
+    const response = await fetch(
+      `https://localhost:3000/protected/users/user/${id}/createRefId`,
+    );
+    const res = await response.json();
+    return res;
   } catch (e) {
     console.log(e);
   }

@@ -5,6 +5,7 @@ import { WalletType } from "../types/wallet.type";
 interface WalletStore {
   currentWallet: WalletType | null;
   updateCurrentWallet: (currentWallet: WalletType) => void;
+  reset: () => void;
 }
 
 export const useWalletStore = create<WalletStore>()(
@@ -12,6 +13,9 @@ export const useWalletStore = create<WalletStore>()(
     (set) => ({
       currentWallet: null,
       updateCurrentWallet: (currentWallet) => set({ currentWallet }),
+      reset: () => {
+        set({ currentWallet: null });
+      },
     }),
     {
       name: "current-wallet-storage",

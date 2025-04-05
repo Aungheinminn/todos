@@ -3,10 +3,11 @@ import { decryptPassword } from "@/lib/services/hash.service";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { env } from "@/env";
+import { revalidatePath } from "next/cache";
 
 export const GET = async (req: NextRequest) => {
   try {
-    const { searchParams } = new URL(req.url);
+    const { searchParams, pathname } = new URL(req.url);
     const email = searchParams.get("email");
     const password = searchParams.get("password");
 
@@ -65,7 +66,6 @@ export const GET = async (req: NextRequest) => {
             expires: new Date(Date.now() + 3600000),
           },
         );
-
         return response;
       } else {
         return NextResponse.json(
