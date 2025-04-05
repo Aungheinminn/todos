@@ -1,10 +1,12 @@
 "use client";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { loginUser } from "@/lib/services/users.service";
 import { useRouter } from "next/navigation";
 import LoginLoading from "./loading";
 import Image from "next/image";
 import back from "@/assets/caret_whtie.svg";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
+import { useWalletStore } from "@/lib/stores/walletStore";
 
 interface StepOneProps {
   email: string;
@@ -120,7 +122,6 @@ const Login = () => {
   const [emailError, setEmailError] = useState<string>("");
   const [passwordError, setPasswordError] = useState<string>("");
 
-  const router = useRouter();
   const handleBack = () => {
     setPassword("");
     setStep(1);
@@ -135,7 +136,14 @@ const Login = () => {
       const res = await loginUser(datas);
       console.log("res", res);
       if (res.success) {
-        router.push("/home");
+        // router.push("/home?success=true");
+
+        useCurrentUserStore.getState().reset();
+        useWalletStore.getState().reset();
+
+        useCurrentUserStore.persist.clearStorage();
+        useWalletStore.persist.clearStorage();
+        window.location.href = "/home";
       } else {
         setPasswordError(res.error);
       }
@@ -143,6 +151,7 @@ const Login = () => {
       console.log("error", e);
     }
   };
+
   return (
     <Suspense fallback={<LoginLoading />}>
       <div className="w-full h-screen flex flex-col items-center justify-start px-4 py-2 text-black gap-y-3">

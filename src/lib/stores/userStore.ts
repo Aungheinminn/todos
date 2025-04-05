@@ -5,6 +5,7 @@ import { persist } from "zustand/middleware";
 interface CurrentUserStore {
   currentUser: UserType | null;
   updateCurrentUser: (current: UserType) => void;
+  reset: () => void;
 }
 
 export const useCurrentUserStore = create<CurrentUserStore>()(
@@ -14,6 +15,9 @@ export const useCurrentUserStore = create<CurrentUserStore>()(
       updateCurrentUser: (current: UserType) => {
         console.log(current, "it is called");
         set({ currentUser: current });
+      },
+      reset: () => {
+        set({ currentUser: null });
       },
     }),
     {

@@ -19,11 +19,7 @@ const Balance: React.FC<BalanceProps> = ({ currentWallet, isLoading }) => {
       <div className="flex flex-col ">
         <div className="flex justify-start items-center gap-x-2">
           <p className="text-xl text-white font-normal">
-            {hide || isLoading
-              ? "**********"
-              : currentWallet
-                ? balance
-                : "0"}
+            {hide || isLoading ? "**********" : currentWallet ? balance : "0"}
           </p>
           <div onClick={() => setHide(!hide)}>
             {hide ? (
