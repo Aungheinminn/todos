@@ -69,7 +69,13 @@ export const getCurrentUser = async () => {
 export const getUserByRefId = async (id: string) => {
   try {
     const response = await fetch(
-      `https://localhost:3000/api/protected/users/ref/${id}/getUserByRefId`,
+      `http://localhost:3000/api/protected/users/ref/${id}/getUserByRefId`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     const res = await response.json();
@@ -82,7 +88,7 @@ export const getUserByRefId = async (id: string) => {
 export const createRefId = async (id: string) => {
   try {
     const response = await fetch(
-      `https://localhost:3000/protected/users/user/${id}/createRefId`,
+      `http://localhost:3000/protected/users/user/${id}/createRefId`,
     );
     const res = await response.json();
     return res;
