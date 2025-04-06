@@ -21,7 +21,6 @@ const Wrapper: React.FC<WrapperProps> = ({ children, router }) => {
     "/settings",
     "/redirect",
     "/settings/account",
-    "/settings/profile",
   ];
 
   const handleToggle = () => {
