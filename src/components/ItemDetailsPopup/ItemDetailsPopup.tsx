@@ -12,7 +12,7 @@ import {
 
 const ItemDetailsPopup = () => {
   const { isOpen, closePopup, popupData } = useItemDetailsPopupStore();
-  console.log(popupData);
+
   return (
     <AlertDialog open={isOpen}>
       <AlertDialogContent className="w-[320px] p-6 bg-[#334155] rounded-lg">

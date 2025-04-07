@@ -13,7 +13,6 @@ export const useCurrentUserStore = create<CurrentUserStore>()(
     (set) => ({
       currentUser: null,
       updateCurrentUser: (current: UserType) => {
-        console.log(current, "it is called");
         set({ currentUser: current });
       },
       reset: () => {

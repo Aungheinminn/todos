@@ -39,7 +39,6 @@ const Home = () => {
   });
 
   useEffect(() => {
-    console.log("currentWalletQuery", currentWalletQuery);
     if (currentUserQuery) {
       updateCurrentUser(currentUserQuery.data.currentUser);
     }
@@ -48,9 +47,6 @@ const Home = () => {
     }
   }, [currentUserQuery, currentWalletQuery]);
 
-  console.log("wallets", wallets);
-  console.log("currentUser", currentUser);
-  console.log("currentWallet", currentWallet);
   return (
     <Suspense fallback={<HomeLoading />}>
       <div className="w-full pt-[55px] text-black flex items-center flex-col justify-center">

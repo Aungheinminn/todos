@@ -17,9 +17,9 @@ import { useWalletStore } from "@/lib/stores/walletStore";
 
 const UserAvatar = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
-  console.log("currentUser", currentUser);
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
+
   const handleLogout = async () => {
     try {
       const res = await logoutUser();

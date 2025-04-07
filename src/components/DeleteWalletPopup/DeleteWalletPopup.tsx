@@ -18,7 +18,6 @@ const DeleteWalletPopup = () => {
     walletDatas,
     resetWalletDatas,
   } = useWalletPopupStore((state) => state);
-  console.log("walletDatas", walletDatas);
 
   const handleDeleteTransaction = () => {
     try {

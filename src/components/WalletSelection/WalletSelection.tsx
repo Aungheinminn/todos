@@ -32,7 +32,6 @@ const WalletSelection: React.FC<WalletSelectionProps> = ({
   seletedWallet,
   setSeletedWallet,
 }) => {
-  console.log(seletedWallet, "seleted");
   return (
     <Drawer>
       <DrawerTrigger className="w-full flex justify-between items-center gap-x-8 py-1 px-4">

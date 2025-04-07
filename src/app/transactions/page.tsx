@@ -62,9 +62,6 @@ const Transactions = () => {
     enabled: !!currentWallet,
   });
 
-  console.log("currentWallet", currentWallet);
-  console.log("transactions", transactions);
-
   useEffect(() => {
     socket.connect(currentWallet?._id || "");
 

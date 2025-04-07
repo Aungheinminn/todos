@@ -41,7 +41,6 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
 
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
-  console.log("isSettingsOpen", isSettingsOpen);
   const handleSettingsOpenChange = () => {
     setIsSettingsOpen(!isSettingsOpen);
   };
@@ -67,7 +66,6 @@ const WalletComponent: React.FC<WalletComponentProps> = ({
   };
 
   const handleDelete = () => {
-    console.log(wallet);
     setWalletDatas({
       _id: wallet._id,
       user_id: wallet.user_id,
@@ -137,7 +135,6 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
   const handleOpenChange = () => {
     setIsOpen(!isOpen);
   };
-  console.log("total isOpen", isOpen);
 
   const handleCreateWallet = () => {
     setType("create");
@@ -170,15 +167,17 @@ const TotalWallets: React.FC<TotalWalletsProps> = ({ wallets }) => {
         className="bg-gray-700 px-1 flex flex-col gap-y-1 rounded-xl"
       >
         <DialogTitle className="text-base text-white px-3">Wallets</DialogTitle>
-        { wallets && wallets.length > 0
-          ? wallets.map((wallet) => (
-              <WalletComponent
-                currentlyShown={false}
-                key={wallet._id}
-                wallet={wallet}
-              />
-            ))
-          : <p className="px-3 text-slate-300">No wallets, try adding one</p>}
+        {wallets && wallets.length > 0 ? (
+          wallets.map((wallet) => (
+            <WalletComponent
+              currentlyShown={false}
+              key={wallet._id}
+              wallet={wallet}
+            />
+          ))
+        ) : (
+          <p className="px-3 text-slate-300">No wallets, try adding one</p>
+        )}
 
         <div
           onClick={handleCreateWallet}

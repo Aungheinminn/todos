@@ -20,7 +20,6 @@ const Signup = () => {
     };
     try {
       const res = await createUser(datas);
-      console.log("res", res);
       if (res.success) {
         router.push("/");
       }

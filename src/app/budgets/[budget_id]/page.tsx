@@ -90,7 +90,6 @@ const BudgetDetails: React.FC<BudgetDetailsProps> = ({
   handleEndBudget,
   handleDeleteBudget,
 }) => {
-  console.log("budget", budget);
   if (isLoading || !wallet || !budget) {
     return <Skeleton className="w-full h-[150px] bg-gray-700 rounded-lg" />;
   }

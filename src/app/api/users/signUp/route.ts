@@ -13,11 +13,6 @@ export const POST = async (req: NextRequest) => {
     const encryptedPassword = await encryptPassword(userData.password);
     userData.password = encryptedPassword;
 
-
-    console.log("userData", {
-      ...userData,
-      refId: new ObjectId(),
-    });
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const user = await db.collection("users").insertOne({

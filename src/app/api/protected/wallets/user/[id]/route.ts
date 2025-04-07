@@ -34,7 +34,7 @@ export const GET = async (
       { status: 200 },
     );
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 },
@@ -131,7 +131,7 @@ export const POST = async (
         { status: 400 },
       );
     }
-    console.log(e);
+    console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 },

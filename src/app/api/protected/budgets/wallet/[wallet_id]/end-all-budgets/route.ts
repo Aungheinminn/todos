@@ -15,8 +15,6 @@ export const PUT = async (
   try {
     const now = new Date().toISOString();
 
-    console.log("now", now, typeof now);
-
     const client = await clientPromise;
     const db = client.db("remarker_next");
 

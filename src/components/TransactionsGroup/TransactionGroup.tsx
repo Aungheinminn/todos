@@ -53,7 +53,7 @@ const TransactionGroup: React.FC<TransactionGroupProps> = ({
       return Number(total) + Number(transaction.transaction);
     }, 0);
   }, [transactions]);
-  console.log("totalCosts", totalCosts);
+
   return (
     <div className="w-full bg-gray-700">
       <TransactionGroupHeader date={date} totalCost={totalCosts} />

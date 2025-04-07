@@ -111,7 +111,6 @@ const AccountUI: React.FC<AccountUiProps> = ({
   ) => {
     if (!currentUserId || !primaryUserId || !linkedUserId || !declinedBy)
       return;
-    console.log(currentUserId, primaryUserId, linkedUserId, declinedBy);
     handleDeclineLinking(
       currentUserId,
       primaryUserId,

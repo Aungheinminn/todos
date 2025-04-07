@@ -12,7 +12,6 @@ type WrapperProps = {
 const Wrapper: React.FC<WrapperProps> = ({ children, router }) => {
   const { currentUser } = useCurrentUserStore((state) => state);
 
-  console.log("cur", currentUser, typeof router);
   const noWrapperRoutes = ["/login", "/signup", "/unauthorized", "/redirect"];
   const isWrapperRequired = !noWrapperRoutes.includes(router);
   const [show, setShow] = useState<boolean>(false);

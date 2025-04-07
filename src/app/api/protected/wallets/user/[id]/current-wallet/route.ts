@@ -30,7 +30,7 @@ export const GET = async (
       { status: 200 },
     );
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return NextResponse.json(
       { success: false, message: "Internal Server Error" },
       { status: 500 },

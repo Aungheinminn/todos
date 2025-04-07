@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/database";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (
@@ -24,7 +25,7 @@ export const GET = async (
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const user = await db.collection("users").findOne({
-      refId: ref_id,
+      refId: new ObjectId(ref_id),
     });
 
     if (!user) {

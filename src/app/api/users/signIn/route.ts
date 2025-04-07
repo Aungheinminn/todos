@@ -22,10 +22,6 @@ export const GET = async (req: NextRequest) => {
     const db = client.db("remarker_next");
     const user = await db.collection("users").findOne({ email: email });
 
-    // if(!user) {
-    //     console.log('a')
-    // }
-
     if (user) {
       const comparePassword = await decryptPassword(password, user.password);
       const tokenData = {

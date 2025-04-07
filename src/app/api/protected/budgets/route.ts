@@ -3,9 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/database";
 import { BudgetSchema } from "@/lib/models/budget.model";
 
-export const POST = async (
-  req: NextRequest,
-) => {
+export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
     const parsedBody = BudgetSchema.parse(body);
@@ -23,7 +21,6 @@ export const POST = async (
       findSameBudgetExist.start_date === parsedBody.start_date &&
       findSameBudgetExist.end_date === parsedBody.end_date
     ) {
-      console.log(findSameBudgetExist);
       return NextResponse.json(
         { success: false, error: "Budget already exists" },
         {
@@ -61,7 +58,7 @@ export const POST = async (
         },
       );
     }
-    console.log(e);
+    console.error(e);
     NextResponse.json(
       { success: false, error: "Internal Server Error" },
       {

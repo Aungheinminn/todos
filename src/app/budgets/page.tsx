@@ -71,8 +71,6 @@ const Budgets = () => {
     enabled: !!currentWallet || !!currentUser,
   });
 
-
-  console.log(currentWallet);
   const { data: activeBudgets, isLoading: isActiveBudgetLoading } = useQuery({
     queryFn: () => getActiveBudgets(currentWallet?._id || ""),
     queryKey: ["budgets", currentWallet, isSuccess],

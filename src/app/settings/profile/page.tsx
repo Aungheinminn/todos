@@ -4,14 +4,34 @@ import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { Suspense } from "react";
 import ProfileLoading from "@/app/settings/profile/loading";
 import Clipboard from "@/components/Clipboard.tsx/Clipboard";
+import { useUserMutation } from "@/lib/mutations/userMutation";
+import { UserType } from "@/lib/types/user.type";
 
 const Profile = () => {
-  const { currentUser } = useCurrentUserStore((state) => state);
+  const { currentUser, updateCurrentUser } = useCurrentUserStore(
+    (state) => state,
+  );
+  const { createRefIdMutation } = useUserMutation();
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text || "");
   };
-  console.log("currentUser", currentUser);
+
+  const handleCreateRefId = () => {
+    try {
+      createRefIdMutation.mutate(currentUser?._id || "", {
+        onSettled(data) {
+          if (data.success) {
+            updateCurrentUser({
+              ...currentUser,
+              refId: data.data,
+            } as UserType);
+          }
+        },
+      });
+    } catch (e) {}
+  };
+
   return (
     <Suspense fallback={<ProfileLoading />}>
       <div className="w-full flex justify-center items-start pt-[60px]">
@@ -27,6 +47,7 @@ const Profile = () => {
             text={currentUser?.refId || ""}
             type="refId"
             handleCopy={handleCopy}
+            handleCreateRefId={handleCreateRefId}
           />
         </div>
       </div>

@@ -65,7 +65,6 @@ export const PUT = async (
   try {
     const { wallet_id } = params;
     const { _id, created_at, ...rest } = await req.json();
-    console.log("rest", rest);
     const parsedBody = WalletSchema.parse(rest);
 
     const client = await clientPromise;
@@ -120,7 +119,7 @@ export const PUT = async (
       );
     }
 
-    console.log(e);
+    console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 },

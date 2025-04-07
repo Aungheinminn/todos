@@ -23,7 +23,6 @@ const TransactionsComponent: React.FC<TransactionsProps> = ({
   total,
   height,
 }) => {
-  console.log("transactions", transactions.length, limit);
   const transactionsByDate = useMemo(() => {
     return (
       transactions &&

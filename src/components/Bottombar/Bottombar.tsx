@@ -25,11 +25,9 @@ const Bottombar = () => {
   };
 
   const { setIsOpen, setType } = useTransactionPopupStore((state) => state);
-  console.log();
 
   useEffect(() => {
     if (path) {
-      console.log("fetched");
       setActive(path.split("/")[1].toString());
     }
   }, [path]);

@@ -75,7 +75,7 @@ export const getUserByRefId = async (id: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const res = await response.json();
@@ -88,11 +88,17 @@ export const getUserByRefId = async (id: string) => {
 export const createRefId = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/protected/users/user/${id}/createRefId`,
+      `http://localhost:3000/api/protected/users/user/${id}/createRefId`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
     );
     const res = await response.json();
     return res;
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
