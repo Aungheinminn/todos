@@ -5,14 +5,12 @@ export const GET = async (req: NextRequest) => {
     const userData = req.cookies.get('user');
 
     if (!userData) {
-        console.log('No user data found in cookies');
         return new NextResponse('Unauthorized', { status: 401 });
     }
 
     try {
         const user = JSON.parse(userData.value);
 
-        console.log('user', user);
         const client = await clientPromise;
         const db = client.db('remarker_next');
         const currentUser = await db.collection('users').findOne(

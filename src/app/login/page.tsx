@@ -134,7 +134,6 @@ const Login = () => {
     };
     try {
       const res = await loginUser(datas);
-      console.log("res", res);
       if (res.success) {
         // router.push("/home?success=true");
 

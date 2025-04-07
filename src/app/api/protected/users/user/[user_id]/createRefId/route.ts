@@ -23,6 +23,7 @@ export const PUT = async (
     const { user_id } = params;
     const client = await clientPromise;
     const db = client.db("remarker_next");
+    const newRefId = new ObjectId();
 
     const user = await db.collection("users").findOne({
       _id: new ObjectId(user_id),
@@ -33,21 +34,26 @@ export const PUT = async (
       {
         $set: {
           ...user,
-          refId: new ObjectId(),
+          refId: newRefId,
         },
       },
     );
 
-		if(!updatedUser) {
-			return NextResponse.json({ success: false, error: "Error updating User"}, { status: 404})
-		}
+    if (!updatedUser || !user) {
+      return NextResponse.json(
+        { success: false, error: "Error updating User" },
+        { status: 404 },
+      );
+    }
 
-		return NextResponse.json({ success: true, data: updatedUser}, { status: 200})
+    return NextResponse.json(
+      { success: true, data: newRefId },
+      { status: 200 },
+    );
   } catch (e) {
-
     return NextResponse.json(
       { success: false, error: "Internal server error" },
       { status: 500 },
     );
-	}
+  }
 };

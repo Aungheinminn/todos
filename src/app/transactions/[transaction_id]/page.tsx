@@ -11,9 +11,7 @@ import { TransactionType } from "@/lib/types/transaction.type";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getTransactionById,
-} from "@/lib/services/transaction.service";
+import { getTransactionById } from "@/lib/services/transaction.service";
 import { useWalletStore } from "@/lib/stores/walletStore";
 import { getWalletById } from "@/lib/services/wallet.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
@@ -139,16 +137,11 @@ const Transaction = () => {
     enabled: !!currentWallet?._id,
   });
 
-  console.log("isTransactionLoading", isTransactionLoading);
-
   const { data: wallet } = useQuery({
     queryKey: ["wallet"],
-    queryFn: () =>
-      getWalletById(currentUser?._id || "", transaction.wallet_id || ""),
-    enabled: !!currentUser?._id && !!transaction,
+    queryFn: () => getWalletById(transaction.wallet_id || ""),
+    enabled: !!transaction,
   });
-
-  console.log(transaction, wallet);
 
   const handleEdit = () => {
     setType("edit");
@@ -170,7 +163,6 @@ const Transaction = () => {
       },
       process: editMutation,
     });
-    console.log(router);
   };
 
   const handleDuplicate = () => {
@@ -193,7 +185,6 @@ const Transaction = () => {
       },
       process: duplicateMutation,
     });
-    console.log(router);
   };
 
   const handleDelete = () => {
@@ -214,7 +205,6 @@ const Transaction = () => {
 
       process: deleteMutation,
     });
-    console.log(router);
   };
   return (
     <Suspense fallback={<TransactionsLoading />}>

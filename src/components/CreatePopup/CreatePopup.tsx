@@ -112,7 +112,6 @@ const CreatePopupComponent: React.FC = () => {
   const { isOpen, closePopup, popupData } = useCreatePopupStore(
     (state) => state,
   );
-  console.log(popupData);
   const [name, setName] = useState<string>(popupData.name || "");
   const [desc, setDesc] = useState<string>(popupData.description || "");
   const [selected, setSelected] = useState<string>("");
@@ -124,7 +123,6 @@ const CreatePopupComponent: React.FC = () => {
       plan_id: popupData.type === "createRoutine" && selected,
       icon: "",
     };
-    console.log(data, "data");
     popupData.process(data);
     setName("");
     setDesc("");
@@ -176,4 +174,3 @@ const CreatePopupComponent: React.FC = () => {
   );
 };
 export default CreatePopupComponent;
-

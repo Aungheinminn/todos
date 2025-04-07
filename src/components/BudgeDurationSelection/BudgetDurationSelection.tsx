@@ -47,7 +47,6 @@ const BudgetDurationSelection: React.FC<BudgetDurationSelectionProps> = ({
   date,
   setDate,
 }) => {
-  console.log(date);
   const [open, setOpen] = useState<boolean>(false);
   const calendarRef = useRef<HTMLDivElement>(null);
   const [isCustomSelection, setIsCustomSelection] = useState<boolean>(false);

@@ -52,7 +52,6 @@ const EndedBudgets = () => {
     queryFn: () => getEndedBudgets(currentWallet?._id || ""),
     enabled: !!currentWallet || !!currentUser,
   });
-  console.log(data);
   return (
     <Suspense fallback={<EndedBudgetsLoading />}>
       <EndedBudgetsHeader />

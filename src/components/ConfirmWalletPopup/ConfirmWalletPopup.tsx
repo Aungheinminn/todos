@@ -59,7 +59,6 @@ const ConfirmWalletPopup = () => {
     try {
       walletDatas.process.mutate(newWallet, {
         onSuccess: (data: any) => {
-          console.log("after data", data);
           if (data.success) {
             setOpen(false);
             resetWalletDatas();

@@ -30,7 +30,6 @@ const ConfirmTransactionPopup = () => {
     resetTransactionDatas,
   } = useTransactionPopupStore((state) => state);
 
-  console.log(transactionDatas, "transactionDatas");
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
   const { createMutation } = useTransactionMutation();

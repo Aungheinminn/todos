@@ -20,8 +20,6 @@ export const GET = async (
     const endDate = reqParams.get("endDate");
     const limit = reqParams.get("limit");
 
-    console.log(category, startDate, endDate);
-
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
@@ -69,7 +67,7 @@ export const GET = async (
       { status: 200 },
     );
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return NextResponse.json(
       { success: false, error: "Internal Server Error" },
       { status: 500 },
