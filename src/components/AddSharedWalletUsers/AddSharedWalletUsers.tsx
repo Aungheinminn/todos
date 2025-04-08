@@ -1,7 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useSharedWalletRequestMutation } from "@/lib/mutations/sharedWalletRequestMutation";
 import { getUserByRefId } from "@/lib/services/users.service";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { SharedWalletRequestType } from "@/lib/types/sharedWalletRequest.type";
 import { WalletType } from "@/lib/types/wallet.type";
 import { debounce } from "@/lib/utils/debounce";
@@ -148,6 +150,7 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
   valid,
   wallet,
 }) => {
+  const { createMutation } = useSharedWalletRequestMutation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
   const [sharedWalletUsers, setSharedWalletUsers] = useState<
@@ -171,7 +174,18 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
       return acc;
     }, [] as SharedWalletRequestType[]);
 
-    setIsOpen(!isOpen);
+    createMutation.mutate(
+      {
+        data: transformedDatas,
+      },
+      {
+        onSettled: (data) => {
+          if (data.success) {
+            setIsOpen(!isOpen);
+          }
+        },
+      },
+    );
   };
 
   return (
@@ -188,7 +202,12 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
           sharedWalletUsers={sharedWalletUsers}
           setSharedWalletUsers={setSharedWalletUsers}
         />
-        <Button onClick={handleAddSharedWalletUsers}>Add User</Button>
+        <Button
+          disabled={sharedWalletUsers.length === 0}
+          onClick={handleAddSharedWalletUsers}
+        >
+          Add User
+        </Button>
       </DialogContent>
     </Dialog>
   );

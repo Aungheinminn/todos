@@ -35,7 +35,17 @@ export const GET = async (
       );
     }
 
-    return NextResponse.json({ success: true, data: user }, { status: 200 });
+    const filteredData = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      refId: user.refId,
+    };
+
+    return NextResponse.json(
+      { success: true, data: filteredData },
+      { status: 200 },
+    );
   } catch (e) {
     return NextResponse.json(
       { success: false, error: "Internal server error" },

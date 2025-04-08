@@ -11,10 +11,46 @@ export const POST = async (req: NextRequest) => {
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
-    for (const request in sharedWalletRequests) {
+    let errorFlag = {
+      flag: true,
+      error: "",
+    };
+
+    for (const request of sharedWalletRequests) {
+      const isRequestExisted = await db
+        .collection("shared_wallet_requests")
+        .findOne({
+          wallet_id: request.wallet_id,
+          inviter_id: request.inviter_id,
+          invitee_id: request.invitee_id,
+        });
+      console.log(isRequestExisted);
+
+      if (isRequestExisted) {
+        console.log("it enters ise");
+        errorFlag = {
+          flag: false,
+          error: "Request is already Existed",
+        };
+      }
+
+      if (request.inviter_id === request.invitee_id) {
+        console.log("it enters");
+        errorFlag = {
+          flag: false,
+          error: "Can't Send request Yourself",
+        };
+      }
+
       const parsedBody = SharedWalletRequestSchema.parse(request);
 
       await db.collection("shared_wallet_requests").insertOne(parsedBody);
+    }
+    if (!errorFlag.flag) {
+      return NextResponse.json(
+        { success: false, error: errorFlag.error },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(
