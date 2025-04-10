@@ -1,5 +1,6 @@
 import clientPromise from "@/lib/database";
 import { NextRequest, NextResponse } from "next/server";
+
 export const GET = async (
   req: NextRequest,
   {
@@ -17,6 +18,8 @@ export const GET = async (
     );
   }
   try {
+    const url = new URL(req.url);
+    const type = url.searchParams.get("type");
     const { user_id } = params;
 
     const client = await clientPromise;
@@ -24,12 +27,12 @@ export const GET = async (
 
     const sharedWalletRequests = await db
       .collection("shared_wallet_requests")
-      .find({ $or: [{ inviter_id: user_id }, { invitee_id: user_id }] })
+      .find({ [type as string]: user_id })
       .toArray();
 
     if (!sharedWalletRequests) {
       return NextResponse.json(
-        { success: false, error: "Error deleting request" },
+        { success: false, error: "Error fetching request" },
         { status: 404 },
       );
     }

@@ -1,8 +1,9 @@
-"use client"
-import Loading from "@/components/Loading/Loading"
+"use client";
+import Loading from "@/components/Loading/Loading";
 
 const HomeLoading = () => {
-    return <Loading />
-}
+  return <Loading />;
+};
 
-export default HomeLoading
+export default HomeLoading;
+

@@ -1,7 +1,7 @@
 import { SharedWalletRequestType } from "@/lib/types/sharedWalletRequest.type";
 
 export const createSharedWalletRequest = async ({
-  data
+  data,
 }: {
   data: SharedWalletRequestType[];
 }) => {
@@ -64,10 +64,13 @@ export const deleteSharedWalletRequest = async (id: string) => {
   }
 };
 
-export const getSharedWalletRequestsByUserId = async (id: string) => {
+export const getSharedWalletRequestsByUserId = async (
+  id: string,
+  type: string,
+) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallet-requests/request/${id}/delete`,
+      `http://localhost:3000/api/protected/shared-wallet-requests/user/${id}/?type=${type}`,
       {
         method: "GET",
         headers: {
