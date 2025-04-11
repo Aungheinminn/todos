@@ -78,7 +78,7 @@ export const GET = async (
             _id: 1,
             status: 1,
             "wallet_data._id": 1,
-            "wallet_data.name": 1,
+            "wallet_data.wallet_name": 1,
             "inviter_data._id": 1,
             "inviter_data.username": 1,
             "inviter_data.email": 1,
