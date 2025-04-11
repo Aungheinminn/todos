@@ -9,10 +9,13 @@ export const useSharedWalletRequestMutation = () => {
     onError: (error, variables, context: any) => {
       queryClient.setQueryData(["sharedWalletRequests"], context.previousItems);
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] })
-  })
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
+  });
+
+  const
 
   return {
-    createMutation
-  }
+    createMutation,
+  };
 };
