@@ -27,7 +27,67 @@ export const GET = async (
 
     const sharedWalletRequests = await db
       .collection("shared_wallet_requests")
-      .find({ [type as string]: user_id })
+      .aggregate([
+        {
+          $match: {
+            [type as string]: user_id,
+          },
+        },
+        {
+          $addFields: {
+            wallet_id: { $toObjectId: "$wallet_id" },
+            inviter_id: { $toObjectId: "$inviter_id" },
+            invitee_id: { $toObjectId: "$invitee_id" },
+          },
+        },
+        {
+          $lookup: {
+            from: "wallets",
+            localField: "wallet_id",
+            foreignField: "_id",
+            as: "wallet_data",
+          },
+        },
+        {
+          $unwind: "$wallet_data",
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "inviter_id",
+            foreignField: "_id",
+            as: "inviter_data",
+          },
+        },
+        {
+          $unwind: "$inviter_data",
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "invitee_id",
+            foreignField: "_id",
+            as: "invitee_data",
+          },
+        },
+        {
+          $unwind: "$invitee_data",
+        },
+        {
+          $project: {
+            _id: 1,
+            status: 1,
+            "wallet_data._id": 1,
+            "wallet_data.name": 1,
+            "inviter_data._id": 1,
+            "inviter_data.username": 1,
+            "inviter_data.email": 1,
+            "invitee_data._id": 1,
+            "invitee_data.username": 1,
+            "invitee_data.email": 1,
+          },
+        },
+      ])
       .toArray();
 
     if (!sharedWalletRequests) {
