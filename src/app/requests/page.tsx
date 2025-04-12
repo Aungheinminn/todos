@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getSharedWalletRequestsByUserId } from "@/lib/services/sharedWalletRequest.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
-import { SharedWalletRequestType } from "@/lib/types/sharedWalletRequest.type";
+import { SharedWalletRequestResponseType } from "@/lib/types/sharedWalletRequest.type";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 
@@ -16,7 +16,7 @@ type RequestHeaderProps = {
 
 type RequestBodyProps = {
   type: string;
-  requests: SharedWalletRequestType[];
+  requests: SharedWalletRequestResponseType[];
   isLoading: boolean;
 };
 
@@ -69,7 +69,7 @@ const Requests = () => {
   const [toggle, setToggle] = useState<string>("invitee_id");
 
   const { data: requests, isLoading } = useQuery({
-    queryKey: ["requests", toggle],
+    queryKey: ["sharedWalletRequests", toggle],
     queryFn: () =>
       getSharedWalletRequestsByUserId(currentUser?._id || "", toggle),
     enabled: !!currentUser,

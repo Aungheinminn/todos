@@ -21,7 +21,7 @@ const Signup = () => {
     try {
       const res = await createUser(datas);
       if (res.success) {
-        router.push("/");
+        router.push("/login");
       }
     } catch (e) {
       console.log(e);
