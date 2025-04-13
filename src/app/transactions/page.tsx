@@ -17,6 +17,7 @@ import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLo
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Socket } from "@/lib/singleton/socketService";
 import AddSharedWalletUsers from "@/components/AddSharedWalletUsers/AddSharedWalletUsers";
+import Link from "next/link";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -44,7 +45,7 @@ const Transactions = () => {
   const [limit, setLimit] = useState<number>(10);
   const socket = Socket.getInstance();
 
-  const { data: currentWallet } = useQuery({
+  const { data: currentWallet, isError } = useQuery({
     queryKey: ["currentWallet"],
     queryFn: () => getCurrentWallet(currentUser?._id || ""),
     enabled: !!currentUser?._id,
@@ -70,6 +71,14 @@ const Transactions = () => {
       socket.disconnect();
     };
   }, [socket, currentWallet]);
+
+  if(isError) return (
+  <div className="flex flex-col items-center justify-center text-white pt-[55px]">
+      <p>No Wallet Found</p>
+      <Link className="underline text-blue-300" href="/home">Try creating one</Link>
+    </div>
+  )
+
   return (
     <Suspense fallback={<TransactionLoading />}>
       <ScrollArea className="h-fit">

@@ -1,5 +1,6 @@
 "use client";
 import RequestsLoading from "@/app/requests/loading";
+import Loading from "@/components/Loading/Loading";
 import RequestComponent from "@/components/RequestComponent/RequestComponent";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";

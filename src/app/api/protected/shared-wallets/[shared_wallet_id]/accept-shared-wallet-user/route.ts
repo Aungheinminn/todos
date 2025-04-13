@@ -34,9 +34,16 @@ export const PUT = async (
           },
         } as unknown as PushOperator<Document>);
 
-    if (!currentWallet) {
+    const updatedRequest = await db
+      .collection("shared_wallet_requests")
+      .updateOne(
+        { wallet_id: shared_wallet_id },
+        { $set: { status: "accepted" } },
+      );
+
+    if (!currentWallet || !updatedRequest) {
       return NextResponse.json(
-        { success: false, error: "Error Updating Transaction" },
+        { success: false, error: "Error Updating Wallet" },
         { status: 404 },
       );
     }
