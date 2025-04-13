@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
+import { useSharedWalletRequestMutation } from "@/lib/mutations/sharedWalletRequestMutation";
 import { SharedWalletRequestResponseType } from "@/lib/types/sharedWalletRequest.type";
+import Lottie from "react-lottie-player";
+import loadingAnimation from "@/lottle/loading.json";
 
 type RequestComponent = {
   request: SharedWalletRequestResponseType;
@@ -8,13 +11,35 @@ type RequestComponent = {
 
 type RequestComponentProps = {
   request: SharedWalletRequestResponseType;
+  handleDelete: () => void;
+  isLoading: boolean;
 };
 
 type InviteComponentProps = {
   request: SharedWalletRequestResponseType;
+  handleDecline: () => void;
+  isDeclineLoading: boolean;
 };
 
-const Invite: React.FC<InviteComponentProps> = ({ request }) => {
+const MutateLoading = () => {
+  return (
+    <Lottie
+      loop
+      animationData={loadingAnimation}
+      play
+      style={{
+        width: "78px",
+        height: "40px",
+      }}
+    />
+  );
+};
+
+const Invite: React.FC<InviteComponentProps> = ({
+  request,
+  handleDecline,
+  isDeclineLoading,
+}) => {
   return (
     <div className="flex items-start flex-col p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center space-x-4">
@@ -48,12 +73,16 @@ const Invite: React.FC<InviteComponentProps> = ({ request }) => {
             </span>
           </div>
         </div>
-        <div className="flex space-x-2">
-          <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 ">
+        <div className={`flex space-x-2 ${request.status !== "pending" && "hidden" }`}>
+          <button className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 ">
             Accept
           </button>
-          <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
-            Decline
+          <button
+            onClick={handleDecline}
+            disabled={isDeclineLoading}
+            className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+          >
+            {isDeclineLoading ? <MutateLoading /> : "Decline"}
           </button>
         </div>
       </div>
@@ -61,7 +90,11 @@ const Invite: React.FC<InviteComponentProps> = ({ request }) => {
   );
 };
 
-const Request: React.FC<RequestComponentProps> = ({ request }) => {
+const Request: React.FC<RequestComponentProps> = ({
+  request,
+  handleDelete,
+  isLoading,
+}) => {
   return (
     <div className=" flex items-start flex-col p-4 gap-x-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center space-x-4">
@@ -78,7 +111,6 @@ const Request: React.FC<RequestComponentProps> = ({ request }) => {
       </div>
       <div className="w-full flex justify-between items-center">
         <div className="ml-16">
-
           <p className="text-sm text-gray-600">
             Invitation sent to{" "}
             {request.invitee_data.username || request.invitee_data.email}
@@ -98,20 +130,43 @@ const Request: React.FC<RequestComponentProps> = ({ request }) => {
           </div>
         </div>
 
-
-      <button className="px-4 py-2 text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200">
-        Delete
-      </button>
+        <button
+          onClick={handleDelete}
+          disabled={isLoading}
+          className={`w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 ${request.status !== "pending" && "hidden"}`}
+        >
+          {isLoading ? <MutateLoading /> : "Delete"}
+        </button>
       </div>
     </div>
   );
 };
 
 const RequestComponent = ({ request, type }: RequestComponent) => {
+  const { declineMutation, deleteMutation } = useSharedWalletRequestMutation();
+  const handleDecline = () => {
+    declineMutation.mutate(request._id || "");
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate(request._id || "");
+  };
   return (
     <div className="w-full">
-      {type === "invitee_id" && <Invite request={request} />}
-      {type === "inviter_id" && <Request request={request} />}
+      {type === "invitee_id" && (
+        <Invite
+          request={request}
+          handleDecline={handleDecline}
+          isDeclineLoading={declineMutation.isPending}
+        />
+      )}
+      {type === "inviter_id" && (
+        <Request
+          request={request}
+          handleDelete={handleDelete}
+          isLoading={deleteMutation.isPending}
+        />
+      )}
     </div>
   );
 };
