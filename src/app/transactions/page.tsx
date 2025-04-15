@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Socket } from "@/lib/singleton/socketService";
 import AddSharedWalletUsers from "@/components/AddSharedWalletUsers/AddSharedWalletUsers";
 import Link from "next/link";
+import SharedWalletVerified from "@/components/SharedWalletVerified/SharedWalletVerified";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -35,7 +36,16 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         <p>Total</p>
         <Image className="w-4" src={caretDown} alt="caret down" />
       </Button>
-      <AddSharedWalletUsers valid={true} wallet={currentWallet} />
+      <div className="flex justify-between items-center">
+        {currentWallet &&
+        currentWallet.shared_user_ids &&
+        currentWallet.shared_user_ids.length > 0 ? (
+          <SharedWalletVerified />
+        ) : (
+          ""
+        )}
+        <AddSharedWalletUsers valid={true} wallet={currentWallet} />
+      </div>
     </div>
   );
 };
@@ -72,12 +82,15 @@ const Transactions = () => {
     };
   }, [socket, currentWallet]);
 
-  if(isError) return (
-  <div className="flex flex-col items-center justify-center text-white pt-[55px]">
-      <p>No Wallet Found</p>
-      <Link className="underline text-blue-300" href="/home">Try creating one</Link>
-    </div>
-  )
+  if (isError)
+    return (
+      <div className="flex flex-col items-center justify-center text-white pt-[55px]">
+        <p>No Wallet Found</p>
+        <Link className="underline text-blue-300" href="/home">
+          Try creating one
+        </Link>
+      </div>
+    );
 
   return (
     <Suspense fallback={<TransactionLoading />}>

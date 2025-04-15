@@ -17,7 +17,9 @@ type RequestComponentProps = {
 
 type InviteComponentProps = {
   request: SharedWalletRequestResponseType;
+  handleAccept: () => void;
   handleDecline: () => void;
+  isAcceptLoading: boolean;
   isDeclineLoading: boolean;
 };
 
@@ -37,7 +39,9 @@ const MutateLoading = () => {
 
 const Invite: React.FC<InviteComponentProps> = ({
   request,
+  handleAccept,
   handleDecline,
+  isAcceptLoading,
   isDeclineLoading,
 }) => {
   return (
@@ -73,9 +77,15 @@ const Invite: React.FC<InviteComponentProps> = ({
             </span>
           </div>
         </div>
-        <div className={`flex space-x-2 ${request.status !== "pending" && "hidden" }`}>
-          <button className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 ">
-            Accept
+        <div
+          className={`flex space-x-2 ${request.status !== "pending" && "hidden"}`}
+        >
+          <button
+            onClick={handleAccept}
+            disabled={isAcceptLoading}
+            className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 "
+          >
+            {isAcceptLoading ? <MutateLoading /> : "Accept"}
           </button>
           <button
             onClick={handleDecline}
@@ -143,7 +153,15 @@ const Request: React.FC<RequestComponentProps> = ({
 };
 
 const RequestComponent = ({ request, type }: RequestComponent) => {
-  const { declineMutation, deleteMutation } = useSharedWalletRequestMutation();
+  const { acceptMutation, declineMutation, deleteMutation } =
+    useSharedWalletRequestMutation();
+
+  const handleAccept = () => {
+    acceptMutation.mutate({
+      id: request.invitee_data._id,
+      walletId: request.wallet_data._id,
+    });
+  };
   const handleDecline = () => {
     declineMutation.mutate(request._id || "");
   };
@@ -151,12 +169,15 @@ const RequestComponent = ({ request, type }: RequestComponent) => {
   const handleDelete = () => {
     deleteMutation.mutate(request._id || "");
   };
+
   return (
     <div className="w-full">
       {type === "invitee_id" && (
         <Invite
           request={request}
+          handleAccept={handleAccept}
           handleDecline={handleDecline}
+          isAcceptLoading={acceptMutation.isPending}
           isDeclineLoading={declineMutation.isPending}
         />
       )}

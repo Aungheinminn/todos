@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import logout from "@/assets/signout_black.svg";
+import logout from "@/assets/signout.svg";
 import setting from "@/assets/white_setting.svg";
+import notification from "@/assets/notification.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,18 +58,25 @@ const UserAvatar = () => {
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[150px] bg-gray-800 mr-1 p-2 border-2 border-white">
+      <DropdownMenuContent className="w-[150px] bg-gray-800 mr-1 p-1 border border-white">
         <Link
           onClick={() => handleOpenChange()}
           href="/settings"
-          className="w-full flex items-center gap-x-1 hover:bg-[#0ea5e9] rounded-md p-1 px-2"
+          className="w-full flex items-center gap-x-2 hover:bg-[#0ea5e9] rounded-md p-2"
         >
           <Image src={setting} alt="setting" />
           <p className="text-white font-medium">Settings</p>
         </Link>
+        <Link
+          href="/requests"
+          className="w-full flex items-center gap-x-2 hover:bg-[#0ea5e9] rounded-md p-2"
+        >
+          <Image src={notification} alt="notificaiton" />
+          <p className="text-white font-medium">Requests</p>
+        </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-x-1 hover:bg-[#0ea5e9] rounded-md p-1 px-2"
+          className="w-full flex items-center gap-x-2 hover:bg-[#0ea5e9] rounded-md p-2"
         >
           <Image src={logout} alt="logout" />
           <p className="text-white font-medium">Logout</p>

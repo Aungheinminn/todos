@@ -81,7 +81,7 @@ const Bottombar = () => {
       </div>
 
       <Link
-        href="/wallets"
+        href="/shared-wallets"
         onClick={() => handleChange("wallets")}
         className="cursor-pointer w-[80px] relative group flex flex-col items-center"
       >
