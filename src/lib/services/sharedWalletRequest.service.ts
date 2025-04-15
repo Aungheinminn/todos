@@ -35,7 +35,7 @@ export const acceptSharedWalletRequest = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/${walletId}/accept-shared-wallet-user`,
+      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${walletId}/accept-shared-wallet-user`,
       {
         method: "PUT",
         headers: {

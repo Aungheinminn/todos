@@ -31,30 +31,20 @@ const ConfirmWalletPopup = () => {
   const { createMutation, editMutation } = useWalletMutation();
 
   const handleCreateWallet = () => {
-    let newWallet;
-    if (type === "create") {
-      newWallet = {
-        wallet_name: wallet,
-        user_id: currentUser?._id || "",
-        currency: currency,
-        balance: Number(initialAmount),
-        current: false,
-      };
-      walletDatas.process = createMutation;
-    } else if (type === "edit") {
-      newWallet = {
+    const newWallet = {
+      ...(type === "edit" && {
         _id: walletDatas?._id || "",
-        wallet_name: wallet,
-        user_id: walletDatas?.user_id || "",
         created_at: walletDatas?.created_at
           ? new Date(walletDatas?.created_at)
           : new Date(),
-        currency: currency,
-        balance: Number(initialAmount),
-        current: walletDatas?.current,
-      };
-      walletDatas.process = editMutation;
-    }
+      }),
+      wallet_name: type === "create" ? wallet : walletDatas?.wallet_name,
+      user_id: type === "create" ? currentUser?._id : walletDatas?.user_id,
+      balance: Number(initialAmount),
+      currency: currency,
+      current: type === "create" ? false : walletDatas?.current,
+    };
+    walletDatas.process = type === "create" ? createMutation : editMutation;
 
     try {
       walletDatas.process.mutate(newWallet, {
