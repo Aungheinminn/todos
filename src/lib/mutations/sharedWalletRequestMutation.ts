@@ -1,4 +1,5 @@
 import {
+  acceptSharedWalletRequest,
   createSharedWalletRequest,
   declineSharedWalletRequest,
   deleteSharedWalletRequest,
@@ -10,6 +11,15 @@ export const useSharedWalletRequestMutation = () => {
 
   const createMutation = useMutation({
     mutationFn: createSharedWalletRequest,
+    onError: (error, variables, context: any) => {
+      queryClient.setQueryData(["requests"], context.previousItems);
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
+  });
+
+  const acceptMutation = useMutation({
+    mutationFn: acceptSharedWalletRequest,
     onError: (error, variables, context: any) => {
       queryClient.setQueryData(["requests"], context.previousItems);
     },
@@ -37,6 +47,7 @@ export const useSharedWalletRequestMutation = () => {
 
   return {
     createMutation,
+    acceptMutation,
     declineMutation,
     deleteMutation,
   };

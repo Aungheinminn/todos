@@ -57,7 +57,6 @@ const Home = () => {
 
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />
-        <Link href="/requests">Shared Wallet Invitations</Link>
       </div>
     </Suspense>
   );
