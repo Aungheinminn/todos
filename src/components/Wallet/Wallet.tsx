@@ -1,6 +1,6 @@
 import { WalletType } from "@/lib/types/wallet.type";
 
-type SharedWalletProps = {
+type WalletProps = {
   wallet: WalletType;
 };
 
@@ -18,7 +18,7 @@ const createMonograms = (userIds: string[] = []) => {
   });
 };
 
-const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
+const Wallet: React.FC<WalletProps> = ({ wallet }) => {
   return (
     <div className="bg-gray-700 rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
       <div className="flex justify-between items-start mb-4">
@@ -41,21 +41,11 @@ const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-3">
         <p className="text-3xl font-bold text-white">{wallet.balance}</p>
-      </div>
-
-      <div className="flex items-center px-2">
-        <div className="flex">{createMonograms(wallet.shared_user_ids)}</div>
-        {wallet.shared_user_ids && wallet.shared_user_ids.length > 0 && (
-          <span className="ml-3 text-sm text-white">
-            Shared with {wallet.shared_user_ids.length} user
-            {wallet.shared_user_ids.length > 1 ? "s" : ""}
-          </span>
-        )}
       </div>
     </div>
   );
 };
 
-export default SharedWallet;
+export default Wallet;

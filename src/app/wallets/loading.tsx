@@ -1,8 +1,8 @@
 "use client";
 import Loading from "@/components/Loading/Loading";
 
-const SharedWalletsLoading = () => {
+const WalletsLoading = () => {
   return <Loading />;
 };
 
-export default SharedWalletsLoading;
+export default WalletsLoading;

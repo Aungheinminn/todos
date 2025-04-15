@@ -32,7 +32,7 @@ const ConfirmTransactionPopup = () => {
 
   const { currentUser } = useCurrentUserStore((state) => state);
   const { currentWallet } = useWalletStore((state) => state);
-  const { createMutation } = useTransactionMutation();
+  const { createMutation, editMutation } = useTransactionMutation();
 
   const { data: wallets } = useQuery({
     queryKey: ["wallets"],
@@ -72,28 +72,19 @@ const ConfirmTransactionPopup = () => {
   };
 
   const handleTransaction = async () => {
-    let data;
-    if (type === "create") {
-      data = {
-        wallet_id: wallet.id,
-        transaction: Number(amount),
-        user_id: currentUser?._id || "",
-        category: category.name,
-        note,
-        created_at: date,
-      };
-      transactionDatas.process = createMutation;
-    } else if (type === "edit") {
-      data = {
+    const data = {
+      ...(type === "edit" && {
         _id: transactionDatas?._id || "",
-        wallet_id: wallet.id,
-        transaction: Number(amount),
-        user_id: currentUser?._id || "",
-        category: category.name,
-        note,
-        created_at: date,
-      };
-    }
+      }),
+      wallet_id: wallet.id,
+      transaction: Number(amount),
+      user_id: currentUser?._id || "",
+      category: category.name,
+      note,
+      created_at: date,
+    };
+    transactionDatas.process =
+      type === "create" && createMutation
     try {
       transactionDatas.process.mutate(data, {
         onSuccess: (data: any) => {

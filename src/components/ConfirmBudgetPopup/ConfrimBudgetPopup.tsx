@@ -71,27 +71,18 @@ const ConfirmBudgetPopup = () => {
   };
 
   const handleBudget = () => {
-    let budgetData;
-    if (type === "create") {
-      budgetData = {
-        user_id: currentUser?._id || "",
-        wallet_id: currentWallet?._id || "",
-        budget: Number(amount),
-        category: category.name,
-        start_date: new Date(new Date(date.startDate).setHours(0, 0, 0, 0)),
-        end_date: new Date(new Date(date.endDate).setHours(0, 0, 0, 0)),
-      };
-    } else if (type === "edit") {
-      budgetData = {
+    const budgetData = {
+      ...(type === "edit" && {
         _id: budgetDatas?.id || "",
-        user_id: budgetDatas?.user_id || currentUser?._id || "",
-        wallet_id: wallet.id || currentWallet?._id || "",
-        budget: Number(amount),
-        category: category.name,
-        start_date: new Date(new Date(date.startDate).setHours(0, 0, 0, 0)),
-        end_date: new Date(new Date(date.endDate).setHours(0, 0, 0, 0)),
-      };
-    }
+      }),
+      user_id: type === "create" ? currentUser?._id : budgetDatas?.user_id,
+      wallet_id:
+        type === "create" ? currentWallet?._id : budgetDatas?.wallet.id,
+      budget: Number(amount),
+      category: category.name,
+      start_date: new Date(new Date(date.startDate).setHours(0, 0, 0, 0)),
+      end_date: new Date(new Date(date.endDate).setHours(0, 0, 0, 0)),
+    };
     budgetDatas.process.mutate(budgetData, {
       onSuccess: (data: any) => {
         if (data.success) {
