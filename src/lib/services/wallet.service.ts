@@ -113,11 +113,7 @@ export const updateWallet = async (data: WalletType) => {
   }
 };
 
-export const deleteWallet = async ({
-  wallet_id,
-}: {
-  wallet_id: string;
-}) => {
+export const deleteWallet = async ({ wallet_id }: { wallet_id: string }) => {
   try {
     const response = await fetch(
       `http://localhost:3000/api/protected/wallets/wallet/${wallet_id}`,

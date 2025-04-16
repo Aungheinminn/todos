@@ -5,7 +5,12 @@ import SharedWallet from "@/components/SharedWallet/SharedWallet";
 import Wallet from "@/components/Wallet/Wallet";
 import WalletTypeSwitcher from "@/components/WalletTypeSwitcher/WalletTypeSwitcher";
 import { Button } from "@/components/ui/button";
+import { getSharedWallets } from "@/lib/services/sharedWallet.service";
+import { useSharedWalletPopupStore } from "@/lib/stores/sharedWalletPopupStore";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
+import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
 import { WalletType } from "@/lib/types/wallet.type";
+import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 
 type WalletHeaderProps = {
@@ -39,13 +44,43 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({
 };
 
 const Wallets = () => {
-  const [walletType, setWalletType] = useState<string>("normal");
+  const { currentUser } = useCurrentUserStore((state) => state);
 
+  const { setIsOpen: setSharedWalletIsOpen, setType: setSharedWalletOpenType } =
+    useSharedWalletPopupStore((state) => state);
+  const { setIsOpen: setWalletIsOpen, setType: setWalletOpenType } =
+    useWalletPopupStore((state) => state);
+
+  const [walletType, setWalletType] = useState<string>("normal");
   const handleToggle = (value: string) => {
     setWalletType(value);
   };
 
-  const handleCreate = () => {};
+  const { data: sharedWallets } = useQuery({
+    queryKey: ["sharedWallets"],
+    queryFn: () => getSharedWallets(currentUser?._id || ""),
+    enabled: !!currentUser && walletType === "shared",
+  });
+
+  const { data: wallets } = useQuery({
+    queryKey: ["wallets"],
+    queryFn: () => getSharedWallets(currentUser?._id || ""),
+    enabled: !!currentUser && walletType === "normal",
+  });
+
+
+
+  const handleCreate = () => {
+    if (walletType === "shared") {
+      console.log("hi");
+      setSharedWalletOpenType("create");
+      setSharedWalletIsOpen(true);
+    } else {
+      console.log("hello");
+      setWalletOpenType("create");
+      setWalletIsOpen(true);
+    }
+  };
   const sampleWallet: WalletType = {
     _id: "1",
     wallet_name: "Personal Savings",

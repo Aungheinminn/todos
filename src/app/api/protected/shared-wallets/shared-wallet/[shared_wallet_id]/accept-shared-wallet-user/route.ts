@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
 import { PushOperator } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,17 +23,19 @@ export const PUT = async (
   try {
     const { shared_wallet_id } = params;
     const client = await clientPromise;
-    const db = client.db("remarket_next");
+    const db = client.db("remarker_next");
     const body = await req.json();
     const { sharedWalletUser } = body;
 
-    const currentWallet = await db
-        .collection("wallets")
-        .findOneAndUpdate({ wallet_id: shared_wallet_id }, {
-          $push: {
-            shared_user_ids: sharedWalletUser,
-          },
-        } as unknown as PushOperator<Document>);
+    const currentWallet = await db.collection("wallets").findOneAndUpdate(
+      { _id: new ObjectId(shared_wallet_id) },
+      {
+        $push: {
+          shared_user_ids: sharedWalletUser,
+        },
+      },
+      { returnDocument: "after" },
+    );
 
     const updatedRequest = await db
       .collection("shared_wallet_requests")
@@ -40,6 +43,8 @@ export const PUT = async (
         { wallet_id: shared_wallet_id },
         { $set: { status: "accepted" } },
       );
+
+    console.log("blahblah", updatedRequest, currentWallet);
 
     if (!currentWallet || !updatedRequest) {
       return NextResponse.json(
