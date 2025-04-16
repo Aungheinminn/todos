@@ -19,7 +19,12 @@ export const GET = async (
     const db = client.db("remarker_next");
     const wallets = await db
       .collection("wallets")
-      .find({ user_id: id })
+      .find({
+        user_id: id,
+         shared_user_ids: {
+         $exists: false
+        }
+      })
       .toArray();
 
     if (!wallets) {

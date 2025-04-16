@@ -6,10 +6,10 @@ export const useSharedWalletMutation = () => {
   const createMutation = useMutation({
     mutationFn: createSharedWallet,
     onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["requests"], context.previousItems);
+      queryClient.setQueryData(["sharedWallets"], context.previousItems);
     },
     onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
+      queryClient.invalidateQueries({ queryKey: ["sharedWallets"] }),
   });
 
   return {
