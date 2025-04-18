@@ -1,15 +1,18 @@
-import { WalletType } from "@/lib/types/wallet.type";
+import {
+  SharedWalletType,
+  SharedWalletUserType,
+} from "@/lib/types/wallet.type";
 
 type SharedWalletProps = {
-  wallet: WalletType;
+  wallet: SharedWalletType;
 };
 
-const createMonograms = (userIds: string[] = []) => {
-  return userIds.slice(0, 3).map((userId) => {
-    const initials = userId.split("").slice(0, 2).join("").toUpperCase();
+const createMonograms = (users: SharedWalletUserType[] = []) => {
+  return users.slice(0, 3).map((user, idx) => {
+    const initials = user.username.split("").slice(0, 2).join("").toUpperCase();
     return (
       <div
-        key={userId}
+        key={idx}
         className="w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center text-white text-sm font-medium -ml-2 border border-white"
       >
         {initials}
@@ -32,7 +35,7 @@ const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
             )}
           </h3>
           <p className="text-sm text-gray-500">
-            Created: {wallet.created_at?.toLocaleDateString()}
+            Created: {wallet.created_at && new Date(wallet.created_at).toLocaleDateString()}
           </p>
         </div>
 

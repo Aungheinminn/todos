@@ -5,21 +5,28 @@ import SharedWallet from "@/components/SharedWallet/SharedWallet";
 import Wallet from "@/components/Wallet/Wallet";
 import WalletTypeSwitcher from "@/components/WalletTypeSwitcher/WalletTypeSwitcher";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { getSharedWallets } from "@/lib/services/sharedWallet.service";
 import { useSharedWalletPopupStore } from "@/lib/stores/sharedWalletPopupStore";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
-import { WalletType } from "@/lib/types/wallet.type";
+import { SharedWalletType, WalletType } from "@/lib/types/wallet.type";
 import { useQuery } from "@tanstack/react-query";
 import { Suspense, useState } from "react";
 
-type WalletHeaderProps = {
+type WalletsHeaderProps = {
   walletType: string;
   handleToggle: (value: string) => void;
   handleCreate: () => void;
 };
 
-const WalletHeader: React.FC<WalletHeaderProps> = ({
+type WalletsBodyProps = {
+  walletType: string;
+  wallets: WalletType[];
+  sharedWallets: SharedWalletType[];
+};
+
+const WalletsHeader: React.FC<WalletsHeaderProps> = ({
   walletType,
   handleToggle,
   handleCreate,
@@ -43,6 +50,28 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({
   );
 };
 
+const WalletsBody: React.FC<WalletsBodyProps> = ({
+  walletType,
+  wallets,
+  sharedWallets,
+}) => {
+  return (
+    <ScrollArea>
+      <div className="px-1 w-full h-[calc(100vh-240px)] flex flex-col gap-y-2">
+        {walletType === "normal" &&
+          wallets.map((wallet: WalletType, index: number) => (
+            <Wallet key={index} wallet={wallet} />
+          ))}
+
+        {walletType === "shared" &&
+          sharedWallets.map((sharedWallet: SharedWalletType, index: number) => (
+            <SharedWallet key={index} wallet={sharedWallet} />
+          ))}
+      </div>
+    </ScrollArea>
+  );
+};
+
 const Wallets = () => {
   const { currentUser } = useCurrentUserStore((state) => state);
 
@@ -57,18 +86,16 @@ const Wallets = () => {
   };
 
   const { data: sharedWallets } = useQuery({
-    queryKey: ["sharedWallets"],
+    queryKey: ["sharedWallets", walletType],
     queryFn: () => getSharedWallets(currentUser?._id || ""),
     enabled: !!currentUser && walletType === "shared",
   });
 
   const { data: wallets } = useQuery({
-    queryKey: ["wallets"],
+    queryKey: ["wallets", walletType],
     queryFn: () => getSharedWallets(currentUser?._id || ""),
     enabled: !!currentUser && walletType === "normal",
   });
-
-
 
   const handleCreate = () => {
     if (walletType === "shared") {
@@ -81,27 +108,20 @@ const Wallets = () => {
       setWalletIsOpen(true);
     }
   };
-  const sampleWallet: WalletType = {
-    _id: "1",
-    wallet_name: "Personal Savings",
-    user_id: "user123",
-    created_at: new Date(),
-    currency: "USD",
-    balance: 5000.75,
-    current: true,
-    shared_user_ids: ["john_doe", "jane_smith", "bob_wilson", "alice"],
-  };
 
   return (
     <Suspense fallback={<WalletsLoading />}>
       <div className="pt-[55px] flex flex-col w-full px-2 gap-y-3">
-        <WalletHeader
+        <WalletsHeader
           walletType={walletType}
           handleToggle={handleToggle}
           handleCreate={handleCreate}
         />
-        <SharedWallet wallet={sampleWallet} />
-        <Wallet wallet={sampleWallet} />
+        <WalletsBody
+          walletType={walletType}
+          wallets={wallets || []}
+          sharedWallets={sharedWallets || []}
+        />
       </div>
     </Suspense>
   );
