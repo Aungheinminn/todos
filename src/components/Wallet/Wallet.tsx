@@ -32,7 +32,7 @@ const Wallet: React.FC<WalletProps> = ({ wallet }) => {
             )}
           </h3>
           <p className="text-sm text-gray-500">
-            Created: {wallet.created_at?.toLocaleDateString()}
+            Created: {wallet.created_at && new Date(wallet.created_at).toLocaleDateString()}
           </p>
         </div>
 

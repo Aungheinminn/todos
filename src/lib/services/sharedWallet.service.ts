@@ -27,10 +27,12 @@ export const getSharedWallets = async (id: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
-    return response.json();
+    const res = await response.json();
+    console.log(res);
+    return res.data;
   } catch (e) {
     console.error(e);
   }
-}
+};
