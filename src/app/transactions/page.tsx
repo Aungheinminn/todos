@@ -36,16 +36,6 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
         <p>Total</p>
         <Image className="w-4" src={caretDown} alt="caret down" />
       </Button>
-      <div className="flex justify-between items-center">
-        {currentWallet &&
-        currentWallet.shared_user_ids &&
-        currentWallet.shared_user_ids.length > 0 ? (
-          <SharedWalletVerified />
-        ) : (
-          ""
-        )}
-        <AddSharedWalletUsers valid={true} wallet={currentWallet} />
-      </div>
     </div>
   );
 };

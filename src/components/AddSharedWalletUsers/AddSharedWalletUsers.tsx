@@ -12,7 +12,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useCallback, useMemo } from "react";
 
 type AddSharedWalletUsersProps = {
-  valid: boolean;
+  children: React.ReactNode;
   wallet: WalletType;
 };
 
@@ -147,7 +147,7 @@ const SharedWalletUsersBox: React.FC<SharedWalletUsersBoxProps> = ({
 };
 
 const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
-  valid,
+  children,
   wallet,
 }) => {
   const { createMutation } = useSharedWalletRequestMutation();
@@ -190,10 +190,8 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger
-        className={`${valid ? "" : "pointer-events-none opacity-50"} bg-gray-900 p-2 rounded-md`}
-      >
-        Make Shared-wallet
+      <DialogTrigger className={`flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-blue-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}>
+        {children}
       </DialogTrigger>
       <DialogContent className="rounded-md bg-gray-700">
         <SharedWalletUsersBox

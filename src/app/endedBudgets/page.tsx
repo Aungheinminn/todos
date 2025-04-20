@@ -3,7 +3,7 @@ import EndedBudgetsLoading from "@/app/endedBudgets/loading";
 import BudgetBodyLoading from "@/components/BudgetBodyLoading/BudgetBodyLoading";
 import BudgetCard from "@/components/BudgetCard/BudgetCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getEndedBudgets } from "@/lib/budget.service";
+import { getEndedBudgets } from "@/lib/services/budget.service";
 import { BudgetType } from "@/lib/types/budget.type";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useWalletStore } from "@/lib/stores/walletStore";
