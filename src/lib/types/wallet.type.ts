@@ -18,3 +18,6 @@ export type WalletType = {
 export type SharedWalletType = Omit<WalletType, "shared_user_ids"> & {
   shared_user_ids: SharedWalletUserType[];
 };
+
+
+

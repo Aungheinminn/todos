@@ -150,7 +150,7 @@ export const endBudget = async ({ id }: { id: string }) => {
 export const getBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/budget/${id}`,
+      `http://localhost:3000/api/protected/budgets/budget/${id}`,
       {
         method: "GET",
         headers: {

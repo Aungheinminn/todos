@@ -1,7 +1,10 @@
+"use client";
+
 import {
   SharedWalletType,
   SharedWalletUserType,
 } from "@/lib/types/wallet.type";
+import Link from "next/link";
 
 type SharedWalletProps = {
   wallet: SharedWalletType;
@@ -23,7 +26,7 @@ const createMonograms = (users: SharedWalletUserType[] = []) => {
 
 const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
   return (
-    <div className="bg-gray-700 rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
+    <Link href={`/wallets/${wallet._id}`} className="bg-gray-700 rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-lg font-semibold text-white line-clamp-2">
@@ -57,7 +60,7 @@ const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
           </span>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 
