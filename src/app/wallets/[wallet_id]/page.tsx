@@ -1,9 +1,9 @@
 "use client";
 
 import WalletLoading from "@/app/wallets/[wallet_id]/loading";
-import { WalletType } from "@/lib/types/wallet.type";
+import { WalletType, WalletWithUserInfoType } from "@/lib/types/wallet.type";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import dateIcon from "@/assets/date.svg";
 import moneyIcon from "@/assets/money.svg";
@@ -11,20 +11,30 @@ import deleteIcon from "@/assets/trash.svg";
 import shareIcon from "@/assets/share.svg";
 import transactionIcon from "@/assets/transaction_page_indicator_icon.svg";
 import AddSharedWalletUsers from "@/components/AddSharedWalletUsers/AddSharedWalletUsers";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useWalletStore } from "@/lib/stores/walletStore";
+import { useWalletMutation } from "@/lib/mutations/walletMutation";
+import { useQuery } from "@tanstack/react-query";
+import { getWalletById } from "@/lib/services/wallet.service";
+import { Skeleton } from "@/components/ui/skeleton";
+import MutateLoading from "@/components/MutateLoading/MutateLoading";
 
 type WalletHeaderProps = {
-  wallet: WalletType;
+  wallet: WalletWithUserInfoType;
+  isViewTransactionsLoading: boolean;
   handleViewTransactions: () => void;
 };
 
 type WalletActionsProps = {
-  wallet: WalletType;
+  wallet: WalletWithUserInfoType;
   handleDelete: () => void;
 };
 
-const WalletHeader: React.FC<WalletHeaderProps> = ({ wallet, handleViewTransactions }) => {
+const WalletHeader: React.FC<WalletHeaderProps> = ({
+  wallet,
+  isViewTransactionsLoading,
+  handleViewTransactions,
+}) => {
   return (
     <div className="flex flex-col gap-3 px-1">
       <div className="w-full">
@@ -35,7 +45,7 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({ wallet, handleViewTransacti
                 {wallet.wallet_name}
               </h2>
               <p className="text-xs sm:text-sm text-gray-400">
-                Owner: {wallet.user_id}
+                Owner: {wallet.user.username || wallet.user.email}
               </p>
             </div>
           </div>
@@ -60,14 +70,21 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({ wallet, handleViewTransacti
           <div className="w-full flex justify-end items-center">
             <Button
               onClick={handleViewTransactions}
+              disabled={isViewTransactionsLoading}
               className="w-fit px-4 py-2.5 text-sm font-medium text-white bg-blue-700/50 hover:bg-blue-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
             >
-              <Image
-                className="w-4 h-4"
-                src={transactionIcon}
-                alt="transactions"
-              />
-              View Transactions
+              {isViewTransactionsLoading ? (
+                <MutateLoading width="144px" height="40px" />
+              ) : (
+                <div className="flex items-center gap-2">
+                  <Image
+                    className="w-4 h-4"
+                    src={transactionIcon}
+                    alt="transactions"
+                  />
+                  View Transactions
+                </div>
+              )}
             </Button>
           </div>
         </div>
@@ -120,34 +137,57 @@ const WalletActions: React.FC<WalletActionsProps> = ({
 };
 
 const Wallet = () => {
-  const router = useParams();
+  const param = useParams();
+  const router = useRouter();
+  const { updateCurrentWallet } = useWalletStore((state) => state);
+  const { updateCurrentWalletMutation } = useWalletMutation();
 
-  console.log("router", router);
+  console.log(updateCurrentWalletMutation.isPending);
 
-  const mockWallet = {
-    _id: "1",
-    wallet_name: "Wallet 1",
-    user_id: "1af",
-    created_at: new Date(),
-    currency: "MMK",
-    balance: 1000,
-    current: true,
-    shared_user_ids: ["1", "2", "3"],
-  };
+  const { data: wallet, isLoading } = useQuery({
+    queryKey: ["wallet", param.wallet_id],
+    queryFn: () => getWalletById(param.wallet_id.toString() || ""),
+    enabled: !!param.wallet_id,
+  });
 
   const handleViewTransactions = () => {
-    
-  }
+    if (wallet.current) {
+      router.push(`/transactions`);
+    } else {
+      updateCurrentWalletMutation.mutate(
+        { wallet_id: wallet._id || "", user_id: wallet.user_id },
+        {
+          onSuccess: (data) => {
+            if (data.success) {
+              updateCurrentWallet(data.data);
+              router.push(`/transactions`);
+            }
+          },
+        },
+      );
+    }
+  };
   const handleDelete = () => {};
+
+  if (isLoading) {
+    return (
+      <div className="flex pt-[55px] flex-col gap-y-3 w-full px-1">
+        <Skeleton className="w-full h-[202px] bg-gray-700 rounded-lg" />
+        <Skeleton className="w-full h-[76px] bg-gray-700 rounded-lg" />
+        <Skeleton className="w-full h-[90px] bg-gray-700 rounded-lg" />
+      </div>
+    );
+  }
 
   return (
     <Suspense fallback={<WalletLoading />}>
       <div className="w-full flex flex-col gap-y-4 pt-[55px] mb-4">
-        <WalletHeader wallet={mockWallet} handleViewTransactions={handleViewTransactions} />
-        <WalletActions
-          wallet={mockWallet}
-          handleDelete={handleDelete}
+        <WalletHeader
+          wallet={wallet}
+          isViewTransactionsLoading={updateCurrentWalletMutation.isPending}
+          handleViewTransactions={handleViewTransactions}
         />
+        <WalletActions wallet={wallet} handleDelete={handleDelete} />
       </div>
     </Suspense>
   );

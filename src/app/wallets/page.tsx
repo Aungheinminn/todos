@@ -7,6 +7,7 @@ import WalletTypeSwitcher from "@/components/WalletTypeSwitcher/WalletTypeSwitch
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getSharedWallets } from "@/lib/services/sharedWallet.service";
+import { getWallets } from "@/lib/services/wallet.service";
 import { useSharedWalletPopupStore } from "@/lib/stores/sharedWalletPopupStore";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useWalletPopupStore } from "@/lib/stores/walletPopupStore";
@@ -93,7 +94,7 @@ const Wallets = () => {
 
   const { data: wallets } = useQuery({
     queryKey: ["wallets", walletType],
-    queryFn: () => getSharedWallets(currentUser?._id || ""),
+    queryFn: () => getWallets(currentUser?._id || ""),
     enabled: !!currentUser && walletType === "normal",
   });
 
