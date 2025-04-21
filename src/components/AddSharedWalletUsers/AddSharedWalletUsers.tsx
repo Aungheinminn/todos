@@ -5,7 +5,7 @@ import { useSharedWalletRequestMutation } from "@/lib/mutations/sharedWalletRequ
 import { getUserByRefId } from "@/lib/services/users.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { SharedWalletRequestType } from "@/lib/types/sharedWalletRequest.type";
-import { WalletType } from "@/lib/types/wallet.type";
+import { WalletType, WalletWithUserInfoType } from "@/lib/types/wallet.type";
 import { debounce } from "@/lib/utils/debounce";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +13,7 @@ import { useState, useCallback, useMemo } from "react";
 
 type AddSharedWalletUsersProps = {
   children: React.ReactNode;
-  wallet: WalletType;
+  wallet: WalletWithUserInfoType;
 };
 
 type SharedWalletUsersBoxProps = {
@@ -166,7 +166,7 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
       const data = {
         status: "pending",
         wallet_id: wallet._id || "",
-        inviter_id: wallet.user_id,
+        inviter_id: wallet.user._id,
         invitee_id: user.id,
       };
 
@@ -190,7 +190,9 @@ const AddSharedWalletUsers: React.FC<AddSharedWalletUsersProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger className={`flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-blue-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}>
+      <DialogTrigger
+        className={`flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-blue-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2`}
+      >
         {children}
       </DialogTrigger>
       <DialogContent className="rounded-md bg-gray-700">

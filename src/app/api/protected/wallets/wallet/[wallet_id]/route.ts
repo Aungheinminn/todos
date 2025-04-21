@@ -25,17 +25,59 @@ export const GET = async (
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
+    // const wallet = await db
+    //   .collection("wallets")
+    //   .findOne({ _id: new ObjectId(wallet_id) });
+
     const wallet = await db
       .collection("wallets")
-      .findOne({ _id: new ObjectId(wallet_id) });
+      .aggregate([
+        {
+          $match: {
+            _id: new ObjectId(wallet_id),
+          },
+        },
+        { $addFields: { user_id: { $toObjectId: "$user_id" } } },
+        {
+          $unwind: "$user_id",
+        },
+        {
+          $lookup: {
+            from: "users",
+            localField: "user_id",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $unwind: "$user",
+        },
+        {
+          $project: {
+            _id: 1,
+            wallet_name: 1,
+            created_at: 1,
+            currency: 1,
+            balance: 1,
+            current: 1,
+            "user._id": 1,
+            "user.username": 1,
+            "user.email": 1,
+          },
+        },
+      ])
+      .toArray();
 
-    if (!wallet) {
+    if (wallet.length <= 0) {
       return NextResponse.json(
         { success: false, message: "Wallet not found" },
         { status: 404 },
       );
     }
-    return NextResponse.json({ success: true, data: wallet }, { status: 200 });
+    return NextResponse.json(
+      { success: true, data: wallet[0] },
+      { status: 200 },
+    );
   } catch (e) {
     console.error(e);
     return NextResponse.json(

@@ -1,8 +1,6 @@
-import { Button } from "@/components/ui/button";
+import MutateLoading from "@/components/MutateLoading/MutateLoading";
 import { useSharedWalletRequestMutation } from "@/lib/mutations/sharedWalletRequestMutation";
 import { SharedWalletRequestResponseType } from "@/lib/types/sharedWalletRequest.type";
-import Lottie from "react-lottie-player";
-import loadingAnimation from "@/lottle/loading.json";
 
 type RequestComponent = {
   request: SharedWalletRequestResponseType;
@@ -23,19 +21,6 @@ type InviteComponentProps = {
   isDeclineLoading: boolean;
 };
 
-const MutateLoading = () => {
-  return (
-    <Lottie
-      loop
-      animationData={loadingAnimation}
-      play
-      style={{
-        width: "78px",
-        height: "40px",
-      }}
-    />
-  );
-};
 
 const Invite: React.FC<InviteComponentProps> = ({
   request,
@@ -85,14 +70,14 @@ const Invite: React.FC<InviteComponentProps> = ({
             disabled={isAcceptLoading}
             className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 "
           >
-            {isAcceptLoading ? <MutateLoading /> : "Accept"}
+            {isAcceptLoading ? <MutateLoading width="78px" height="40px" /> : "Accept"}
           </button>
           <button
             onClick={handleDecline}
             disabled={isDeclineLoading}
             className="w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
           >
-            {isDeclineLoading ? <MutateLoading /> : "Decline"}
+            {isDeclineLoading ? <MutateLoading width="78px" height="40px" /> : "Decline"}
           </button>
         </div>
       </div>
@@ -145,7 +130,7 @@ const Request: React.FC<RequestComponentProps> = ({
           disabled={isLoading}
           className={`w-[78px] h-[40px] flex items-center justify-center text-sm font-medium text-red-600 bg-red-100 rounded-md hover:bg-red-200 ${request.status !== "pending" && "hidden"}`}
         >
-          {isLoading ? <MutateLoading /> : "Delete"}
+          {isLoading ? <MutateLoading width="78px" height="40px" /> : "Delete"}
         </button>
       </div>
     </div>

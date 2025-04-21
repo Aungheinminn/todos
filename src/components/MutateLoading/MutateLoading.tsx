@@ -1,27 +1,25 @@
-import { Skeleton } from "../ui/skeleton"
+import Lottie from "react-lottie-player";
+import loadingAnimation from "@/lottle/loading.json";
 
-const MutateLoading = ({ loadingItemHeight, marginTop }: {
-    loadingItemHeight: string;
-    marginTop: string
+const MutateLoading = ({
+  width,
+  height,
+}: {
+  width: string;
+  height: string;
 }) => {
-    return (
-        <div 
-            style={{
-                marginTop: marginTop
-            }} 
-            className="w-full h-full grid grid-cols-1 gap-y-2 px-1"
-        >
-            <Skeleton style={{
-                height: loadingItemHeight
-            }} className={`w-full bg-[#CBD5E1]`} />
-            <Skeleton style={{
-                height: loadingItemHeight
-            }} className={`w-full bg-[#CBD5E1]`} />
-            <Skeleton style={{
-                height: loadingItemHeight
-            }} className={`w-full bg-[#CBD5E1]`} />
-        </div>
-    )
-}
+  return (
+    <Lottie
+      loop
+      animationData={loadingAnimation}
+      play
+      style={{
+        width: width,
+        height: height,
+      }}
+    />
+  );
+};
 
 export default MutateLoading;
+
