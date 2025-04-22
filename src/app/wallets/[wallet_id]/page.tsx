@@ -4,7 +4,7 @@ import WalletLoading from "@/app/wallets/[wallet_id]/loading";
 import { WalletType, WalletWithUserInfoType } from "@/lib/types/wallet.type";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import dateIcon from "@/assets/date.svg";
 import moneyIcon from "@/assets/money.svg";
 import deleteIcon from "@/assets/trash.svg";
@@ -18,6 +18,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getWalletById } from "@/lib/services/wallet.service";
 import { Skeleton } from "@/components/ui/skeleton";
 import MutateLoading from "@/components/MutateLoading/MutateLoading";
+import { getSharedWalletUsers } from "@/lib/services/sharedWallet.service";
+import WalletUserManagement from "@/components/WalletUserManagement/WalletUserManagement";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 type WalletHeaderProps = {
   wallet: WalletWithUserInfoType;
@@ -36,7 +39,7 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({
   handleViewTransactions,
 }) => {
   return (
-    <div className="flex flex-col gap-3 px-1">
+    <div className="flex flex-col gap-3">
       <div className="w-full">
         <div className="bg-gray-700 rounded-lg p-4 sm:p-6 shadow-lg border border-gray-700">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-0 mb-4 sm:mb-6">
@@ -118,7 +121,7 @@ const WalletActions: React.FC<WalletActionsProps> = ({
   handleDelete,
 }) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-1 px-1">
+    <div className="flex flex-col sm:flex-row gap-1">
       <button
         onClick={handleDelete}
         className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-red-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
@@ -142,13 +145,27 @@ const Wallet = () => {
   const { updateCurrentWallet } = useWalletStore((state) => state);
   const { updateCurrentWalletMutation } = useWalletMutation();
 
-  console.log(updateCurrentWalletMutation.isPending);
+  const [search, setSearch] = useState<string>("");
+
+  console.log(search);
 
   const { data: wallet, isLoading } = useQuery({
     queryKey: ["wallet", param.wallet_id],
     queryFn: () => getWalletById(param.wallet_id.toString() || ""),
     enabled: !!param.wallet_id,
   });
+
+  const { data: sharedWalletUsers, isLoading: isSharedWalletUsersLoading } =
+    useQuery({
+      queryKey: ["sharedWalletUsers"],
+      queryFn: () => getSharedWalletUsers(wallet._id),
+      enabled:
+        wallet && wallet.shared_user_ids && wallet.shared_user_ids.length > 0,
+    });
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
 
   const handleViewTransactions = () => {
     if (wallet.current) {
@@ -169,6 +186,10 @@ const Wallet = () => {
   };
   const handleDelete = () => {};
 
+  const handleMakeAdmin = () => {};
+
+  const handleRemoveUser = () => {};
+
   if (isLoading) {
     return (
       <div className="flex pt-[55px] flex-col gap-y-3 w-full px-1">
@@ -181,14 +202,25 @@ const Wallet = () => {
 
   return (
     <Suspense fallback={<WalletLoading />}>
-      <div className="w-full flex flex-col gap-y-4 pt-[55px] mb-4">
+      <ScrollArea className="w-full h-[calc(100vh-56px)] ">
+        <div className="h-full flex flex-col justify-start gap-y-4 pt-[55px] px-1 mb-4">
+        <ScrollBar className="z-[100]" />
         <WalletHeader
           wallet={wallet}
           isViewTransactionsLoading={updateCurrentWalletMutation.isPending}
           handleViewTransactions={handleViewTransactions}
         />
+        <WalletUserManagement
+          users={sharedWalletUsers || []}
+          onSearch={handleSearch}
+          onMakeAdmin={handleMakeAdmin}
+          onRemoveUser={handleRemoveUser}
+          isLoading={isSharedWalletUsersLoading}
+          totalUsers={sharedWalletUsers?.length || 0}
+        />
         <WalletActions wallet={wallet} handleDelete={handleDelete} />
-      </div>
+        </div>
+      </ScrollArea>
     </Suspense>
   );
 };

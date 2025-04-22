@@ -98,6 +98,7 @@ const Wallets = () => {
     enabled: !!currentUser && walletType === "normal",
   });
 
+
   const handleCreate = () => {
     if (walletType === "shared") {
       console.log("hi");
