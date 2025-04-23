@@ -6,8 +6,11 @@ import { useState } from "react";
 import searchIcon from "@/assets/white_search.svg";
 
 type WalletUserManagementProps = {
+  currentUserId: string;
+  walletAdminId: string;
   users: UserType[];
   onMakeAdmin: (userId: string) => void;
+  onLeaveWallet: (userId: string) => void;
   onRemoveUser: (userId: string) => void;
   isLoading: boolean;
   totalUsers: number;
@@ -15,8 +18,11 @@ type WalletUserManagementProps = {
 };
 
 const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
+  currentUserId,
+  walletAdminId,
   users,
   onMakeAdmin,
+  onLeaveWallet,
   onRemoveUser,
   isLoading,
   totalUsers,
@@ -58,7 +64,6 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
         </div>
       </div>
 
-      {/* Users List */}
       <div className="space-y-4">
         {users.map((user) => (
           <div
@@ -66,11 +71,20 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
             className="bg-gray-700 rounded-lg p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:bg-gray-600 transition-all duration-200"
           >
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <h3 className="font-medium text-white">{user.username}</h3>
+              <h3 className="font-medium text-white">
+                {user.username}
+                <span
+                  className={` ${walletAdminId !== user._id && "hidden"} inline-flex items-center px-2 py-0.5 text-xs font-medium bg-green-500 text-white ml-2 rounded-full`}
+                >
+                  Admin
+                </span>{" "}
+              </h3>
               <p className="text-sm text-gray-300">{user.email}</p>
             </div>
 
-            <div className="flex gap-2 w-full sm:w-auto">
+            <div
+              className={`${user._id === walletAdminId || currentUserId === user._id ? "hidden" : "flex"} gap-2 w-auto`}
+            >
               <button
                 onClick={() => onMakeAdmin(user._id || "")}
                 className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors duration-200"
@@ -82,6 +96,17 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
                 className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
               >
                 Remove
+              </button>
+            </div>
+
+            <div
+              className={`${user._id === currentUserId ? "flex" : "hidden"} gap-2 w-auto}`}
+            >
+              <button
+                onClick={() => onLeaveWallet(user._id || "")}
+                className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
+              >
+                Leave
               </button>
             </div>
           </div>

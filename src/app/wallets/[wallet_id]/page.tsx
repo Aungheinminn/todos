@@ -21,6 +21,7 @@ import MutateLoading from "@/components/MutateLoading/MutateLoading";
 import { getSharedWalletUsers } from "@/lib/services/sharedWallet.service";
 import WalletUserManagement from "@/components/WalletUserManagement/WalletUserManagement";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 
 type WalletHeaderProps = {
   wallet: WalletWithUserInfoType;
@@ -29,6 +30,7 @@ type WalletHeaderProps = {
 };
 
 type WalletActionsProps = {
+  isAdmin: boolean;
   wallet: WalletWithUserInfoType;
   handleDelete: () => void;
 };
@@ -117,11 +119,15 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({
 };
 
 const WalletActions: React.FC<WalletActionsProps> = ({
+  isAdmin,
   wallet,
   handleDelete,
 }) => {
+  console.log(wallet.shared_user_ids, isAdmin);
   return (
-    <div className="flex flex-col sm:flex-row gap-1">
+    <div
+      className={`flex flex-col sm:flex-row gap-1 ${isAdmin ? "" : "hidden"}`}
+    >
       <button
         onClick={handleDelete}
         className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-red-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
@@ -129,12 +135,14 @@ const WalletActions: React.FC<WalletActionsProps> = ({
         <Image className="w-4 h-4" src={deleteIcon} alt="delete" />
         Delete
       </button>
-      {wallet.shared_user_ids && wallet.shared_user_ids.length > 0 && (
-        <AddSharedWalletUsers wallet={wallet}>
-          <Image className="w-4 h-4" src={shareIcon} alt="share" />
-          Share
-        </AddSharedWalletUsers>
-      )}
+      {wallet &&
+        wallet.shared_user_ids &&
+        wallet.shared_user_ids.length !== 0 && (
+          <AddSharedWalletUsers wallet={wallet}>
+            <Image className="w-4 h-4" src={shareIcon} alt="share" />
+            Share
+          </AddSharedWalletUsers>
+        )}
     </div>
   );
 };
@@ -143,6 +151,7 @@ const Wallet = () => {
   const param = useParams();
   const router = useRouter();
   const { updateCurrentWallet } = useWalletStore((state) => state);
+  const { currentUser } = useCurrentUserStore((state) => state);
   const { updateCurrentWalletMutation } = useWalletMutation();
 
   const [search, setSearch] = useState<string>("");
@@ -188,6 +197,8 @@ const Wallet = () => {
 
   const handleMakeAdmin = () => {};
 
+  const handleLeaveWallet = () => {};
+
   const handleRemoveUser = () => {};
 
   if (isLoading) {
@@ -204,21 +215,28 @@ const Wallet = () => {
     <Suspense fallback={<WalletLoading />}>
       <ScrollArea className="w-full h-[calc(100vh-56px)] ">
         <div className="h-full flex flex-col justify-start gap-y-4 pt-[55px] px-1 mb-4">
-        <ScrollBar className="z-[100]" />
-        <WalletHeader
-          wallet={wallet}
-          isViewTransactionsLoading={updateCurrentWalletMutation.isPending}
-          handleViewTransactions={handleViewTransactions}
-        />
-        <WalletUserManagement
-          users={sharedWalletUsers || []}
-          onSearch={handleSearch}
-          onMakeAdmin={handleMakeAdmin}
-          onRemoveUser={handleRemoveUser}
-          isLoading={isSharedWalletUsersLoading}
-          totalUsers={sharedWalletUsers?.length || 0}
-        />
-        <WalletActions wallet={wallet} handleDelete={handleDelete} />
+          <ScrollBar className="z-[100]" />
+          <WalletHeader
+            wallet={wallet}
+            isViewTransactionsLoading={updateCurrentWalletMutation.isPending}
+            handleViewTransactions={handleViewTransactions}
+          />
+          <WalletUserManagement
+            currentUserId={currentUser?._id || ""}
+            walletAdminId={wallet.user._id}
+            users={sharedWalletUsers || []}
+            onSearch={handleSearch}
+            onMakeAdmin={handleMakeAdmin}
+            onLeaveWallet={handleLeaveWallet}
+            onRemoveUser={handleRemoveUser}
+            isLoading={isSharedWalletUsersLoading}
+            totalUsers={sharedWalletUsers?.length || 0}
+          />
+          <WalletActions
+            isAdmin={currentUser?._id === wallet.user._id}
+            wallet={wallet}
+            handleDelete={handleDelete}
+          />
         </div>
       </ScrollArea>
     </Suspense>

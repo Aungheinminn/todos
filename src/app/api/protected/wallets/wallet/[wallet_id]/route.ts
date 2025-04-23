@@ -60,6 +60,7 @@ export const GET = async (
             currency: 1,
             balance: 1,
             current: 1,
+            shared_user_ids: 1,
             "user._id": 1,
             "user.username": 1,
             "user.email": 1,
