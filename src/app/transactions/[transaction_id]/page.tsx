@@ -31,6 +31,7 @@ type TransactionBodyProps = {
 };
 
 type TransactionFooterProps = {
+  isAdmin: boolean;
   handleDuplicate: () => void;
   handleDelete: () => void;
 };
@@ -99,6 +100,7 @@ const TransactionBody: React.FC<TransactionBodyProps> = ({
 };
 
 const TransactionFooter: React.FC<TransactionFooterProps> = ({
+  isAdmin,
   handleDuplicate,
   handleDelete,
 }) => {
@@ -106,12 +108,14 @@ const TransactionFooter: React.FC<TransactionFooterProps> = ({
     <div className="w-full flex flex-col justify-center items-center bg-gray-700">
       <Button
         className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-green-500 border-t border-slate-500"
+        disabled={!isAdmin}
         onClick={handleDuplicate}
       >
         Duplicate
       </Button>
       <Button
         className="w-full p-0 rounded-none bg-gray-700 hover:bg-gray-700 py-2 text-red-500 border-y border-slate-500"
+        disabled={!isAdmin}
         onClick={handleDelete}
       >
         Delete
@@ -217,6 +221,7 @@ const Transaction = () => {
         />
       </div>
       <TransactionFooter
+        isAdmin={currentUser?._id === transaction?.user_id} // This is needed because of the shared wallet side effect as other user can delete yours if this is not applied
         handleDuplicate={handleDuplicate}
         handleDelete={handleDelete}
       />
