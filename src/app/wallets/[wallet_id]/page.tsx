@@ -178,13 +178,15 @@ const Wallet = () => {
 
   const handleViewTransactions = () => {
     if (wallet.current) {
+      updateCurrentWallet(wallet);
       router.push(`/transactions`);
     } else {
       updateCurrentWalletMutation.mutate(
-        { wallet_id: wallet._id || "", user_id: wallet.user_id },
+        { wallet_id: wallet._id || "", user_id: wallet.user._id },
         {
           onSuccess: (data) => {
             if (data.success) {
+              console.log(data.data);
               updateCurrentWallet(data.data);
               router.push(`/transactions`);
             }

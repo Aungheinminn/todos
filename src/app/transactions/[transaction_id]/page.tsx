@@ -15,17 +15,18 @@ import { getTransactionById } from "@/lib/services/transaction.service";
 import { useWalletStore } from "@/lib/stores/walletStore";
 import { getWalletById } from "@/lib/services/wallet.service";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
-import { WalletType } from "@/lib/types/wallet.type";
+import { WalletWithUserInfoType } from "@/lib/types/wallet.type";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionPopupStore } from "@/lib/stores/transactionPopupStore";
 import { useTransactionMutation } from "@/lib/mutations/transactionMutation";
+import { isAdmin } from "@/lib/utils/isAdmin";
 
 type TransactionHeaderProps = {
   handleEdit: () => void;
 };
 
 type TransactionBodyProps = {
-  wallet: WalletType;
+  wallet: WalletWithUserInfoType;
   transaction: TransactionType;
   isLoading: boolean;
 };
@@ -210,6 +211,9 @@ const Transaction = () => {
       process: deleteMutation,
     });
   };
+
+  console.log(transaction, wallet, currentUser);
+
   return (
     <Suspense fallback={<TransactionsLoading />}>
       <div className="w-full pt-[56px] mb-4">
@@ -221,7 +225,11 @@ const Transaction = () => {
         />
       </div>
       <TransactionFooter
-        isAdmin={currentUser?._id === transaction?.user_id} // This is needed because of the shared wallet side effect as other user can delete yours if this is not applied
+        isAdmin={isAdmin(
+          currentUser?._id || "",
+          transaction?.user_id || "",
+          wallet?.user._id || "",
+        )} // This is needed because of the shared wallet side effect as other user can delete yours if this is not applied
         handleDuplicate={handleDuplicate}
         handleDelete={handleDelete}
       />

@@ -22,24 +22,20 @@ const DeleteTransactionPopup = () => {
   } = useTransactionPopupStore((state) => state);
 
   const handleDeleteTransaction = () => {
+    console.log(transactionDatas);
     try {
-      transactionDatas.process.mutate(
-        {
-          _id: transactionDatas?._id || "",
+      transactionDatas.process.mutate(transactionDatas?._id || "", {
+        onSuccess: (data: any) => {
+          if (data.success) {
+            setOpen(false);
+            resetTransactionDatas();
+            router.push("/transactions");
+          }
         },
-        {
-          onSuccess: (data: any) => {
-            if (data.success) {
-              setOpen(false);
-              resetTransactionDatas();
-              router.push("/transactions");
-            }
-          },
-          onError: (error: any) => {
-            console.error(error);
-          },
+        onError: (error: any) => {
+          console.error(error);
         },
-      );
+      });
     } catch (e) {
       console.error(e);
     }

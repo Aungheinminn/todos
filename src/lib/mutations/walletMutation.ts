@@ -22,7 +22,11 @@ queryClient.invalidateQueries({ queryKey: ["wallets"] })
 
   const updateCurrentWalletMutation = useMutation({
     mutationFn: updateCurrentWallet,
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ["wallets"] }),
+    onSettled: () => {
+
+    queryClient.invalidateQueries({ queryKey: ["wallets"] })
+    queryClient.invalidateQueries({ queryKey: ["sharedWallets"] })
+    } 
   });
 
   const editMutation = useMutation({
