@@ -12,13 +12,14 @@ import { getTransactionsByDate } from "@/lib/services/transaction.service";
 import TransactionMonthPicker from "@/components/TransactionMonthPicker/TransactionMonthPicker";
 import TransactionsComponent from "@/components/Transactions/Transactions";
 import { WalletType } from "@/lib/types/wallet.type";
-import { getCurrentWallet } from "@/lib/services/wallet.service";
+import { getCurrentWallet, getWalletById } from "@/lib/services/wallet.service";
 import TransactionsLoading from "@/components/TransactionsLoading/TransactionsLoading";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Socket } from "@/lib/singleton/socketService";
 import AddSharedWalletUsers from "@/components/AddSharedWalletUsers/AddSharedWalletUsers";
 import Link from "next/link";
 import SharedWalletVerified from "@/components/SharedWalletVerified/SharedWalletVerified";
+import { useWalletStore } from "@/lib/stores/walletStore";
 
 type TransactionHeaderProps = {
   currentWallet: WalletType;
@@ -41,14 +42,14 @@ const TransactionHeader: React.FC<TransactionHeaderProps> = ({
 };
 
 const Transactions = () => {
-  const { currentUser } = useCurrentUserStore((state) => state);
+  const { currentWallet: wallet } = useWalletStore((state) => state);
   const [limit, setLimit] = useState<number>(10);
   const socket = Socket.getInstance();
 
   const { data: currentWallet, isError } = useQuery({
     queryKey: ["currentWallet"],
-    queryFn: () => getCurrentWallet(currentUser?._id || ""),
-    enabled: !!currentUser?._id,
+    queryFn: () => getWalletById(wallet?._id || ""),
+    enabled: !!wallet?._id,
   });
 
   const [date, setDate] = useState({
@@ -59,7 +60,12 @@ const Transactions = () => {
   const { data: transactions, isLoading: isTransactionsLoading } = useQuery({
     queryKey: ["transactions", date, currentWallet, limit],
     queryFn: () =>
-      getTransactionsByDate(currentWallet._id, date.month, date.year, limit),
+      getTransactionsByDate(
+        currentWallet?._id || "",
+        date.month,
+        date.year,
+        limit,
+      ),
     enabled: !!currentWallet,
   });
 

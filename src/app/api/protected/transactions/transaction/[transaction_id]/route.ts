@@ -121,7 +121,7 @@ export const DELETE = async (
   req: NextRequest,
   { params }: { params: { transaction_id: string } },
 ) => {
-  if (!params.transaction_id) {
+  if (!params) {
     return NextResponse.json(
       { success: false, error: "wallet_id is required" },
       { status: 400 },

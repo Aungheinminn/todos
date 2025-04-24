@@ -1,5 +1,6 @@
 "use client";
 
+import { useCurrentUserStore } from "@/lib/stores/userStore";
 import {
   SharedWalletType,
   SharedWalletUserType,
@@ -25,20 +26,26 @@ const createMonograms = (users: SharedWalletUserType[] = []) => {
 };
 
 const SharedWallet: React.FC<SharedWalletProps> = ({ wallet }) => {
+  const { currentUser } = useCurrentUserStore((state) => state);
   return (
-    <Link href={`/wallets/${wallet._id}`} className="bg-gray-700 rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
+    <Link
+      href={`/wallets/${wallet._id}`}
+      className="bg-gray-700 rounded-xl shadow-md p-4 hover:shadow-lg transition-shadow duration-300"
+    >
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-lg font-semibold text-white line-clamp-2">
             {wallet.wallet_name}
-            {wallet.current && (
+            {wallet.user_id === currentUser?._id && wallet.current && (
               <span className="ml-2 text-sm bg-green-100 text-green-600 px-2 py-1 rounded-full">
                 Current
               </span>
             )}
           </h3>
           <p className="text-sm text-gray-500">
-            Created: {wallet.created_at && new Date(wallet.created_at).toLocaleDateString()}
+            Created:{" "}
+            {wallet.created_at &&
+              new Date(wallet.created_at).toLocaleDateString()}
           </p>
         </div>
 

@@ -30,6 +30,12 @@ export const PUT = async (
       .collection("wallets")
       .updateMany({ user_id: id }, { $set: { current: false } });
 
+    const wallets = await db
+      .collection("wallets")
+      .find({ user_id: id })
+      .toArray();
+    console.log(wallets, "wallets");
+
     await db
       .collection("wallets")
       .updateOne(
