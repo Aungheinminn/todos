@@ -32,6 +32,7 @@ type WalletHeaderProps = {
 type WalletActionsProps = {
   isAdmin: boolean;
   wallet: WalletWithUserInfoType;
+  isDeleteLoading: boolean;
   handleDelete: () => void;
 };
 
@@ -121,6 +122,7 @@ const WalletHeader: React.FC<WalletHeaderProps> = ({
 const WalletActions: React.FC<WalletActionsProps> = ({
   isAdmin,
   wallet,
+  isDeleteLoading,
   handleDelete,
 }) => {
   console.log(wallet.shared_user_ids, isAdmin);
@@ -130,10 +132,16 @@ const WalletActions: React.FC<WalletActionsProps> = ({
     >
       <button
         onClick={handleDelete}
-        className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-gray-700/50 hover:bg-red-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
+        className="flex-1 px-4 h-10 text-sm font-medium text-white bg-gray-700/50 hover:bg-red-600 rounded-lg transition-all duration-200 flex items-center justify-center gap-2"
       >
-        <Image className="w-4 h-4" src={deleteIcon} alt="delete" />
-        Delete
+        {isDeleteLoading ? (
+          <MutateLoading width="144px" height="40px" />
+        ) : (
+          <div className="h-10 flex items-center gap-2">
+            <Image className="w-4 h-4" src={deleteIcon} alt="delete" />
+            Delete
+          </div>
+        )}
       </button>
       {wallet &&
         wallet.shared_user_ids &&
@@ -152,7 +160,7 @@ const Wallet = () => {
   const router = useRouter();
   const { updateCurrentWallet } = useWalletStore((state) => state);
   const { currentUser } = useCurrentUserStore((state) => state);
-  const { updateCurrentWalletMutation } = useWalletMutation();
+  const { updateCurrentWalletMutation, deleteMutation } = useWalletMutation();
 
   const [search, setSearch] = useState<string>("");
 
@@ -195,7 +203,20 @@ const Wallet = () => {
       );
     }
   };
-  const handleDelete = () => {};
+  const handleDelete = () => {
+    try {
+      console.log(wallet);
+      deleteMutation.mutate({ wallet_id: wallet._id || "" }, {
+        onSuccess: (data) => {
+          if(data.success){
+            router.push("/wallets");
+          }
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleMakeAdmin = () => {};
 
@@ -223,20 +244,23 @@ const Wallet = () => {
             isViewTransactionsLoading={updateCurrentWalletMutation.isPending}
             handleViewTransactions={handleViewTransactions}
           />
-          <WalletUserManagement
-            currentUserId={currentUser?._id || ""}
-            walletAdminId={wallet.user._id}
-            users={sharedWalletUsers || []}
-            onSearch={handleSearch}
-            onMakeAdmin={handleMakeAdmin}
-            onLeaveWallet={handleLeaveWallet}
-            onRemoveUser={handleRemoveUser}
-            isLoading={isSharedWalletUsersLoading}
-            totalUsers={sharedWalletUsers?.length || 0}
-          />
+          {wallet.shared_user_ids && wallet.shared_user_ids.length !== 0 && (
+            <WalletUserManagement
+              currentUserId={currentUser?._id || ""}
+              walletAdminId={wallet.user._id}
+              users={sharedWalletUsers || []}
+              onSearch={handleSearch}
+              onMakeAdmin={handleMakeAdmin}
+              onLeaveWallet={handleLeaveWallet}
+              onRemoveUser={handleRemoveUser}
+              isLoading={isSharedWalletUsersLoading}
+              totalUsers={sharedWalletUsers?.length || 0}
+            />
+          )}
           <WalletActions
             isAdmin={currentUser?._id === wallet.user._id}
             wallet={wallet}
+            isDeleteLoading={deleteMutation.isPending}
             handleDelete={handleDelete}
           />
         </div>
