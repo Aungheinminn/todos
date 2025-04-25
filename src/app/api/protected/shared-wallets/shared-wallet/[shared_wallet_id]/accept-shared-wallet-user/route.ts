@@ -1,6 +1,5 @@
 import { ObjectId } from "mongodb";
 import clientPromise from "@/lib/database";
-import { PushOperator } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export const PUT = async (

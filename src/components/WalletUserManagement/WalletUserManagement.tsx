@@ -4,6 +4,7 @@ import { UserType } from "@/lib/types/user.type";
 import Image from "next/image";
 import { useState } from "react";
 import searchIcon from "@/assets/white_search.svg";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type WalletUserManagementProps = {
   currentUserId: string;
@@ -36,10 +37,10 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
     onSearch(query);
   };
 
-  if (isLoading) return <div>...Loading</div>;
+  if (isLoading) return <Skeleton className="bg-gray-700 w-full px-3 h-[300px]" />;
 
   return (
-    <div className="w-full bg-gray-700/50 text-white rounded-lg p-3 ">
+    <div className="w-full bg-gray-700/50 text-white rounded-lg p-3">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h2 className="text-xl sm:text-2xl font-semibold text-white">
           User Management
