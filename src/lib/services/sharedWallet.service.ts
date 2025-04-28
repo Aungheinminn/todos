@@ -54,3 +54,53 @@ export const getSharedWalletUsers = async (wallet_id: string) => {
     console.error(e);
   }
 };
+
+export const removeSharedWalletUser = async ({
+  wallet_id,
+  user_id,
+}: {
+  wallet_id: string;
+  user_id: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${wallet_id}/remove-shared-wallet-user`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const makeSharedWalletAdmin = async ({
+  wallet_id,
+  user_id,
+}: {
+  wallet_id: string;
+  user_id: string;
+}) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${wallet_id}/make-admin`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id }),
+      },
+    );
+    const res = await response.json();
+    return res;
+  } catch (e) {
+    console.error(e);
+  }
+};

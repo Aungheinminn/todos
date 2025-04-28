@@ -1,7 +1,7 @@
 "use client";
 
 import WalletLoading from "@/app/wallets/[wallet_id]/loading";
-import { WalletType, WalletWithUserInfoType } from "@/lib/types/wallet.type";
+import { WalletWithUserInfoType } from "@/lib/types/wallet.type";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
@@ -22,6 +22,7 @@ import { getSharedWalletUsers } from "@/lib/services/sharedWallet.service";
 import WalletUserManagement from "@/components/WalletUserManagement/WalletUserManagement";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
+import { useSharedWalletMutation } from "@/lib/mutations/sharedWalletMutation";
 
 type WalletHeaderProps = {
   wallet: WalletWithUserInfoType;
@@ -161,6 +162,8 @@ const Wallet = () => {
   const { updateCurrentWallet } = useWalletStore((state) => state);
   const { currentUser } = useCurrentUserStore((state) => state);
   const { updateCurrentWalletMutation, deleteMutation } = useWalletMutation();
+  const { makeSharedWalletAdminMutation, leaveSharedWalletMutation ,removeSharedWalletUserMutation } =
+    useSharedWalletMutation();
 
   const [search, setSearch] = useState<string>("");
 
@@ -206,23 +209,61 @@ const Wallet = () => {
   const handleDelete = () => {
     try {
       console.log(wallet);
-      deleteMutation.mutate({ wallet_id: wallet._id || "" }, {
-        onSuccess: (data) => {
-          if(data.success){
-            router.push("/wallets");
-          }
-        }
+      deleteMutation.mutate(
+        { wallet_id: wallet._id || "" },
+        {
+          onSuccess: (data) => {
+            if (data.success) {
+              router.push("/wallets");
+            }
+          },
+        },
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleMakeAdmin = (userId: string) => {
+    try {
+      console.log(wallet);
+      makeSharedWalletAdminMutation.mutate(
+        { wallet_id: wallet._id || "", user_id: userId },
+        {
+          onSuccess: (data) => {
+            if (data.success) {
+              console.log(data.data);
+            }
+          },
+        },
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleLeaveWallet = (userId: string) => {
+    try {
+      console.log(wallet);
+      leaveSharedWalletMutation.mutate({
+        wallet_id: wallet._id || "",
+        user_id: userId,
       });
     } catch (e) {
       console.log(e);
     }
   };
 
-  const handleMakeAdmin = () => {};
-
-  const handleLeaveWallet = () => {};
-
-  const handleRemoveUser = () => {};
+  const handleRemoveUser = (userId: string) => {
+    try {
+      removeSharedWalletUserMutation.mutate({
+        wallet_id: wallet._id || "",
+        user_id: userId,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -251,8 +292,11 @@ const Wallet = () => {
               users={sharedWalletUsers || []}
               onSearch={handleSearch}
               onMakeAdmin={handleMakeAdmin}
+              isMakeAdminLoading={makeSharedWalletAdminMutation.isPending}
               onLeaveWallet={handleLeaveWallet}
+              isLeaveWalletLoading={leaveSharedWalletMutation.isPending}
               onRemoveUser={handleRemoveUser}
+              isRemoveUserLoading={removeSharedWalletUserMutation.isPending}
               isLoading={isSharedWalletUsersLoading}
               totalUsers={sharedWalletUsers?.length || 0}
             />
