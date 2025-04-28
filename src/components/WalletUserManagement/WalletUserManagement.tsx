@@ -5,14 +5,18 @@ import Image from "next/image";
 import { useState } from "react";
 import searchIcon from "@/assets/white_search.svg";
 import { Skeleton } from "@/components/ui/skeleton";
+import MutateLoading from "@/components/MutateLoading/MutateLoading";
 
 type WalletUserManagementProps = {
   currentUserId: string;
   walletAdminId: string;
   users: UserType[];
   onMakeAdmin: (userId: string) => void;
+  isMakeAdminLoading: boolean;
   onLeaveWallet: (userId: string) => void;
+  isLeaveWalletLoading: boolean;
   onRemoveUser: (userId: string) => void;
+  isRemoveUserLoading: boolean;
   isLoading: boolean;
   totalUsers: number;
   onSearch: (query: string) => void;
@@ -23,8 +27,11 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
   walletAdminId,
   users,
   onMakeAdmin,
+  isMakeAdminLoading,
   onLeaveWallet,
+  isLeaveWalletLoading,
   onRemoveUser,
+  isRemoveUserLoading,
   isLoading,
   totalUsers,
   onSearch,
@@ -37,7 +44,10 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
     onSearch(query);
   };
 
-  if (isLoading) return <Skeleton className="bg-gray-700 w-full px-3 h-[300px]" />;
+  console.log(currentUserId, walletAdminId)
+
+  if (isLoading)
+    return <Skeleton className="bg-gray-700 w-full px-3 h-[300px]" />;
 
   return (
     <div className="w-full bg-gray-700/50 text-white rounded-lg p-3">
@@ -88,15 +98,25 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
             >
               <button
                 onClick={() => onMakeAdmin(user._id || "")}
-                className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors duration-200"
+                disabled={isMakeAdminLoading}
+                className={`${isMakeAdminLoading && "cursor-not-allowed"} flex-1 sm:flex-none px-4 w-[120px] h-10 text-sm font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 transition-colors duration-200 whitespace-nowrap`}
               >
-                Admin
+                {isMakeAdminLoading ? (
+                  <MutateLoading width="120px" height="40px" />
+                ) : (
+                  "Make Admin"
+                )}
               </button>
               <button
                 onClick={() => onRemoveUser(user._id || "")}
-                className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
+                disabled={isRemoveUserLoading}
+                className={`${isRemoveUserLoading && "cursor-not-allowed"} flex-1 sm:flex-none px-4 h-10 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200`}
               >
-                Remove
+                {isRemoveUserLoading ? (
+                  <MutateLoading width="91px" height="40px" />
+                ) : (
+                  "   Remove"
+                )}
               </button>
             </div>
 
@@ -105,9 +125,14 @@ const WalletUserManagement: React.FC<WalletUserManagementProps> = ({
             >
               <button
                 onClick={() => onLeaveWallet(user._id || "")}
-                className="flex-1 sm:flex-none px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200"
+                disabled={isLeaveWalletLoading || walletAdminId === currentUserId}
+                className={` ${walletAdminId === currentUserId && "cursor-not-allowed"} flex-1 sm:flex-none px-4 h-10 text-sm font-medium text-white bg-red-500 rounded-lg hover:bg-red-600 transition-colors duration-200`}
               >
-                Leave
+                {isLeaveWalletLoading ? (
+                  <MutateLoading width="70px" height="40px" />
+                ) : (
+                  "Leave Wallet"
+                )}
               </button>
             </div>
           </div>

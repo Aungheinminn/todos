@@ -22,16 +22,18 @@ export const PUT = async (
     const { shared_wallet_id } = params;
     const { user_id } = await req.json();
 
+
     const client = await clientPromise;
     const db = client.db("remarker_next");
 
     const updatedWallet = await db
-      .collection("users")
+      .collection("wallets")
       .findOneAndUpdate(
         { _id: new ObjectId(shared_wallet_id) },
         { $set: { user_id: user_id } },
         { returnDocument: "after" },
       );
+
     if (!updatedWallet) {
       return NextResponse.json(
         { success: false, error: "Error updating wallet" },
