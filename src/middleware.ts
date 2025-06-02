@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-// import jwt from 'jsonwebtoken';
+export { auth } from "@/auth";
 import * as jose from "jose";
 import { env } from "@/env";
+
 
 export const middleware = async (req: NextRequest) => {
   const token = req.cookies.get("token");

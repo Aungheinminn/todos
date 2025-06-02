@@ -1,5 +1,6 @@
 "use client";
 import Loading from "@/components/Loading/Loading";
+import { signIn } from "next-auth/react";
 import { createUser } from "@/lib/services/users.service";
 import { useRouter } from "next/navigation";
 import React, { Suspense, useState } from "react";
@@ -16,13 +17,17 @@ const Signup = () => {
       username: username,
       email: email,
       password: password,
-      icon: "",
     };
     try {
-      const res = await createUser(datas);
-      if (res.success) {
+      const res = await signIn("credentials", {
+        ...datas,
+        redirect: false,
+      });
+
+      if (res.ok) {
         router.push("/login");
       }
+
     } catch (e) {
       console.log(e);
     }
