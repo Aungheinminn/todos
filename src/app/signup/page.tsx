@@ -27,7 +27,6 @@ const Signup = () => {
       if (res.ok) {
         router.push("/login");
       }
-
     } catch (e) {
       console.log(e);
     }
