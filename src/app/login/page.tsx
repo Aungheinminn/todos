@@ -1,12 +1,13 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import { loginUser } from "@/lib/services/users.service";
-import { useRouter } from "next/navigation";
 import LoginLoading from "./loading";
 import Image from "next/image";
 import back from "@/assets/caret_whtie.svg";
 import { useCurrentUserStore } from "@/lib/stores/userStore";
 import { useWalletStore } from "@/lib/stores/walletStore";
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react"
 
 interface StepOneProps {
   email: string;
@@ -153,7 +154,7 @@ const Login = () => {
 
   return (
     <Suspense fallback={<LoginLoading />}>
-      <div className="w-full h-screen flex flex-col items-center justify-start px-4 py-2 text-black gap-y-3">
+      <div className="w-full flex flex-col items-center justify-start px-4 py-2 text-black gap-y-3">
         <div
           className={`w-full md:w-[50%] bg-[#cbd5e1] flex flex-col justify-start mt-[100px] p-8 border-2 ${emailError || passwordError ? "border-red-500" : "border-[#0ea5e9]"} rounded-lg`}
         >
@@ -195,6 +196,9 @@ const Login = () => {
             <p>Back to Email ?</p>
           </button>
         )}
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <Button onClick={() => signIn("google")}>Sign in with Google</Button>
       </div>
     </Suspense>
   );
