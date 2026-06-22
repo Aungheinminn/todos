@@ -1,5 +1,6 @@
 import {
   createBudget,
+  deleteAllEndedBudgets,
   deleteBudget,
   endBudget,
   updateBudget,
@@ -13,8 +14,8 @@ export const useBudgetMutation = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
     },
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["budgets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["budgets"], context?.previousItems);
     },
   });
 
@@ -23,8 +24,8 @@ export const useBudgetMutation = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
     },
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["budgets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["budgets"], context?.previousItems);
     },
   });
 
@@ -33,8 +34,8 @@ export const useBudgetMutation = () => {
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
     },
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["budgets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["budgets"], context?.previousItems);
     },
   });
 
@@ -42,9 +43,18 @@ export const useBudgetMutation = () => {
     mutationFn: deleteBudget,
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["budgets"] });
+      queryClient.invalidateQueries({ queryKey: ["endedBudgets"] });
     },
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["budgets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["budgets"], context?.previousItems);
+    },
+  });
+
+  const deleteAllMutation = useMutation({
+    mutationFn: deleteAllEndedBudgets,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["endedBudgets"] });
+      queryClient.invalidateQueries({ queryKey: ["budgets"] });
     },
   });
   return {
@@ -52,5 +62,6 @@ export const useBudgetMutation = () => {
     editMutation,
     endMutation,
     deleteMutation,
+    deleteAllMutation,
   };
 };

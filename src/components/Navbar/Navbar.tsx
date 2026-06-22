@@ -1,14 +1,6 @@
-import { UserType } from "@/lib/types/user.type";
 import UserAvatar from "../UserAvatar/UserAvatar";
-type MobileNavbarProps = {
-  currentUser?: UserType | null;
-  onToggle: () => void;
-};
 
-export const MobileNavbar: React.FC<MobileNavbarProps> = ({
-  currentUser,
-  onToggle,
-}) => {
+export const MobileNavbar = () => {
   return (
     <div className="w-full bg-gray-800 flex justify-between items-center lg:hidden px-2 py-3">
       <h1 className="">Logo</h1>

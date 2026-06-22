@@ -11,8 +11,8 @@ export const useSharedWalletRequestMutation = () => {
 
   const createMutation = useMutation({
     mutationFn: createSharedWalletRequest,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["requests"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["requests"], context?.previousItems);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
@@ -20,8 +20,8 @@ export const useSharedWalletRequestMutation = () => {
 
   const acceptMutation = useMutation({
     mutationFn: acceptSharedWalletRequest,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["requests"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["requests"], context?.previousItems);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
@@ -29,8 +29,8 @@ export const useSharedWalletRequestMutation = () => {
 
   const declineMutation = useMutation({
     mutationFn: declineSharedWalletRequest,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["requests"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["requests"], context?.previousItems);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),
@@ -38,8 +38,8 @@ export const useSharedWalletRequestMutation = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteSharedWalletRequest,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["sharedWalletRequests"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["sharedWalletRequests"], context?.previousItems);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["sharedWalletRequests"] }),

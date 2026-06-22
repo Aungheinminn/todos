@@ -180,7 +180,7 @@ const BudgetFooter: React.FC<BudgetFooterProps> = ({
   isTransactionsLoading,
 }) => {
   return (
-    <Accordion collapsible type="single" className="w-full">
+    <Accordion collapsible type="single" className="w-full" defaultValue="transactions">
       <AccordionItem removeBorder value="transactions">
         <AccordionTrigger className="w-full hover:no-underline flex items-center justify-between gap-x-4 px-2 border-none outline-none">
           Related Transactions

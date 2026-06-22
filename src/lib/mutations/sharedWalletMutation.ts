@@ -9,8 +9,8 @@ export const useSharedWalletMutation = () => {
 
   const createMutation = useMutation({
     mutationFn: createSharedWallet,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["sharedWallets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["sharedWallets"], context?.previousItems);
     },
     onSettled: () =>
       queryClient.invalidateQueries({ queryKey: ["sharedWallets"] }),
@@ -18,8 +18,8 @@ export const useSharedWalletMutation = () => {
 
   const makeSharedWalletAdminMutation = useMutation({
     mutationFn: makeSharedWalletAdmin,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["sharedWalletUsers"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["sharedWalletUsers"], context?.previousItems);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
@@ -29,8 +29,8 @@ export const useSharedWalletMutation = () => {
 
   const leaveSharedWalletMutation = useMutation({
     mutationFn: removeSharedWalletUser,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["sharedWalletUsers"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["sharedWalletUsers"], context?.previousItems);
     },
     onSettled: () => {
       // queryClient.invalidateQueries({ queryKey: ["wallet"] });
@@ -40,8 +40,8 @@ export const useSharedWalletMutation = () => {
 
   const removeSharedWalletUserMutation = useMutation({
     mutationFn: removeSharedWalletUser,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["sharedWalletUsers"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["sharedWalletUsers"], context?.previousItems);
     },
     onSettled: () => {
       // queryClient.invalidateQueries({ queryKey: ["wallet"] });

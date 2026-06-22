@@ -1,8 +1,8 @@
-"use client"
-import loading from "@/components/loading/loading";
+"use client";
+import Loading from "@/components/Loading/Loading";
 
-const settingsloading = () => {
-    return <loading />
-}
+const SettingsLoading = () => {
+  return <Loading />;
+};
 
-export default settingsloading;
+export default SettingsLoading;

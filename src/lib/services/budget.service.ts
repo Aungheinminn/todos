@@ -1,9 +1,10 @@
 import { BudgetType } from "../types/budget.type";
+import { getBaseUrl } from "../utils/baseUrl";
 
 export const createBudget = async (data: BudgetType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets`,
+      `${getBaseUrl()}/api/protected/budgets`,
       {
         method: "POST",
         headers: {
@@ -34,7 +35,7 @@ export const getBudgetTransactions = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}&limit=${limit}`,
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/get-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}&limit=${limit}`,
       {
         method: "GET",
         headers: {
@@ -62,7 +63,7 @@ export const getTopUsageBudgetTransactions = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/get-top-usage-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}`,
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/get-top-usage-transactions-by-timeRange?category=${encodeURIComponent(category)}&startDate=${startDate}&endDate=${endDate}`,
       {
         method: "GET",
         headers: {
@@ -80,7 +81,7 @@ export const getTopUsageBudgetTransactions = async ({
 export const getActiveBudgets = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/active`,
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/active`,
       {
         method: "GET",
         headers: {
@@ -98,7 +99,7 @@ export const getActiveBudgets = async (wallet_id: string) => {
 export const deleteBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/budget/${id}`,
+      `${getBaseUrl()}/api/protected/budgets/budget/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -115,7 +116,7 @@ export const deleteBudget = async ({ id }: { id: string }) => {
 export const updateBudget = async (data: BudgetType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/budget/${data._id}`,
+      `${getBaseUrl()}/api/protected/budgets/budget/${data._id}`,
       {
         method: "PUT",
         headers: {
@@ -133,7 +134,7 @@ export const updateBudget = async (data: BudgetType) => {
 export const endBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/budget/${id}/end-budget`,
+      `${getBaseUrl()}/api/protected/budgets/budget/${id}/end-budget`,
       {
         method: "PUT",
         headers: {
@@ -150,7 +151,7 @@ export const endBudget = async ({ id }: { id: string }) => {
 export const getBudget = async ({ id }: { id: string }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/budget/${id}`,
+      `${getBaseUrl()}/api/protected/budgets/budget/${id}`,
       {
         method: "GET",
         headers: {
@@ -168,7 +169,7 @@ export const getBudget = async ({ id }: { id: string }) => {
 export const getEndedBudgets = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/ended`,
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/ended`,
       {
         method: "GET",
         headers: {
@@ -186,9 +187,46 @@ export const getEndedBudgets = async (wallet_id: string) => {
 export const endAllBudgets = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/budgets/wallet/${wallet_id}/end-all-budgets`,
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/end-all-budgets`,
       {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const deleteAllEndedBudgets = async (wallet_id: string) => {
+  try {
+    const response = await fetch(
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/delete-all-ended-budgets`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const getBudgetSpentOverview = async (
+  wallet_id: string) => {
+  try {
+    const response = await fetch(
+      `${getBaseUrl()}/api/protected/budgets/wallet/${wallet_id}/spent-overview`,
+      {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
