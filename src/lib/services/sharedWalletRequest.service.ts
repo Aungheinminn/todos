@@ -1,4 +1,5 @@
 import { SharedWalletRequestType } from "@/lib/types/sharedWalletRequest.type";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 export const createSharedWalletRequest = async ({
   data,
@@ -7,7 +8,7 @@ export const createSharedWalletRequest = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallet-requests`,
+      `${getBaseUrl()}/api/protected/shared-wallet-requests`,
       {
         method: "POST",
         headers: {
@@ -35,7 +36,7 @@ export const acceptSharedWalletRequest = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${walletId}/accept-shared-wallet-user`,
+      `${getBaseUrl()}/api/protected/shared-wallets/shared-wallet/${walletId}/accept-shared-wallet-user`,
       {
         method: "PUT",
         headers: {
@@ -57,7 +58,7 @@ export const acceptSharedWalletRequest = async ({
 export const declineSharedWalletRequest = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallet-requests/request/${id}/decline`,
+      `${getBaseUrl()}/api/protected/shared-wallet-requests/request/${id}/decline`,
       {
         method: "PUT",
         headers: {
@@ -76,7 +77,7 @@ export const declineSharedWalletRequest = async (id: string) => {
 export const deleteSharedWalletRequest = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallet-requests/request/${id}/delete`,
+      `${getBaseUrl()}/api/protected/shared-wallet-requests/request/${id}/delete`,
       {
         method: "DELETE",
         headers: {
@@ -98,7 +99,7 @@ export const getSharedWalletRequestsByUserId = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallet-requests/user/${id}/?type=${type}`,
+      `${getBaseUrl()}/api/protected/shared-wallet-requests/user/${id}/?type=${type}`,
       {
         method: "GET",
         headers: {

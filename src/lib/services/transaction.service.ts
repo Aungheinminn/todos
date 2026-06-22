@@ -1,9 +1,10 @@
 import { TransactionType } from "@/lib/types/transaction.type";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 export const getTransactionsByWallet = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}`,
+      `${getBaseUrl()}/api/protected/transactions/wallet/${wallet_id}`,
     );
     const res = await response.json();
     return res.data;
@@ -15,7 +16,7 @@ export const getTransactionsByWallet = async (wallet_id: string) => {
 export const getTransactionById = async (transaction_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/transaction/${transaction_id}`,
+      `${getBaseUrl()}/api/protected/transactions/transaction/${transaction_id}`,
     );
     const res = await response.json();
     return res.data;
@@ -32,7 +33,7 @@ export const getTransactionsByDate = async (
 ) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${wallet_id}/by-transaction-date/?limit=${limit}&transaction_month=${month}&transaction_year=${year}`,
+      `${getBaseUrl()}/api/protected/transactions/wallet/${wallet_id}/by-transaction-date/?limit=${limit}&transaction_month=${month}&transaction_year=${year}`,
       {
         method: "GET",
         headers: {
@@ -50,7 +51,7 @@ export const getTransactionsByDate = async (
 export const createTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}`,
+      `${getBaseUrl()}/api/protected/transactions/wallet/${data.wallet_id}`,
       {
         method: "POST",
         headers: {
@@ -69,7 +70,7 @@ export const createTransaction = async (data: TransactionType) => {
 export const duplicateTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/wallet/${data.wallet_id}/duplicate`,
+      `${getBaseUrl()}/api/protected/transactions/wallet/${data.wallet_id}/duplicate`,
       {
         method: "POST",
         headers: {
@@ -88,7 +89,7 @@ export const duplicateTransaction = async (data: TransactionType) => {
 export const updateTransaction = async (data: TransactionType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/transaction/${data._id}`,
+      `${getBaseUrl()}/api/protected/transactions/transaction/${data._id}`,
       {
         method: "PUT",
         headers: {
@@ -107,7 +108,7 @@ export const updateTransaction = async (data: TransactionType) => {
 export const deleteTransaction = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/transactions/transaction/${id}`,
+      `${getBaseUrl()}/api/protected/transactions/transaction/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -117,6 +118,24 @@ export const deleteTransaction = async (id: string) => {
     );
     const res = await response.json();
     return res;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getRecentTransactions = async (wallet_id: string) => {
+  try {
+    const response = await fetch(
+      `${getBaseUrl()}/api/protected/transactions/wallet/${wallet_id}/recent-transactions`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    const res = await response.json();
+    return res.data;
   } catch (error) {
     console.error(error);
   }

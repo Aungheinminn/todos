@@ -13,13 +13,14 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ transaction }) => {
       href={`/transactions/${transaction._id}`}
       className="duration-300 cursor-pointer w-full flex justify-between items-center bg-gray-700 hover:bg-slate-400 px-3 py-4"
     >
-      <div className="flex justify-start gap-x-3 items-start">
+      <div className="w-full flex justify-start gap-x-3 items-start">
         <Image
           className="w-8 h-8"
           src={
-            Categories.find((cate) => cate.name === transaction.category)?.icon
+            Categories.find((cate) => cate.name === transaction.category)
+              ?.icon ?? transportation
           }
-          alt="transportation"
+          alt={transaction.category}
         />
         <div className="flex flex-col gap-y-1 items-start">
         <p className="text-sm">{transaction.category}</p>

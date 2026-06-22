@@ -11,46 +11,50 @@ export const useTransactionMutation = () => {
 
   const createMutation = useMutation({
     mutationFn: createTransaction,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["transactions"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["transactions"], context?.previousItems);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["top-usage-transactions"] });
       queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
     },
   });
 
   const editMutation = useMutation({
     mutationFn: updateTransaction,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["transactions"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["transactions"], context?.previousItems);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteTransaction,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["transactions"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["transactions"], context?.previousItems);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
-        queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
     },
   });
 
   const duplicateMutation = useMutation({
     mutationFn: duplicateTransaction,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["transactions"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["transactions"], context?.previousItems);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["transactions"] }),
-        queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["currentWallet"] });
+      queryClient.invalidateQueries({ queryKey: ["recentTransactions"] });
     },
   });
   return {

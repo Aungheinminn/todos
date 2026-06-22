@@ -10,8 +10,11 @@ import { useWalletStore } from "@/lib/stores/walletStore";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import { useBudgetMutation } from "@/lib/mutations/budgetMutation";
 
 type EndedBudgetsBodyProps = {
+  handleDeleteAllBudgets: () => void;
   endedBudgets: BudgetType[];
 };
 
@@ -30,10 +33,19 @@ const EndedBudgetsHeader = () => {
 };
 
 const EndedBudgetsBody: React.FC<EndedBudgetsBodyProps> = ({
+  handleDeleteAllBudgets,
   endedBudgets,
 }) => {
   return (
     <ScrollArea>
+      <div className="w-full flex justify-end items-center p-2">
+        <Button
+          disabled={endedBudgets.length === 0}
+          onClick={handleDeleteAllBudgets}
+        >
+          Delete All
+        </Button>
+      </div>
       <div className="px-1 w-full h-[calc(100vh-181px)] flex flex-col gap-y-2">
         {endedBudgets &&
           endedBudgets.map((activeBudget: BudgetType, index: number) => (
@@ -47,18 +59,31 @@ const EndedBudgetsBody: React.FC<EndedBudgetsBodyProps> = ({
 const EndedBudgets = () => {
   const { currentWallet } = useWalletStore((state) => state);
   const { currentUser } = useCurrentUserStore((state) => state);
+  const { deleteAllMutation } = useBudgetMutation();
+
   const { data, isLoading } = useQuery({
     queryKey: ["endedBudgets", currentWallet],
     queryFn: () => getEndedBudgets(currentWallet?._id || ""),
     enabled: !!currentWallet || !!currentUser,
   });
+
+  const handleDeleteAllBudgets = () => {
+    try {
+      deleteAllMutation.mutate(currentWallet?._id || "");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Suspense fallback={<EndedBudgetsLoading />}>
       <EndedBudgetsHeader />
       {isLoading ? (
         <BudgetBodyLoading />
       ) : (
-        <EndedBudgetsBody endedBudgets={data || []} />
+        <EndedBudgetsBody
+          handleDeleteAllBudgets={handleDeleteAllBudgets}
+          endedBudgets={data || []}
+        />
       )}
     </Suspense>
   );

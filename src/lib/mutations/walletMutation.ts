@@ -9,9 +9,8 @@ export const useWalletMutation = () => {
   const queryClient = useQueryClient();
   const createMutation = useMutation({
     mutationFn: createWallet,
-    onError: (error, variables, context: any) => {
-
-      queryClient.setQueryData(["wallets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["wallets"], context?.previousItems);
     },
     onSettled: () => {
 
@@ -31,8 +30,8 @@ queryClient.invalidateQueries({ queryKey: ["wallets"] })
 
   const editMutation = useMutation({
     mutationFn: updateWallet,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["wallets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["wallets"], context?.previousItems);
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: ["wallets"] }),
   });
@@ -41,8 +40,8 @@ queryClient.invalidateQueries({ queryKey: ["wallets"] })
     mutationFn: deleteWallet,
     onSettled:() =>
        queryClient.invalidateQueries({ queryKey: ["wallets"] }),
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["wallets"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["wallets"], context?.previousItems);
     },
   });
 

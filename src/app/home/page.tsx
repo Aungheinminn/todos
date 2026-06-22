@@ -10,6 +10,10 @@ import { getCurrentWallet, getWallets } from "@/lib/services/wallet.service";
 import Balance from "@/components/Balance/Balance";
 import { useWalletStore } from "@/lib/stores/walletStore";
 import Link from "next/link";
+import RecentTransactions from "@/components/RecentTransactions/RecentTransactions";
+import BudgetOverviewWidget from "@/components/BudgetOverviewWidget/BudgetOverviewWidget";
+import { getBudgetSpentOverview } from "@/lib/services/budget.service";
+import { getRecentTransactions } from "@/lib/services/transaction.service";
 
 const Home = () => {
   const { currentUser, updateCurrentUser } = useCurrentUserStore(
@@ -38,6 +42,18 @@ const Home = () => {
     enabled: !!currentUser?._id,
   });
 
+  const { data: recentTransactions } = useQuery({
+    queryKey: ["recentTransactions"],
+    queryFn: () => getRecentTransactions(currentWallet?._id || ""),
+    enabled: !!currentUser?._id && !!currentWallet?._id,
+  })
+
+  const { data: budgetOverview } = useQuery({
+    queryKey: ["budgetOverview"],
+    queryFn: () => getBudgetSpentOverview(currentWallet?._id || ""),
+    enabled: !!currentUser?._id && !!currentWallet?._id,
+  });
+
   useEffect(() => {
     if (currentUserQuery) {
       updateCurrentUser(currentUserQuery.data.currentUser);
@@ -57,6 +73,14 @@ const Home = () => {
 
         <div className="mt-2" />
         <TotalWallets wallets={wallets} />
+
+        <div className="mt-4 w-full px-4">
+          <RecentTransactions recentTransactions={recentTransactions} />
+        </div>
+
+        <div className="mt-4 w-full px-4">
+          <BudgetOverviewWidget budgetOverview={budgetOverview} />
+        </div>
       </div>
     </Suspense>
   );

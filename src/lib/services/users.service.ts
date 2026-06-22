@@ -1,9 +1,10 @@
 import { decryptPassword, encryptPassword } from "@/lib/services/hash.service";
 import { CredentialModel, UserModel } from "@/lib/models/user.model";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 export const createUser = async (datas: UserModel) => {
   try {
-    const res = await fetch("http://localhost:3000/api/users/signUp", {
+    const res = await fetch(`${getBaseUrl()}/api/users/signUp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,7 +21,7 @@ export const loginUser = async (datas: CredentialModel) => {
   const { email, password } = datas;
   try {
     const res = await fetch(
-      `http://localhost:3000/api/users/signIn?email=${email}&password=${password}`,
+      `${getBaseUrl()}/api/users/signIn?email=${email}&password=${password}`,
       {
         method: "GET",
         headers: {
@@ -37,7 +38,7 @@ export const loginUser = async (datas: CredentialModel) => {
 
 export const logoutUser = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/users/signOut", {
+    const res = await fetch(`${getBaseUrl()}/api/users/signOut`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +55,7 @@ export const logoutUser = async () => {
 
 export const getCurrentUser = async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/protected/currentUser", {
+    const res = await fetch(`${getBaseUrl()}/api/protected/currentUser`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +70,7 @@ export const getCurrentUser = async () => {
 export const getUserByRefId = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/users/ref/${id}/getUserByRefId`,
+      `${getBaseUrl()}/api/protected/users/ref/${id}/getUserByRefId`,
       {
         method: "GET",
         headers: {
@@ -88,7 +89,7 @@ export const getUserByRefId = async (id: string) => {
 export const createRefId = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/users/user/${id}/createRefId`,
+      `${getBaseUrl()}/api/protected/users/user/${id}/createRefId`,
       {
         method: "PUT",
         headers: {

@@ -57,10 +57,12 @@ const TransactionGroup: React.FC<TransactionGroupProps> = ({
   return (
     <div className="w-full bg-gray-700">
       <TransactionGroupHeader date={date} totalCost={totalCosts} />
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {transactions &&
         transactions.map((transaction, idx) => (
           <TransactionCard key={transaction?._id || idx} transaction={transaction} />
         ))}
+        </div>
     </div>
   );
 };

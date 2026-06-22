@@ -6,8 +6,8 @@ export const useUserMutation = () => {
 
   const createRefIdMutation = useMutation({
     mutationFn: createRefId,
-    onError: (error, variables, context: any) => {
-      queryClient.setQueryData(["currentUser"], context.previousItems);
+    onError: (error, variables, context: { previousItems?: unknown } | undefined) => {
+      queryClient.setQueryData(["currentUser"], context?.previousItems);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["currentUser"] });

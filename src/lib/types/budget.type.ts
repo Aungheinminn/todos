@@ -9,3 +9,18 @@ export type BudgetType = {
   status?: string;
   createdAt?: string;
 };
+
+
+export type BudgetSpentOverviewType = {
+  _id?: string;
+  user_id: string;
+  wallet_id: string;
+  budget: number;
+  category: string;
+  start_date?: string;
+  end_date?: string;
+  status?: string;
+  createdAt?: string;
+  transactions: number;
+  percentage: number;
+};

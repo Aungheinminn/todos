@@ -1,16 +1,16 @@
-export const debounce = (
-  mainFunction: (value: string) => void,
+export const debounce = <T extends unknown[]>(
+  mainFunction: (...args: T) => void,
   delay: number,
 ) => {
   let timer: NodeJS.Timeout;
 
-  return function (value: string) { 
+  return (...args: T) => {
     if (timer) {
       clearTimeout(timer);
     }
 
     timer = setTimeout(() => {
-      mainFunction(value);
+      mainFunction(...args);
     }, delay);
   };
 };

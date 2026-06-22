@@ -115,11 +115,11 @@ const EditPopupComponent: React.FC = () => {
   const { isOpen, closePopup, popupData } = useEditPopupStore((state) => state);
 
   const [name, setName] = useState<string>("");
-  const [desc, setDesc] = useState<string | undefined>("");
+  const [desc, setDesc] = useState<string>("");
 
   useEffect(() => {
     setName(popupData.name);
-    setDesc(popupData.description);
+    setDesc(popupData.description ?? "");
   }, [popupData.name, popupData.description]);
 
   const handleProcess = () => {

@@ -1,9 +1,10 @@
 import { WalletType } from "@/lib/types/wallet.type";
+import { getBaseUrl } from "@/lib/utils/baseUrl";
 
 export const createSharedWallet = async (data: WalletType) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/user/${data.user_id}`,
+      `${getBaseUrl()}/api/protected/shared-wallets/user/${data.user_id}`,
       {
         method: "POST",
         headers: {
@@ -21,7 +22,7 @@ export const createSharedWallet = async (data: WalletType) => {
 export const getSharedWallets = async (id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/user/${id}`,
+      `${getBaseUrl()}/api/protected/shared-wallets/user/${id}`,
       {
         method: "GET",
         headers: {
@@ -30,7 +31,6 @@ export const getSharedWallets = async (id: string) => {
       },
     );
     const res = await response.json();
-    console.log(res);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -40,7 +40,7 @@ export const getSharedWallets = async (id: string) => {
 export const getSharedWalletUsers = async (wallet_id: string) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${wallet_id}/getUsers`,
+      `${getBaseUrl()}/api/protected/shared-wallets/shared-wallet/${wallet_id}/getUsers`,
       {
         method: "GET",
         headers: {
@@ -64,7 +64,7 @@ export const removeSharedWalletUser = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${wallet_id}/remove-shared-wallet-user`,
+      `${getBaseUrl()}/api/protected/shared-wallets/shared-wallet/${wallet_id}/remove-shared-wallet-user`,
       {
         method: "PUT",
         headers: {
@@ -89,7 +89,7 @@ export const makeSharedWalletAdmin = async ({
 }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/api/protected/shared-wallets/shared-wallet/${wallet_id}/make-admin`,
+      `${getBaseUrl()}/api/protected/shared-wallets/shared-wallet/${wallet_id}/make-admin`,
       {
         method: "PUT",
         headers: {
