@@ -12,18 +12,9 @@ export const middleware = async (req: NextRequest) => {
   }
 
   try {
-    const secretKey = new TextEncoder().encode(env.JWT_SECRET ?? "");
-    if (!secretKey) {
-      return new NextResponse("Internal Server Error", { status: 500 });
-    }
-
-    const decoded = await jose.jwtVerify(token.value, secretKey);
-
-    if (decoded) {
-      return NextResponse.next();
-    } else {
-      return new NextResponse("Invalid Token", { status: 401 });
-    }
+    const secretKey = new TextEncoder().encode(env.JWT_SECRET);
+    await jose.jwtVerify(token.value, secretKey);
+    return NextResponse.next();
   } catch (err) {
     console.error("Token verification failed:", err);
     return new NextResponse("Unauthorized", { status: 401 });

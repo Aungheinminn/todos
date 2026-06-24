@@ -1,6 +1,6 @@
 import clientPromise from "@/lib/database";
 import { encryptPassword } from "@/lib/services/hash.service";
-import { UserSchema } from "@/lib/models/user.model";
+import { SignUpInputSchema } from "@/lib/models/user.model";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { z } from "zod";
@@ -8,15 +8,15 @@ import { z } from "zod";
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const userData = UserSchema.parse(body);
+    const userData = SignUpInputSchema.parse(body);
 
     const encryptedPassword = await encryptPassword(userData.password);
-    userData.password = encryptedPassword;
 
     const client = await clientPromise;
     const db = client.db("remarker_next");
     const user = await db.collection("users").insertOne({
       ...userData,
+      password: encryptedPassword,
       refId: new ObjectId(),
     });
 
