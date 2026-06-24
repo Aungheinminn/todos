@@ -1,8 +1,8 @@
 import { decryptPassword, encryptPassword } from "@/lib/services/hash.service";
-import { CredentialModel, UserModel } from "@/lib/models/user.model";
+import { CredentialModel, SignUpInput } from "@/lib/models/user.model";
 import { getBaseUrl } from "@/lib/utils/baseUrl";
 
-export const createUser = async (datas: UserModel) => {
+export const createUser = async (datas: SignUpInput) => {
   try {
     const res = await fetch(`${getBaseUrl()}/api/users/signUp`, {
       method: "POST",
@@ -18,17 +18,14 @@ export const createUser = async (datas: UserModel) => {
 };
 
 export const loginUser = async (datas: CredentialModel) => {
-  const { email, password } = datas;
   try {
-    const res = await fetch(
-      `${getBaseUrl()}/api/users/signIn?email=${email}&password=${password}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const res = await fetch(`${getBaseUrl()}/api/users/signIn`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(datas),
+    });
 
     return res.json();
   } catch (e) {

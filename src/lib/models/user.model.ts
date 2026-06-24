@@ -12,8 +12,18 @@ export const UserSchema = z
   })
   .strict();
 
+export const SignUpInputSchema = z
+  .object({
+    username: z.string().min(1),
+    email: z.string().email(),
+    password: z.string().min(1),
+    icon: z.string().nullable(),
+  })
+  .strict();
+
 export type UserModel = z.infer<typeof UserSchema>;
 export type UserDocument = UserModel & { _id: ObjectId };
+export type SignUpInput = z.infer<typeof SignUpInputSchema>;
 
 export const CredentialSchema = z.object({
   email: z.string().email(),
